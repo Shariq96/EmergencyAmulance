@@ -16,6 +16,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -29,6 +32,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -59,7 +63,7 @@ import okhttp3.Response;
 public class Main2Activity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener , NavigationView.OnNavigationItemSelectedListener {
+        LocationListener , NavigationView.OnNavigationItemSelectedListener ,FragmentChangeListner{
 
     private GoogleMap mMap;
     private GoogleApiClient client;
@@ -67,14 +71,15 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private Location lastLocation;
     private Location  myloc;
     private Marker currentLocation;
-    Button btn_req;
+    Button btn_req,btn_cancel;
     public static final int REQUEST_LOCATION_CODE = 99;
     SupportMapFragment mapFragment;
     private LatLng[] ltlong = new LatLng[3];
     String hello;
-    String url = "http://4b95f6e7.ngrok.io/api/useracc/GetRequest";
+    String url = "http://6ee01b7d.ngrok.io/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
-
+    FrameLayout f1;
+    CancelationFragment cf = new CancelationFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +96,25 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         mapFragment.getMapAsync(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMsgReciver,
                 new IntentFilter("myFunction"));
+       f1 = (FrameLayout)findViewById(R.id.frame);
 
+
+        btn_cancel = (Button)findViewById(R.id.btn_cncel);
+        btn_cancel.setVisibility(View.GONE);
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                f1.setVisibility(v.VISIBLE);
+                replaceFragment(cf);
+            }
+        });
         btn_req = (Button)findViewById(R.id.btn_req);
         btn_req.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    run(url);
+                    run(url,v);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -373,7 +390,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     OkHttpClient Client = new OkHttpClient();
 
-    public void run(String url) throws IOException {
+    public void run(String url,View v) throws IOException {
         // OkHttpClient client = new OkHttpClient();
             LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
         HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
@@ -408,6 +425,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                     public void run() {
                         if (hello.equals("true")) {
                             Toast.makeText(getApplicationContext(), "Got it", Toast.LENGTH_LONG).show();
+                            btn_req.setVisibility(View.GONE);
+                            btn_cancel.setVisibility(View.VISIBLE);
 
                         } else {
                             Toast.makeText(getApplicationContext(), "No Amb Nearby", Toast.LENGTH_LONG).show();
@@ -420,5 +439,14 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();;
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame, fragment, fragment.toString());
+        fragmentTransaction.addToBackStack(fragment.toString());
+        fragmentTransaction.commit();
     }
 }
