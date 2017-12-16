@@ -34,7 +34,7 @@ public class loginActivity extends AppCompatActivity {
     OkHttpClient Client;
     String mobno, password;
     String api_mob, api_pass;
-    public String url = "http://6ee01b7d.ngrok.io/api/useracc/get";
+    public String url = "http://30468d57.ngrok.io/api/useracc/get";
     private FirebaseAuth mAuth;
     SharedPreferences.Editor editor;
     SharedPreferences pref;

@@ -4,19 +4,23 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cast_intro_overlay_button_background_color"
-    android:alpha="0.4">
+    android:background="@mipmap/white_background"
+    android:alpha="0.6"
 
+    >
 
     <RadioGroup
+        android:id="@+id/rg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_vertical"
         android:layout_marginLeft="45dp"
         android:layout_marginRight="45dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginBottom="50dp"
         android:alpha="1"
+
 
         >
 
@@ -24,7 +28,7 @@
             android:id="@+id/radioButton1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="RadioButton"
+            android:text="Driver is too late"
             android:paddingLeft="20dp"
             android:textSize="30sp"
             android:layout_gravity="center_vertical"/>
@@ -32,7 +36,7 @@
         <RadioButton
             android:id="@+id/radioButton2"
             android:layout_width="match_parent"
-            android:text="RadioButton"
+            android:text="Bkd by Mistake"
             android:paddingLeft="20dp"
             android:layout_height="wrap_content"
             android:textSize="30sp"
@@ -43,33 +47,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
-            android:text="RadioButton"
+            android:text="Patient is f9 now"
             android:alpha="1"
             android:layout_gravity="center_vertical"/>
-        <RadioButton
-            android:id="@+id/radioButton4"
-            android:textSize="30sp"
-            android:paddingLeft="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
 
-            android:text="RadioButton"
-            android:layout_gravity="center_vertical"/>
-        <RadioButton
-
-            android:id="@+id/radioButton5"
-            android:textSize="30sp"
-            android:paddingLeft="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:text="RadioButton"
-            android:layout_gravity="center_vertical"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="50dp"
             android:layout_marginLeft="50dp"
 
     >

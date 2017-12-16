@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity  {
      String facebookName;
     String mob1;
     String hello;
-    public String url = "http://6ee01b7d.ngrok.io/api/useracc/post";
+    public String url = "http://30468d57.ngrok.io/api/useracc/post";
     jbobject jb = new jbobject();
     String Token = FirebaseInstanceId.getInstance().getToken();
 

@@ -76,7 +76,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     SupportMapFragment mapFragment;
     private LatLng[] ltlong = new LatLng[3];
     String hello;
-    String url = "http://6ee01b7d.ngrok.io/api/useracc/GetRequest";
+    String url = "http://30468d57.ngrok.io/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
     FrameLayout f1;
     CancelationFragment cf = new CancelationFragment();
@@ -130,6 +130,12 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         navigationView.setNavigationItemSelectedListener(this);
 
 
+    }
+    public void alliswell()
+    {
+        f1.setVisibility(View.GONE);
+        btn_cancel.setVisibility(View.GONE);
+        btn_req.setVisibility(View.VISIBLE);
     }
     @Override
     protected void onDestroy() {
