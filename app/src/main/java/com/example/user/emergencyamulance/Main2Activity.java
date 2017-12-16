@@ -71,14 +71,15 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private Location lastLocation;
     private Location  myloc;
     private Marker currentLocation;
-    Button btn_req,btn_cancel;
+    public static Button btn_req,btn_cancel;
     public static final int REQUEST_LOCATION_CODE = 99;
     SupportMapFragment mapFragment;
+    public static Boolean Status = false;
     private LatLng[] ltlong = new LatLng[3];
     String hello;
     String url = "http://30468d57.ngrok.io/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
-    FrameLayout f1;
+    public static FrameLayout f1;
     CancelationFragment cf = new CancelationFragment();
 
     @Override
@@ -131,7 +132,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
     }
-    public void alliswell()
+    public  void alliswell()
     {
         f1.setVisibility(View.GONE);
         btn_cancel.setVisibility(View.GONE);
@@ -145,7 +146,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private BroadcastReceiver mMsgReciver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            Status = true;
             displayAlert(intent);
         }
     };
@@ -157,7 +158,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         builder.setMessage(mobile_no)
                 .setCancelable(
                         true)
-                .setPositiveButton(latLong,
+                .setPositiveButton("YES",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
