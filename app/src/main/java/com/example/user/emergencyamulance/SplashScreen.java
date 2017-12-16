@@ -7,6 +7,8 @@ import android.os.Bundle;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import static com.example.user.emergencyamulance.loginActivity.LogedIn;
+
 public class SplashScreen extends AppCompatActivity {
     private FirebaseAuth mAuth;
     @Override
@@ -19,9 +21,14 @@ public class SplashScreen extends AppCompatActivity {
                 try {
 
                         sleep(3000);
-                        Intent intent = new Intent(getApplicationContext(), loginActivity.class);
-                        startActivity(intent);
-                        finish();
+                        if(LogedIn == true) {
+                            Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    Intent intent = new Intent(getApplicationContext(), loginActivity.class);
+                    startActivity(intent);
+                    finish();
 
                 }
                 catch (InterruptedException e) {

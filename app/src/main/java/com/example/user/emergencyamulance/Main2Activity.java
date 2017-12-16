@@ -36,6 +36,8 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -49,6 +51,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
@@ -75,6 +78,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     public static final int REQUEST_LOCATION_CODE = 99;
     SupportMapFragment mapFragment;
     public static Boolean Status = false;
+    public static String mobile_no,latLong , d_token ,Trip_id;
     private LatLng[] ltlong = new LatLng[3];
     String hello;
     String url = "http://30468d57.ngrok.io/api/useracc/GetRequest";
@@ -85,6 +89,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main2);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -152,8 +157,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     };
 
     private void displayAlert(Intent intent)
-    {String mobile_no = intent.getStringExtra("title");
-        String latLong = intent.getStringExtra("body");
+    { mobile_no = intent.getStringExtra("title");
+      latLong = intent.getStringExtra("body");
+      d_token = intent.getStringExtra("drivertoken_no");
+       Trip_id = intent.getStringExtra("Trip_id");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(mobile_no)
                 .setCancelable(
@@ -223,7 +230,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
+            LoginManager.getInstance().logOut();
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(Main2Activity.this, loginActivity.class));
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

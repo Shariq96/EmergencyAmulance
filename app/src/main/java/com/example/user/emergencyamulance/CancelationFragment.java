@@ -26,6 +26,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import static com.example.user.emergencyamulance.Main2Activity.Status;
+import static com.example.user.emergencyamulance.Main2Activity.Trip_id;
 import static com.example.user.emergencyamulance.Main2Activity.btn_cancel;
 import static com.example.user.emergencyamulance.Main2Activity.btn_req;
 import static com.example.user.emergencyamulance.Main2Activity.f1;
@@ -89,6 +90,7 @@ public class CancelationFragment extends Fragment implements FragmentChangeListn
     OkHttpClient Client = new OkHttpClient();
     public void post(String url, String val) throws IOException {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
+        urlBuilder.addQueryParameter("Trip_id",Trip_id);
         urlBuilder.addQueryParameter("cancelOption", val);
         //urlBuilder.addQueryParameter("Status_id","1");
         String url1 = urlBuilder.build().toString();

@@ -38,6 +38,7 @@ public class loginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     SharedPreferences.Editor editor;
     SharedPreferences pref;
+    public static boolean LogedIn = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,23 +80,7 @@ public class loginActivity extends AppCompatActivity {
         });
 
     }
-    @Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        boolean userFirstLogin= pref.getBoolean("Login",false);
 
-        if (currentUser != null) {
-            startActivity(new Intent(loginActivity.this, Main2Activity.class));
-            finish();
-
-        }
-        else if(userFirstLogin == true)
-        {
-            startActivity(new Intent(loginActivity.this, Main2Activity.class));
-            finish();
-        }
-    }
     private void run() throws IOException {
 
         OkHttpClient client = new OkHttpClient();
@@ -137,6 +122,7 @@ public class loginActivity extends AppCompatActivity {
                             editor.putBoolean("login", true);
                             editor.apply();
                             editor.commit();
+                            LogedIn = true;
                             Intent intent = new Intent(loginActivity.this, Main2Activity.class);
                             startActivity(intent);
                         } else {
