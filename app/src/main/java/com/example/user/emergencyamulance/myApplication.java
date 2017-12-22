@@ -2,7 +2,9 @@ package com.example.user.emergencyamulance;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 
 /**
  * Created by SHARIK on 10/29/2017.
@@ -16,6 +18,13 @@ public class myApplication extends Application implements Application.ActivityLi
         super.onCreate();
         registerActivityLifecycleCallbacks(this);
     }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 

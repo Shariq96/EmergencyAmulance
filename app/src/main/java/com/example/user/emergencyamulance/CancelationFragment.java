@@ -29,6 +29,7 @@ import static com.example.user.emergencyamulance.Main2Activity.Status;
 import static com.example.user.emergencyamulance.Main2Activity.Trip_id;
 import static com.example.user.emergencyamulance.Main2Activity.btn_cancel;
 import static com.example.user.emergencyamulance.Main2Activity.btn_req;
+import static com.example.user.emergencyamulance.Main2Activity.d_token;
 import static com.example.user.emergencyamulance.Main2Activity.f1;
 
 /**
@@ -42,7 +43,7 @@ public class CancelationFragment extends Fragment implements FragmentChangeListn
     RadioGroup radioReasongGrp;
     int selectedId;
     String val;
-    String url = "http://30468d57.ngrok.io/api/useracc/cancelRide";
+    String url = "http://7665883c.ngrok.io/api/useracc/cancelRideUser";
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class CancelationFragment extends Fragment implements FragmentChangeListn
                     Toast.makeText(getActivity().getApplicationContext(), radioReasonBtn.getText().toString(), Toast.LENGTH_SHORT).show();
                     f1.setVisibility(View.GONE);
                     btn_cancel.setVisibility(View.GONE);
-                    Toast.makeText(getActivity().getApplicationContext(), "YOUR RIDE IS CANCELED", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Please Be sure when booking a ride", Toast.LENGTH_LONG).show();
                     btn_req.setVisibility(View.VISIBLE);
                 }
 
@@ -92,6 +93,7 @@ public class CancelationFragment extends Fragment implements FragmentChangeListn
         HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
         urlBuilder.addQueryParameter("Trip_id",Trip_id);
         urlBuilder.addQueryParameter("cancelOption", val);
+        urlBuilder.addQueryParameter("token",d_token);
         //urlBuilder.addQueryParameter("Status_id","1");
         String url1 = urlBuilder.build().toString();
         Request request = new Request.Builder()

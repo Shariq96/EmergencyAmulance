@@ -78,10 +78,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     public static final int REQUEST_LOCATION_CODE = 99;
     SupportMapFragment mapFragment;
     public static Boolean Status = false;
-    public static String mobile_no,latLong , d_token ,Trip_id;
+    public static String mobile_no,latLong , d_token ,Trip_id,Click_action;
     private LatLng[] ltlong = new LatLng[3];
     String hello;
-    String url = "http://30468d57.ngrok.io/api/useracc/GetRequest";
+    String url = "http://7665883c.ngrok.io/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
     public static FrameLayout f1;
     CancelationFragment cf = new CancelationFragment();
@@ -156,30 +156,39 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         }
     };
 
-    private void displayAlert(Intent intent)
-    { mobile_no = intent.getStringExtra("title");
-      latLong = intent.getStringExtra("body");
-      d_token = intent.getStringExtra("drivertoken_no");
-       Trip_id = intent.getStringExtra("Trip_id");
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(mobile_no)
-                .setCancelable(
-                        true)
-                .setPositiveButton("YES",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        }).setNegativeButton("No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
+    private void displayAlert(Intent intent) {
+        mobile_no = intent.getStringExtra("title");
+        latLong = intent.getStringExtra("body");
+        d_token = intent.getStringExtra("drivertoken_no");
+        Click_action = intent.getStringExtra("clickaction");
+        Trip_id = intent.getStringExtra("Trip_id");
 
+        if (Click_action == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(mobile_no)
+                    .setCancelable(
+                            true)
+                    .setPositiveButton("YES",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            }).setNegativeButton("No",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        else
+        {
+            btn_cancel.setVisibility(View.GONE);
+            btn_req.setVisibility(View.VISIBLE);
+            Toast.makeText(this,"REASSINING DRIVER. Please Wait",Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -412,7 +421,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
         HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
         urlBuilder.addQueryParameter("mobile_no", "3338983584");
-        urlBuilder.addQueryParameter("latlong",latLng.toString());
+        urlBuilder.addQueryParameter("lat", String.valueOf(lastLocation.getLatitude()));
+        urlBuilder.addQueryParameter("longi",String.valueOf(lastLocation.getLongitude()));
         urlBuilder.addQueryParameter("token",token);
         String url1 = urlBuilder.build().toString();
         Request request = new Request.Builder()
