@@ -32,4 +32,12 @@
     <string name="signup_here">Signup Here!</string>
     <string name="forget_password">Forget Password</string>
     <string name="save_password">Save Password</string>
+
+    //RegistrationScreenStrings
+    <string name="txt_or">OR</string>
+    <string name="txt_agreement">By Clicking “Register”, you agree to Terms and Conditions and Privacy Policy.</string>
+    <string name="fill_username">Username</string>
+    <string name="fill_pass">Password</string>
+    <string name="fill_Phone">Phone Number</string>
+    <string name="fill_cnic">Email Address</string>
 </resources>
