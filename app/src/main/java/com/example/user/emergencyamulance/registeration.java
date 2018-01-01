@@ -25,7 +25,7 @@ import okhttp3.Response;
 
 public class registeration extends AppCompatActivity {
 
-    EditText name, pass, email, addr;
+    EditText name, pass, email, phone;
     Button signup_btn;
     String password, eMail, namee, Jsonobj, hello, mob_no ,addr1 ,mob1;
     JSONObject jbobj;
@@ -42,7 +42,7 @@ public class registeration extends AppCompatActivity {
         name   = (EditText) findViewById(R.id.e_name);
         pass   = (EditText) findViewById(R.id.e_pass);
         email  = (EditText) findViewById(R.id.e_email);
-        addr   = (EditText) findViewById(R.id.e_addr) ;
+        phone   = (EditText) findViewById(R.id.e_addr) ;
 
         mob1 = getIntent().getStringExtra("mobile_no");
         signup_btn = (Button)findViewById(R.id.button2);

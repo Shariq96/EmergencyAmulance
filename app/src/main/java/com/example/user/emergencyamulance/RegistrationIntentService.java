@@ -11,9 +11,7 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
-/**
- * Created by SHARIK on 10/29/2017.
- */
+
 
 public class
 RegistrationIntentService extends IntentService{

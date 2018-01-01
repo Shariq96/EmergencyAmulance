@@ -11,51 +11,63 @@
     tools:layout_editor_absoluteY="25dp">
 
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="341dp"
-        android:layout_height="46dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:contentDescription="@string/txt_agreement"
-        android:text="By Clicking “Register”, you agree to Terms and Conditions and Privacy Policy."
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="360dp"
-        android:layout_height="55dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/reg_register"
-        tools:layout_editor_absoluteY="478dp" />
-
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar2"
-        android:layout_width="420dp"
+        android:id="@+id/topbar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/topBar"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/lbl_reg_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/average_sans"
+        android:text="Registration User"
+        android:textColor="@android:color/background_light"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/topbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/topbar" />
+
+    <TextView
+        android:id="@+id/lbl_OR"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="OR"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/txt_Username"
+        app:layout_constraintEnd_toEndOf="@+id/txt_Username"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/txt_Username"
+        app:layout_constraintTop_toBottomOf="@+id/fb_login_Btn" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/fb_login_Btn"
         android:layout_width="360dp"
         android:layout_height="55dp"
-        app:srcCompat="@drawable/reg_signup"
-        tools:layout_editor_absoluteX="31dp"
-        tools:layout_editor_absoluteY="74dp" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/lbl_OR"
+        app:layout_constraintStart_toStartOf="@+id/lbl_OR"
+        app:layout_constraintTop_toBottomOf="@+id/topbar"
+        app:srcCompat="@drawable/reg_signup" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/txt_Username"
         android:layout_width="360dp"
         android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="74dp"
         android:background="@drawable/reg_name"
         android:ems="10"
@@ -65,15 +77,13 @@
         android:paddingLeft="62dp"
         android:paddingStart="62dp"
         android:textColorHint="@color/txtColor"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/txt_Phone"
         app:layout_constraintHorizontal_bias="0.485"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintStart_toStartOf="@+id/txt_Phone"
+        app:layout_constraintTop_toBottomOf="@+id/fb_login_Btn" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/txt_Phone"
         android:layout_width="360dp"
         android:layout_height="50dp"
         android:layout_marginEnd="8dp"
@@ -86,12 +96,12 @@
         android:inputType="textPersonName"
         android:paddingLeft="62dp"
         android:paddingStart="62dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintEnd_toEndOf="@+id/txt_Email"
+        app:layout_constraintStart_toStartOf="@+id/txt_Email"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Username" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/txt_Email"
         android:layout_width="360dp"
         android:layout_height="50dp"
         android:layout_marginEnd="8dp"
@@ -104,12 +114,12 @@
         android:inputType="textPersonName"
         android:paddingLeft="62dp"
         android:paddingStart="62dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintEnd_toEndOf="@+id/txt_Password"
+        app:layout_constraintStart_toStartOf="@+id/txt_Password"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Phone" />
 
     <EditText
-        android:id="@+id/editText6"
+        android:id="@+id/txt_Password"
         android:layout_width="360dp"
         android:layout_height="50dp"
         android:layout_marginEnd="8dp"
@@ -122,35 +132,34 @@
         android:inputType="textPersonName"
         android:paddingLeft="62dp"
         android:paddingStart="62dp"
+        app:layout_constraintEnd_toEndOf="@+id/btn_reg_me"
+        app:layout_constraintStart_toStartOf="@+id/btn_reg_me"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Email" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="341dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/txt_agreement"
+        android:text="By Clicking “Register”, you agree to Terms and Conditions and Privacy Policy."
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText4" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_reg_me" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:text="OR"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/editText2"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        tools:layout_editor_absoluteX="184dp" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/average_sans"
-        android:text="Registration User"
-        android:textColor="@android:color/background_light"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar2" />
+    <ImageView
+        android:id="@+id/btn_reg_me"
+        android:layout_width="360dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView5"
+        app:layout_constraintStart_toStartOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Password"
+        app:srcCompat="@drawable/reg_register" />
 
 </android.support.constraint.ConstraintLayout>
