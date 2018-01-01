@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -26,7 +28,7 @@ import okhttp3.Response;
 public class registeration extends AppCompatActivity {
 
     EditText name, pass, email, phone;
-    Button signup_btn;
+    ImageView signup_btn;
     String password, eMail, namee, Jsonobj, hello, mob_no ,addr1 ,mob1;
     JSONObject jbobj;
     public String url = "http://7665883c.ngrok.io/api/useracc/post";
@@ -39,20 +41,20 @@ public class registeration extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registeration);
 
-        name   = (EditText) findViewById(R.id.e_name);
-        pass   = (EditText) findViewById(R.id.e_pass);
-        email  = (EditText) findViewById(R.id.e_email);
-        phone   = (EditText) findViewById(R.id.e_addr) ;
+        name   = (EditText) findViewById(R.id.txt_Username);
+        pass   = (EditText) findViewById(R.id.txt_Password);
+        email  = (EditText) findViewById(R.id.txt_Email);
+        phone   = (EditText) findViewById(R.id.txt_Phone) ;
 
         mob1 = getIntent().getStringExtra("mobile_no");
-        signup_btn = (Button)findViewById(R.id.button2);
+        signup_btn = findViewById(R.id.btn_reg_me);
         signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 namee = name.getText().toString();
                 password = pass.getText().toString();
                 eMail = email.getText().toString();
-                addr1 = addr.getText().toString();
+                addr1 = phone.getText().toString();
                 mob_no = mob1;
                 try {
                     jbobj = jb.jb(namee,password,mob_no,addr1,Token);
@@ -82,7 +84,7 @@ public class registeration extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(getApplicationContext(), "somethng went wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Something went Wrong, Try Again!", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -95,7 +97,7 @@ public class registeration extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (hello.equals("true")) {
-                            Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Registered!", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(registeration.this, Main2Activity.class);
                             startActivity(intent);
 
@@ -105,7 +107,7 @@ public class registeration extends AppCompatActivity {
 
                         }
                         else {
-                            Toast.makeText(getApplicationContext(), "tch  tch Accout Already created", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Already Exist, Sign-in Please", Toast.LENGTH_LONG).show();
 
                         }
 

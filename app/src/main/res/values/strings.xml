@@ -40,4 +40,7 @@
     <string name="fill_pass">Password</string>
     <string name="fill_Phone">Phone Number</string>
     <string name="fill_cnic">Email Address</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
