@@ -62,4 +62,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="farrukh_dilawar">Farrukh Dilawar</string>
     <string name="farrukhdilawar_pafkiet_com_pk">farrukhdilawar@pafkiet.com.pk</string>
+    <string name="driver_is_late">Driver is late</string>
+    <string name="mistakenly_booked">Mistakenly booked</string>
+    <string name="patient_is_fine">Patient is fine</string>
 </resources>

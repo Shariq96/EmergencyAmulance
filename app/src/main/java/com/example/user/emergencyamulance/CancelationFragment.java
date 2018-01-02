@@ -47,9 +47,9 @@ public class CancelationFragment extends Fragment implements FragmentChangeListn
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container, @Nullable Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_cancelation,container,false);
+        v = inflater.inflate(R.layout.cancellationdialog,container,false);
         radioReasongGrp = (RadioGroup)v.findViewById(R.id.rg);
-        btn = (Button)v.findViewById(R.id.btn_sumbit);
+        btn = (Button)v.findViewById(R.id.btn_submit);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
