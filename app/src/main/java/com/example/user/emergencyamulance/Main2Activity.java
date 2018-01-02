@@ -238,7 +238,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_signout) {
             LoginManager.getInstance().logOut();
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(Main2Activity.this, loginActivity.class));
