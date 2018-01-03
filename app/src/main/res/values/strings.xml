@@ -60,6 +60,9 @@
     <string name="how_it_works">How it works</string>
     <string name="policies">Policies</string>
     <string name="sign_out">Sign Out</string>
+
+
+    <!--dialog strings-->
     <string name="farrukh_dilawar">Farrukh Dilawar</string>
     <string name="farrukhdilawar_pafkiet_com_pk">farrukhdilawar@pafkiet.com.pk</string>
     <string name="driver_is_late">Driver is late</string>

@@ -32,9 +32,7 @@ import static com.example.user.emergencyamulance.Main2Activity.btn_req;
 import static com.example.user.emergencyamulance.Main2Activity.d_token;
 import static com.example.user.emergencyamulance.Main2Activity.f1;
 
-/**
- * Created by User on 12/11/2017.
- */
+
 
 public class CancelationFragment extends Fragment implements FragmentChangeListner {
     View v;

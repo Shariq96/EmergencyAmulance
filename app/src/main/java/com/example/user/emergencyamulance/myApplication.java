@@ -6,9 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
-/**
- * Created by SHARIK on 10/29/2017.
- */
+
 
 public class myApplication extends Application implements Application.ActivityLifecycleCallbacks {
     private static boolean isActive;

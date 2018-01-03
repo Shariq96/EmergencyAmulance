@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.user.emergencyamulance.SplashScreen">
+    tools:context="com.example.user.emergencyamulance.SplashScreen"
+    android:background="@drawable/splash_bg">
+
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="305dp"
-        android:src="@mipmap/splasher"
-        tools:layout_editor_absoluteY="-49dp"
-        tools:layout_editor_absoluteX="8dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:layout_gravity="center"
-        android:text="EMERGENCY AMBULANCE"
-        android:textStyle="bold"
-        android:textColor="#f44336"
-        tools:layout_editor_absoluteY="395dp"
-        tools:layout_editor_absoluteX="16dp" />
-</LinearLayout>
+        android:id="@+id/imageView"
+        android:layout_width="224dp"
+        android:layout_height="242dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="72dp"
+        android:contentDescription="@string/desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/splash_logo" />
+</android.support.constraint.ConstraintLayout>
