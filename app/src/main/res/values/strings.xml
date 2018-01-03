@@ -15,7 +15,7 @@
     </string>
     <string name="facebook_app_id">1639411012818943</string>
     <string name="fb_login_protocol_scheme">fb1639411012818943</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_mapss">MapsActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -60,9 +60,17 @@
     <string name="how_it_works">How it works</string>
     <string name="policies">Policies</string>
     <string name="sign_out">Sign Out</string>
+
+
+    <!--dialog strings-->
     <string name="farrukh_dilawar">Farrukh Dilawar</string>
     <string name="farrukhdilawar_pafkiet_com_pk">farrukhdilawar@pafkiet.com.pk</string>
     <string name="driver_is_late">Driver is late</string>
     <string name="mistakenly_booked">Mistakenly booked</string>
     <string name="patient_is_fine">Patient is fine</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="resend">RESEND</string>
+    <string name="change_number">CHANGE NUMBER</string>
+    <string name="enter_the_code">Enter the Code</string>
+    <string name="title_activity_verify_account">verify_account</string>
 </resources>

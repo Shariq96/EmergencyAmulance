@@ -86,7 +86,19 @@
 
         <activity
             android:name=".MapScreen"
-            android:label="@string/title_activity_map_screen"></activity>
+            android:label="@string/title_activity_map_screen" />
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".verify_account"
+            android:label="@string/title_activity_verify_account"
+            android:parentActivityName=".registeration"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.user.emergencyamulance.registeration" />
+        </activity>
     </application>
 
 </manifest>
