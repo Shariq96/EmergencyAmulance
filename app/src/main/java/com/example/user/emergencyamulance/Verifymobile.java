@@ -3,7 +3,6 @@ package com.example.user.emergencyamulance;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -42,13 +41,13 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verifymobile);
-        mPhoneNumberField = (EditText) findViewById(R.id.editText);
-        mVerificationField = (EditText) findViewById(R.id.editText1);
+        mPhoneNumberField = (EditText) findViewById(R.id.edit_num);
+        mVerificationField = (EditText) findViewById(R.id.edit_code);
         Mobile_No = mPhoneNumberField.toString();
 
-        mStartButton = (Button) findViewById(R.id.button);
-        mVerifyButton = (Button) findViewById(R.id.button2);
-        mResendButton = (Button) findViewById(R.id.button3);
+        mStartButton = (Button) findViewById(R.id.btn_ver_send);
+        mVerifyButton = (Button) findViewById(R.id.btn_ver_verify);
+        mResendButton = (Button) findViewById(R.id.btn_ver_resend);
 
         mStartButton.setOnClickListener(this);
         mVerifyButton.setOnClickListener(this);
@@ -159,7 +158,7 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
                         startPhoneNumberVerification(mPhoneNumberField.getText().toString());
 
                         break;
-                    case R.id.button2:
+                    case R.id.btn_ver_resend:
                         String code = mVerificationField.getText().toString();
                         if (TextUtils.isEmpty(code)) {
                             mVerificationField.setError("Cannot be empty.");
