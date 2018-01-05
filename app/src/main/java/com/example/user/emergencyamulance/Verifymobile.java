@@ -151,14 +151,14 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.button:
+                    case R.id.btn_ver_verify:
                         if (!validatePhoneNumber()) {
                             return;
                         }
                         startPhoneNumberVerification(mPhoneNumberField.getText().toString());
 
                         break;
-                    case R.id.btn_ver_resend:
+                    case R.id.btn_ver_send:
                         String code = mVerificationField.getText().toString();
                         if (TextUtils.isEmpty(code)) {
                             mVerificationField.setError("Cannot be empty.");
@@ -167,7 +167,7 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
 
                         verifyPhoneNumberWithCode(mVerificationId, code);
                         break;
-                    case R.id.button3:
+                    case R.id.btn_ver_resend:
                         resendVerificationCode(mPhoneNumberField.getText().toString(), mResendToken);
                         break;
                 }

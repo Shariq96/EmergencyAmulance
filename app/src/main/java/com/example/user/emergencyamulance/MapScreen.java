@@ -36,9 +36,9 @@ public class MapScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_screen);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+       // mTextMessage = (TextView) findViewById(R.id.message);
+        //BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+    //    navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
 }

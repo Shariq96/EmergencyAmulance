@@ -47,7 +47,7 @@ public class registeration extends AppCompatActivity {
         phone   = (EditText) findViewById(R.id.txt_Phone) ;
 
         mob1 = getIntent().getStringExtra("mobile_no");
-        signup_btn = findViewById(R.id.btn_reg_me);
+        signup_btn = (ImageView) findViewById(R.id.btn_reg_me);
         signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -4,7 +4,6 @@
     import android.content.SharedPreferences;
     import android.support.v7.app.AppCompatActivity;
     import android.os.Bundle;
-    import android.util.Log;
     import android.view.View;
     import android.widget.Button;
     import android.widget.CheckBox;
@@ -13,10 +12,10 @@
     import android.widget.Toast;
 
     import com.google.firebase.auth.FirebaseAuth;
-    import com.google.firebase.auth.FirebaseUser;
 
     import java.io.IOException;
 
+    import dmax.dialog.SpotsDialog;
     import okhttp3.Call;
     import okhttp3.Callback;
     import okhttp3.HttpUrl;
@@ -43,6 +42,9 @@
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
+
+
+
             boolean var = Verifymobile.getVariable();
             mAuth = FirebaseAuth.getInstance();
 
@@ -127,6 +129,7 @@
                                 startActivity(intent);
                             } else {
                                 Toast.makeText(getApplicationContext(), "Wrong Credentials", Toast.LENGTH_LONG).show();
+
                                 editor.putBoolean("login", false);
                                 editor.commit();
                             }
