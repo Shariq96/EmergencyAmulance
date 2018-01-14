@@ -74,13 +74,13 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
             @Override
 
             public void onCodeSent(String verificationId,
-                                       PhoneAuthProvider.ForceResendingToken token) {
+                                   PhoneAuthProvider.ForceResendingToken token) {
                 Log.d(TAG, "onCodeSent:" + verificationId);
                 mVerificationId = verificationId;
                 mResendToken = token;
             }
         };
-        }
+    }
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -89,7 +89,7 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
-                            Intent in = new Intent(getBaseContext(),MainActivity.class);
+                            Intent in = new Intent(getBaseContext(),registeration.class);
                             in.putExtra("mobile_no",mPhoneNumberField.getText().toString());
                             startActivity(in);
                             finish();
@@ -148,36 +148,36 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
     }
 
 
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.btn_ver_verify:
-                        if (!validatePhoneNumber()) {
-                            return;
-                        }
-                        startPhoneNumberVerification(mPhoneNumberField.getText().toString());
-
-                        break;
-                    case R.id.btn_ver_send:
-                        String code = mVerificationField.getText().toString();
-                        if (TextUtils.isEmpty(code)) {
-                            mVerificationField.setError("Cannot be empty.");
-                            return;
-                        }
-
-                        verifyPhoneNumberWithCode(mVerificationId, code);
-                        break;
-                    case R.id.btn_ver_resend:
-                        resendVerificationCode(mPhoneNumberField.getText().toString(), mResendToken);
-                        break;
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_ver_send:
+                if (!validatePhoneNumber()) {
+                    return;
                 }
-            }
+                startPhoneNumberVerification(mPhoneNumberField.getText().toString());
 
-            private static boolean verified = false;
+                break;
+            case R.id.btn_ver_verify:
+                String code = mVerificationField.getText().toString();
+                if (TextUtils.isEmpty(code)) {
+                    mVerificationField.setError("Cannot be empty.");
+                    return;
+                }
+
+                verifyPhoneNumberWithCode(mVerificationId, code);
+                break;
+            case R.id.btn_ver_resend:
+                resendVerificationCode(mPhoneNumberField.getText().toString(), mResendToken);
+                break;
+        }
+    }
+
+    private static boolean verified = false;
     public static boolean getVariable()
     {
         return verified;
     }
 
-    }
+}
 

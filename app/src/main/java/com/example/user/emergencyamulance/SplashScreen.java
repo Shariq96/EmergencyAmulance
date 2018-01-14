@@ -26,20 +26,13 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 try {
 
-                    progressbar = (ImageView) findViewById(R.id.view_logo);
-                    progressbar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            SpotsDialog _progdialog = new SpotsDialog(SplashScreen.this, R.style.Custom);
-                            _progdialog.show();
-                        }
-                    });
-                    sleep(20000);
-                    // if(LogedIn == true) {
-                    //   Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
-                    // startActivity(intent);
-                    //finish();
-                    // }
+
+                    sleep(4000);
+                     if(LogedIn == true) {
+                       Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                     startActivity(intent);
+                    finish();
+                     }
                     Intent intent = new Intent(getApplicationContext(), loginActivity.class);
                     startActivity(intent);
                     finish();

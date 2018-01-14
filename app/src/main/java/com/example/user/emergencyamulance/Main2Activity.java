@@ -56,6 +56,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
 
+import dmax.dialog.SpotsDialog;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -81,8 +82,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     public static String mobile_no,latLong , d_token ,Trip_id,Click_action;
     private LatLng[] ltlong = new LatLng[3];
     String hello;
-    String url = "http://7665883c.ngrok.io/api/useracc/GetRequest";
+    String url = "http://724d8461.ngrok.io/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
+    SpotsDialog _progdialog;
     public static FrameLayout f1;
     CancelationFragment cf = new CancelationFragment();
 
@@ -103,6 +105,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         LocalBroadcastManager.getInstance(this).registerReceiver(mMsgReciver,
                 new IntentFilter("myFunction"));
        f1 = (FrameLayout)findViewById(R.id.frame);
+        _progdialog = new SpotsDialog(Main2Activity.this, R.style.Custom);
 
 
         btn_cancel = (Button)findViewById(R.id.btn_cncel);
@@ -119,6 +122,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onClick(View v) {
                 try {
+                    _progdialog.show();
                     run(url,v);
 
                 } catch (IOException e) {
@@ -142,6 +146,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         f1.setVisibility(View.GONE);
         btn_cancel.setVisibility(View.GONE);
         btn_req.setVisibility(View.VISIBLE);
+
     }
     @Override
     protected void onDestroy() {
@@ -338,7 +343,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 googleApiClient();
                 mMap.setMyLocationEnabled(true);
                 mMap.setTrafficEnabled(true);
-                mMap.getUiSettings().setZoomControlsEnabled(true);
                 mMap.getUiSettings().setZoomGesturesEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 mMap.getUiSettings().setCompassEnabled(true);
@@ -350,12 +354,11 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             googleApiClient();
             mMap.setMyLocationEnabled(true);
             mMap.setTrafficEnabled(true);
-            mMap.getUiSettings().setZoomControlsEnabled(true);
             mMap.getUiSettings().setZoomGesturesEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
             mMap.getUiSettings().setCompassEnabled(true);
             mMap.getUiSettings().setRotateGesturesEnabled(true);
-            
+            mMap.getUiSettings().setAllGesturesEnabled(true);
 
         }
     }
@@ -454,6 +457,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                             Toast.makeText(getApplicationContext(), "Got it", Toast.LENGTH_LONG).show();
                             btn_req.setVisibility(View.GONE);
                             btn_cancel.setVisibility(View.VISIBLE);
+                            _progdialog.cancel();
 
                         } else {
                             Toast.makeText(getApplicationContext(), "No Amb Nearby", Toast.LENGTH_LONG).show();

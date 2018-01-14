@@ -33,7 +33,7 @@
         OkHttpClient Client;
         String mobno, password;
         String api_mob, api_pass;
-        public String url = "http://7665883c.ngrok.io/api/useracc/get";
+        public String url = "http://724d8461.ngrok.io/api/useracc/get";
         private FirebaseAuth mAuth;
         SharedPreferences.Editor editor;
         SharedPreferences pref;
@@ -52,14 +52,14 @@
             pass = (EditText) findViewById(R.id.etext2);
             sv_pass = (CheckBox) findViewById(R.id.chk_pass);
             btn_login = (Button) findViewById(R.id.button);
-            signup_txt = (TextView) findViewById(R.id.textView);
+            signup_txt = (TextView) findViewById(R.id.textView2);
             signup_txt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent signup_intent = new Intent(loginActivity.this, Verifymobile.class);
-                    loginActivity.this.startActivity(signup_intent);
+                   Intent signup_intent = new Intent(loginActivity.this, Verifymobile.class);
+                   loginActivity.this.startActivity(signup_intent);
 
-                }
+               }
             });
             pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
             editor = pref.edit();
