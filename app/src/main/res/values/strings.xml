@@ -76,4 +76,6 @@
     <string name="_92_3341369120">+92-3341369120</string>
     <string name="verify">Verify</string>
     <string name="send">Send</string>
+    <string name="request">Request</string>
+    <string name="cancel">Cancel</string>
 </resources>

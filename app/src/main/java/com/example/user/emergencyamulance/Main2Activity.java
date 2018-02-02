@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -40,9 +41,14 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -73,6 +79,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private GoogleApiClient client;
     private LocationRequest request;
     private Location lastLocation;
+    private PlaceAutocomplete places;
     private Location  myloc;
     private Marker currentLocation;
     public static Button btn_req,btn_cancel;
@@ -81,6 +88,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     public static Boolean Status = false;
     public static String mobile_no,latLong , d_token ,Trip_id,Click_action;
     private LatLng[] ltlong = new LatLng[3];
+
+
     String hello;
     String url = "http://724d8461.ngrok.io/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
@@ -97,15 +106,55 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             checkLocationPermission();
         }
 
+
+        final String TAG = "PlacesApi Working";
+
+        PlaceAutocompleteFragment source = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_1);
+
+        source.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.getName());
+            }
+
+            @Override
+            public void onError(com.google.android.gms.common.api.Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
+        PlaceAutocompleteFragment destination = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_2);
+
+        destination.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.getName());
+            }
+
+            @Override
+            public void onError(com.google.android.gms.common.api.Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.mapView);
+
+
         mapFragment.getMapAsync(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMsgReciver,
                 new IntentFilter("myFunction"));
-       f1 = (FrameLayout)findViewById(R.id.frame);
-        _progdialog = new SpotsDialog(Main2Activity.this, R.style.Custom);
+     //  f1 = (FrameLayout)findViewById(R.id.frame);
+    //    _progdialog = new SpotsDialog(Main2Activity.this, R.style.Custom);
 
 
         btn_cancel = (Button)findViewById(R.id.btn_cncel);
@@ -476,7 +525,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();;
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame, fragment, fragment.toString());
+       // fragmentTransaction.replace(R.id.frame, fragment, fragment.toString());
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
     }

@@ -33,16 +33,19 @@
         OkHttpClient Client;
         String mobno, password;
         String api_mob, api_pass;
+
         public String url = "http://724d8461.ngrok.io/api/useracc/get";
+
         private FirebaseAuth mAuth;
         SharedPreferences.Editor editor;
         SharedPreferences pref;
+
         public static boolean LogedIn = false;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
-
 
 
             boolean var = Verifymobile.getVariable();

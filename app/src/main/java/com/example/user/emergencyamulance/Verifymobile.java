@@ -40,7 +40,9 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_verifymobile);
+
         mPhoneNumberField = (EditText) findViewById(R.id.edit_num);
         mVerificationField = (EditText) findViewById(R.id.edit_code);
         Mobile_No = mPhoneNumberField.toString();
@@ -52,8 +54,10 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
         mStartButton.setOnClickListener(this);
         mVerifyButton.setOnClickListener(this);
         mResendButton.setOnClickListener(this);
+
         mAuth = FirebaseAuth.getInstance();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                 Log.d(TAG, "onVerificationCompleted:" + phoneAuthCredential);
@@ -72,7 +76,6 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
                 }
             }
             @Override
-
             public void onCodeSent(String verificationId,
                                    PhoneAuthProvider.ForceResendingToken token) {
                 Log.d(TAG, "onCodeSent:" + verificationId);

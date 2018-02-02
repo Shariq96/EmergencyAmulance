@@ -9,31 +9,34 @@ import android.widget.ImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import dmax.dialog.SpotsDialog;
 
 import static com.example.user.emergencyamulance.loginActivity.LogedIn;
 
 public class SplashScreen extends AppCompatActivity {
     private FirebaseAuth mAuth;
     ImageView progressbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_splash_screen);
         Thread myThread;
-        myThread = new Thread(){
+        myThread = new Thread()
+        {
+            Intent intent;
             @Override
             public void run() {
                 try {
-
-
                     sleep(4000);
-                     if(LogedIn == true) {
-                       Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
-                     startActivity(intent);
-                    finish();
+                     if(LogedIn == true)
+                     {
+                         intent = new Intent(getApplicationContext(), Main2Activity.class);
+                         startActivity(intent);
+                         finish();
                      }
-                    Intent intent = new Intent(getApplicationContext(), loginActivity.class);
+
+                     intent = new Intent(getApplicationContext(), Main2Activity.class);
                     startActivity(intent);
                     finish();
 
@@ -44,7 +47,6 @@ public class SplashScreen extends AppCompatActivity {
             }
         };
         myThread.start();
-
     }
 
 }
