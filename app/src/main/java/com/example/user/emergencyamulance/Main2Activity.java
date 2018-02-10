@@ -33,6 +33,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -40,6 +41,8 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
@@ -48,6 +51,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -88,7 +92,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     public static Boolean Status = false;
     public static String mobile_no,latLong , d_token ,Trip_id,Click_action;
     private LatLng[] ltlong = new LatLng[3];
-
+    private static EditText editText;
 
     String hello;
     String url = "http://724d8461.ngrok.io/api/useracc/GetRequest";
@@ -96,6 +100,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     SpotsDialog _progdialog;
     public static FrameLayout f1;
     CancelationFragment cf = new CancelationFragment();
+
+    int placePicker_req =1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +112,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             checkLocationPermission();
         }
 
-
-        final String TAG = "PlacesApi Working";
+/*        final String TAG = "PlacesApi Working";
 
         PlaceAutocompleteFragment source = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_1);
@@ -115,7 +120,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         source.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
+                // TODO: Get info about the  selected place.
                 Log.i(TAG, "Place: " + place.getName());
             }
 
@@ -143,12 +148,17 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-
+*/
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
-
+            View Locatiob_Button  = ((View) mapFragment.getView().findViewById(Integer.parseInt("1")).getParent())
+                    .findViewById(Integer.parseInt("2"));
+            RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) Locatiob_Button.getLayoutParams();
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        rlp.setMargins(0, 0, 30, 200);
 
         mapFragment.getMapAsync(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMsgReciver,
@@ -164,6 +174,22 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             public void onClick(View v) {
                 f1.setVisibility(v.VISIBLE);
                 replaceFragment(cf);
+            }
+        });
+        editText = (EditText)findViewById(R.id.togo);
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+                Intent intent;
+                try {
+                    intent = intentBuilder.build(Main2Activity.this);
+                    startActivityForResult(intent,placePicker_req);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
             }
         });
         btn_req = (Button)findViewById(R.id.btn_req);
@@ -189,6 +215,30 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         navigationView.setNavigationItemSelectedListener(this);
 
 
+    }
+    protected void onActivityResult(int requestCode,int resultCode,Intent data){
+        if (requestCode==placePicker_req)
+        {
+            if (resultCode==RESULT_OK) {
+                boolean isAnHospital = false;
+                Place place = PlacePicker.getPlace(data, this);
+                for (int i : place.getPlaceTypes()) {
+                    if (i == Place.TYPE_DENTIST || i == Place.TYPE_DOCTOR || i == Place.TYPE_HOSPITAL || i == Place.TYPE_HEALTH) {
+                        isAnHospital = true;
+                        break;
+                    }
+
+                }
+                if (isAnHospital== true) {
+                    String address = String.format("Place : %s", place.getAddress());
+                    editText.setText(address);
+                }
+                else
+                {
+                    Toast.makeText(this, "Please Select Appropriate Location", Toast.LENGTH_SHORT).show();
+                }
+                }
+        }
     }
     public  void alliswell()
     {
