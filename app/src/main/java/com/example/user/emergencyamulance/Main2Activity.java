@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -45,6 +46,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -53,12 +55,14 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -77,22 +81,26 @@ import okhttp3.Response;
 public class Main2Activity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener , NavigationView.OnNavigationItemSelectedListener ,FragmentChangeListner{
+        LocationListener, NavigationView.OnNavigationItemSelectedListener, FragmentChangeListner, android.location.LocationListener {
 
     private GoogleMap mMap;
     private GoogleApiClient client;
     private LocationRequest request;
     private Location lastLocation;
     private PlaceAutocomplete places;
-    private Location  myloc;
+    private Location myloc;
     private Marker currentLocation;
-    public static Button btn_req,btn_cancel;
+    public static Button btn_req, btn_cancel;
     public static final int REQUEST_LOCATION_CODE = 99;
     SupportMapFragment mapFragment;
     public static Boolean Status = false;
-    public static String mobile_no,latLong , d_token ,Trip_id,Click_action;
-    private LatLng[] ltlong = new LatLng[3];
+    public boolean first_time = true;
+    public static String mobile_no, latLong, d_token, Trip_id, Click_action;
     private static EditText editText;
+    private LocationManager locationManager;
+    private static final long MIN_TIME = 400;
+    private static final float MIN_DISTANCE = 1000;
+    private double destlang, destlat;
 
     String hello;
     String url = "http://724d8461.ngrok.io/api/useracc/GetRequest";
@@ -101,7 +109,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     public static FrameLayout f1;
     CancelationFragment cf = new CancelationFragment();
 
-    int placePicker_req =1;
+    int placePicker_req = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,50 +120,16 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             checkLocationPermission();
         }
 
-/*        final String TAG = "PlacesApi Working";
-
-        PlaceAutocompleteFragment source = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_1);
-
-        source.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the  selected place.
-                Log.i(TAG, "Place: " + place.getName());
-            }
-
-            @Override
-            public void onError(com.google.android.gms.common.api.Status status) {
-                // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
-            }
-        });
-
-        PlaceAutocompleteFragment destination = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_2);
-
-        destination.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName());
-            }
-
-            @Override
-            public void onError(com.google.android.gms.common.api.Status status) {
-                // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
-            }
-        });
-
-*/
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
-            View Locatiob_Button  = ((View) mapFragment.getView().findViewById(Integer.parseInt("1")).getParent())
-                    .findViewById(Integer.parseInt("2"));
-            RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) Locatiob_Button.getLayoutParams();
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
+                1000, this);
+        View Locatiob_Button = ((View) mapFragment.getView().findViewById(Integer.parseInt("1")).getParent())
+                .findViewById(Integer.parseInt("2"));
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) Locatiob_Button.getLayoutParams();
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
         rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
         rlp.setMargins(0, 0, 30, 200);
@@ -163,11 +137,11 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         mapFragment.getMapAsync(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMsgReciver,
                 new IntentFilter("myFunction"));
-     //  f1 = (FrameLayout)findViewById(R.id.frame);
-    //    _progdialog = new SpotsDialog(Main2Activity.this, R.style.Custom);
+        //  f1 = (FrameLayout)findViewById(R.id.frame);
+        //    _progdialog = new SpotsDialog(Main2Activity.this, R.style.Custom);
 
 
-        btn_cancel = (Button)findViewById(R.id.btn_cncel);
+        btn_cancel = (Button) findViewById(R.id.btn_cncel);
         btn_cancel.setVisibility(View.GONE);
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,7 +150,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 replaceFragment(cf);
             }
         });
-        editText = (EditText)findViewById(R.id.togo);
+        editText = (EditText) findViewById(R.id.togo);
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,7 +158,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 Intent intent;
                 try {
                     intent = intentBuilder.build(Main2Activity.this);
-                    startActivityForResult(intent,placePicker_req);
+                    startActivityForResult(intent, placePicker_req);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
                 } catch (GooglePlayServicesNotAvailableException e) {
@@ -192,13 +166,13 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         });
-        btn_req = (Button)findViewById(R.id.btn_req);
+        btn_req = (Button) findViewById(R.id.btn_req);
         btn_req.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     _progdialog.show();
-                    run(url,v);
+                    run(url, v);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -216,10 +190,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
     }
-    protected void onActivityResult(int requestCode,int resultCode,Intent data){
-        if (requestCode==placePicker_req)
-        {
-            if (resultCode==RESULT_OK) {
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == placePicker_req) {
+            if (resultCode == RESULT_OK) {
                 boolean isAnHospital = false;
                 Place place = PlacePicker.getPlace(data, this);
                 for (int i : place.getPlaceTypes()) {
@@ -229,29 +203,53 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                     }
 
                 }
-                if (isAnHospital== true) {
+                if (isAnHospital == true) {
                     String address = String.format("Place : %s", place.getAddress());
+                    LatLng destloc = place.getLatLng();
+                    destlang = destloc.longitude;
+                    destlat = destloc.latitude;
                     editText.setText(address);
-                }
-                else
-                {
+                    setDestMarker(destlang, destlat);
+
+
+                } else {
                     Toast.makeText(this, "Please Select Appropriate Location", Toast.LENGTH_SHORT).show();
                 }
-                }
+            }
         }
     }
-    public  void alliswell()
-    {
+
+    private void setDestMarker(double lang, double lat) {
+        mMap.clear();
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(new LatLng(lat, lang));
+        markerOptions.title("Destination");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(client);
+        float result[] = new float[10];
+        Location.distanceBetween(currentLocation.getLatitude(),currentLocation.getLongitude(),lat,lang,result);
+        markerOptions.snippet("Distance = "+result[0]);
+        mMap.addMarker(markerOptions);
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
+
+    }
+
+    /*public void alliswell() {
         f1.setVisibility(View.GONE);
         btn_cancel.setVisibility(View.GONE);
         btn_req.setVisibility(View.VISIBLE);
 
-    }
+    } */
+
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMsgReciver);
         super.onDestroy();
     }
+
     private BroadcastReceiver mMsgReciver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -285,12 +283,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                     });
             AlertDialog alert = builder.create();
             alert.show();
-        }
-        else
-        {
+        } else {
             btn_cancel.setVisibility(View.GONE);
             btn_req.setVisibility(View.VISIBLE);
-            Toast.makeText(this,"REASSINING DRIVER. Please Wait",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "REASSINING DRIVER. Please Wait", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -401,22 +397,24 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onLocationChanged(Location location) {
-        lastLocation = location;
-        myloc =location;
-        if (currentLocation != null) {
-            currentLocation.remove();
-        }
-        LatLng latlang = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latlang);
-        markerOptions.title("CurrentLocation");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-        currentLocation = mMap.addMarker(markerOptions);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latlang));
-        mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
-        if (client != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(client, this);
-        }
+
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+           mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+           locationManager.removeUpdates(this);
+       }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
 
     }
 
@@ -425,18 +423,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         MarkerOptions options = new MarkerOptions();
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        LatLng civiccenter = new LatLng(24.900394, 67.072483);
-        googleMap.addMarker(new MarkerOptions().position(civiccenter)
-                .title("Ambulance0"));
-        LatLng lyari = new LatLng(24.871741, 67.008319);
-        googleMap.addMarker(new MarkerOptions().position(lyari)
-                .title("Ambulance2"));
-        LatLng gurumandir = new LatLng(24.880173, 67.039353);
-        googleMap.addMarker(new MarkerOptions().position(gurumandir)
-                .title("Ambulance1"));
-        ltlong[0] = civiccenter;
-        ltlong[1] = gurumandir;
-        ltlong[2] = lyari;
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(14));
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 googleApiClient();
@@ -489,43 +477,41 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 }
         }
     }
+
     public void CalcDistance(LatLng[] ltlong) {
         String result = null;
-        float temp= 0;
+        float temp = 0;
         Location loc1 = new Location("");
         loc1.setLatitude(myloc.getLatitude());
         loc1.setLongitude(myloc.getLongitude());
-        for (int i=0; i!= ltlong.length; i++){
+        for (int i = 0; i != ltlong.length; i++) {
             Location loc2 = new Location("");
             loc2.setLatitude(ltlong[i].latitude);
             loc2.setLongitude(ltlong[i].longitude);
             float distanceInMeters = loc1.distanceTo(loc2);
-            if (i==0)
-            {   temp = distanceInMeters;
+            if (i == 0) {
+                temp = distanceInMeters;
 
-            }
-            else
-            {
-                if(temp > distanceInMeters)
-                {
+            } else {
+                if (temp > distanceInMeters) {
                     result = "ambulance" + i + "is near";
                 }
             }
         }
 
-        Toast.makeText(this,result,Toast.LENGTH_LONG).show();
+        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
     }
 
     OkHttpClient Client = new OkHttpClient();
 
-    public void run(String url,View v) throws IOException {
+    public void run(String url, View v) throws IOException {
         // OkHttpClient client = new OkHttpClient();
-            LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+        LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
         HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
         urlBuilder.addQueryParameter("mobile_no", "3338983584");
         urlBuilder.addQueryParameter("lat", String.valueOf(lastLocation.getLatitude()));
-        urlBuilder.addQueryParameter("longi",String.valueOf(lastLocation.getLongitude()));
-        urlBuilder.addQueryParameter("token",token);
+        urlBuilder.addQueryParameter("longi", String.valueOf(lastLocation.getLongitude()));
+        urlBuilder.addQueryParameter("token", token);
         String url1 = urlBuilder.build().toString();
         Request request = new Request.Builder()
                 .url(url1)
@@ -573,10 +559,12 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ;
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-       // fragmentTransaction.replace(R.id.frame, fragment, fragment.toString());
+        // fragmentTransaction.replace(R.id.frame, fragment, fragment.toString());
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
     }
+
 }
