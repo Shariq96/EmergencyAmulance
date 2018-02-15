@@ -230,10 +230,21 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         }
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(client);
         float result[] = new float[10];
-        Location.distanceBetween(currentLocation.getLatitude(),currentLocation.getLongitude(),lat,lang,result);
-        markerOptions.snippet("Distance = "+result[0]);
+        Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(), lat, lang, result);
+        markerOptions.snippet("Distance = " + result[0]);
         mMap.addMarker(markerOptions);
         mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
+        setDirections();
+
+    }
+    private void setDirections()
+    {   Object[] dataTransfer = new Object[3];
+        String url = getDirectionUrl();
+        GetDirectionData gdd = new GetDirectionData();
+        dataTransfer[0] =mMap;
+        dataTransfer[1]= url;
+        dataTransfer[2] = new LatLng(destlat,destlang);
+        gdd.execute(dataTransfer);
 
     }
 
@@ -398,10 +409,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onLocationChanged(Location location) {
 
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-           mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-           locationManager.removeUpdates(this);
-       }
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        locationManager.removeUpdates(this);
+    }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -555,6 +566,26 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
+    }
+
+    private String getDirectionUrl() {
+        StringBuilder gDirectionUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return null;
+        }
+        Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(client);
+        gDirectionUrl.append("origin="+currentLocation.getLatitude()+","+currentLocation.getLongitude());
+        gDirectionUrl.append("&destination="+destlat+","+destlang);
+        gDirectionUrl.append("&key="+"AIzaSyB5WDX6S95k_KvAdN7PjdXzz9XIneDhIsc");
+        return (gDirectionUrl.toString());
     }
 
     @Override
