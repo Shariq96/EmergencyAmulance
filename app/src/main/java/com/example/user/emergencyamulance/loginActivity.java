@@ -13,6 +13,8 @@
 
     import com.google.firebase.auth.FirebaseAuth;
 
+    import org.json.JSONObject;
+
     import java.io.IOException;
 
     import dmax.dialog.SpotsDialog;
@@ -113,8 +115,8 @@
                     //  myResponse = myResponse.substring(1, myResponse.length() - 1); // yara
                     myResponse = myResponse.replace("\\", "");
 
-                    //JSONObject jarray = null;
-                    //  jarray = new JSONObject(myResponse);
+                   //SONObject jarray = null;
+                     //jarray = new JSONObject(myResponse);
                     //api_pass = jarray.getString("password");
                     api_pass = myResponse;
                     //api_pass = jarray.getJSONObject(0).getString("password");

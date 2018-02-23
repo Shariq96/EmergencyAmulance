@@ -1,5 +1,6 @@
 package com.example.user.emergencyamulance;
 
+import java.util.*;
 import android.*;
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -87,6 +88,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private GoogleApiClient client;
     private LocationRequest request;
     private Location lastLocation;
+    ArrayList driverList = new ArrayList();
     private PlaceAutocomplete places;
     private Location myloc;
     private Marker currentLocation;
@@ -119,7 +121,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-
+        startService(new Intent(this,GetDriverMarkers.class));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -137,6 +139,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         mapFragment.getMapAsync(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMsgReciver,
                 new IntentFilter("myFunction"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(displayDrivers,
+                new IntentFilter("dd"));
         //  f1 = (FrameLayout)findViewById(R.id.frame);
         //    _progdialog = new SpotsDialog(Main2Activity.this, R.style.Custom);
 
@@ -268,6 +272,30 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             displayAlert(intent);
         }
     };
+    private BroadcastReceiver displayDrivers = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            driverList = intent.getStringArrayListExtra("list");
+            showDriver(driverList);
+        }
+    };
+
+    private void showDriver(ArrayList driverList) {
+        mMap.clear();
+        for (int i = 0; i < driverList.size(); i++) {
+
+            String temp = driverList.get(i).toString();
+            String[] latlong = temp.split(",");
+                    double latitude = Double.parseDouble(latlong[0]);
+                    double longitude = Double.parseDouble(latlong[1]);
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(new LatLng(latitude,longitude));
+        mMap.addMarker(markerOptions);
+
+        }
+
+
+    }
 
     private void displayAlert(Intent intent) {
         mobile_no = intent.getStringExtra("title");
@@ -411,7 +439,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        locationManager.removeUpdates(this);
+        locationManager.removeUpdates(Main2Activity.this);
     }
 
     @Override

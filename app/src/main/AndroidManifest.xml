@@ -72,6 +72,9 @@
             android:name=".RegistrationIntentService"
             android:exported="false" />
 
+        <service android:name=".GetDriverMarkers"
+            android:exported="false"/>
+
         <receiver
             android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
             android:exported="true"
