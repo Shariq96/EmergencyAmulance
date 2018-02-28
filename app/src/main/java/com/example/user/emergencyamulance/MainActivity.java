@@ -1,19 +1,14 @@
 package com.example.user.emergencyamulance;
 
 import android.content.Intent;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
-import com.facebook.FacebookActivity;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
@@ -21,11 +16,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.login.widget.ProfilePictureView;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
@@ -100,12 +90,12 @@ public class MainActivity extends AppCompatActivity  {
                 request.executeAsync();
                 Intent intent = new Intent(MainActivity.this, Main2Activity.class);
                 startActivity(intent);
-                Toast.makeText(MainActivity.this, "Login SuccessFull ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "MainActivity SuccessFull ", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(MainActivity.this, "Login Canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "MainActivity Canceled", Toast.LENGTH_SHORT).show();
             }
 
             @Override

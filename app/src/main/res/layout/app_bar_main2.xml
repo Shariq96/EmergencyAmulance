@@ -26,6 +26,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="55dp">
+
     <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/mapView"
@@ -35,16 +36,90 @@
 
          />
 
-    <EditText
-        android:layout_width="500dp"
-        android:layout_height="50dp"
-        android:layout_margin="20dp"
-        android:background="#FFF"
-        android:drawableLeft="@drawable/ic_edit_location_black_24dp"
-        android:focusableInTouchMode="false"
-        android:hint="  Where to ?"
-        android:id="@+id/togo"
-        android:textSize="30sp" />
+    
+
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardElevation="8dp"
+        android:layout_alignParentBottom="true">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/_source"
+                    android:layout_width="280dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="start"
+                    android:layout_margin="10dp"
+                    android:background="#FFF"
+                    android:drawableLeft="@drawable/pickup_location_black_24dp"
+                    android:hint="@string/pickup_location"
+                    android:textSize="14sp"
+                    android:drawableStart="@drawable/pickup_location_black_24dp"/>
+
+                <EditText
+                    android:id="@+id/_destination"
+                    android:layout_width="280dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="start"
+                    android:layout_margin="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#FFF"
+                    android:drawableLeft="@drawable/ic_edit_location_black_24dp"
+                    android:hint="@string/dropoff_location"
+                    android:textSize="14sp" android:drawableStart="@drawable/ic_edit_location_black_24dp"/>
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/topBar">
+
+                <Button
+                    android:id="@+id/cat_normal"
+                    android:layout_width="115dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/firstitems"
+                    android:layout_alignParentStart="true"/>
+
+                <Button
+                    android:id="@+id/cat_crictical"
+                    android:layout_width="115dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/seconditems"
+
+                    />
+
+                <Button
+                    android:id="@+id/cat_dbody"
+                    android:layout_width="115dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/fourthitems"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+
+
+    </android.support.v7.widget.CardView>
+
 
 <RelativeLayout
     android:layout_width="wrap_content"

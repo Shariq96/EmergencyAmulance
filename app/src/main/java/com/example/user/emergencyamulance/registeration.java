@@ -86,12 +86,12 @@ public class registeration extends AppCompatActivity {
                 request.executeAsync();
                 Intent intent = new Intent(registeration.this, Main2Activity.class);
                 startActivity(intent);
-                Toast.makeText(registeration.this, "Login SuccessFull ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(registeration.this, "MainActivity SuccessFull ", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(registeration.this, "Login Canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(registeration.this, "MainActivity Canceled", Toast.LENGTH_SHORT).show();
             }
 
             @Override

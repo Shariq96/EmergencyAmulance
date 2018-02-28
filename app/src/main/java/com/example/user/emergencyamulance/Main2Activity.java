@@ -1,6 +1,5 @@
 package com.example.user.emergencyamulance;
 
-import java.util.*;
 import android.*;
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -9,6 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -59,6 +61,7 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -70,6 +73,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import dmax.dialog.SpotsDialog;
 import okhttp3.Call;
@@ -103,6 +109,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
     private double destlang, destlat;
+    private EditText sourceAddress;
 
     String hello;
     String url = "http://724d8461.ngrok.io/api/useracc/GetRequest";
@@ -112,25 +119,74 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     CancelationFragment cf = new CancelationFragment();
 
     int placePicker_req = 1;
+    private double longitude;
+    private double latitude;
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         FacebookSdk.sdkInitialize(getApplicationContext());
+
         setContentView(R.layout.activity_drawer);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
         startService(new Intent(this,GetDriverMarkers.class));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
                 1000, this);
+
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        Log.i("Latitude------------", "Lattitude1:" +latitude);
+        Log.i("Longitude-------------", "Longitude1:" +longitude);
+        LatLng currentLocation = new LatLng(latitude,longitude);
+        Log.i("Longitude-------------", "latlong:" +currentLocation);
+       // mMap.addMarker(new MarkerOptions().position(loc).title("You"));
+        Marker currentLocMarker = mMap.addMarker(new MarkerOptions()
+                .position(currentLocation)
+                .title("You are Here")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 15));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000,null);
+
+        Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
+
+        StringBuilder builder = new StringBuilder();
+        try {
+            List<Address> address = geoCoder.getFromLocation(latitude, longitude, 1);
+            int maxLines = address.get(0).getMaxAddressLineIndex();
+            for (int i=0; i<maxLines; i++) {
+                String addressStr = address.get(0).getAddressLine(i);
+                builder.append(addressStr);
+                builder.append(" ");
+            }
+
+            String finalAddr = builder.toString(); //This is the complete address.
+            Log.i("Latitude------------", "Lattitude:" +latitude);
+            Log.i("Longitude-------------", "Longitude:" +longitude);
+            Log.i("Address-------------", "Address:" +finalAddr);
+
+            sourceAddress.setText(finalAddr); //This will display the final address.
+
+        } catch (IOException e) {
+            // Handle IOException
+        } catch (NullPointerException e) {
+            // Handle NullPointerException
+        }
         View Locatiob_Button = ((View) mapFragment.getView().findViewById(Integer.parseInt("1")).getParent())
                 .findViewById(Integer.parseInt("2"));
+
         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) Locatiob_Button.getLayoutParams();
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
         rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
@@ -154,7 +210,11 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 replaceFragment(cf);
             }
         });
-        editText = (EditText) findViewById(R.id.togo);
+//Setting Places Types Filter for PlaceAutoCompleteResults
+
+
+        //Places Api
+        editText = (EditText) findViewById(R.id._destination);
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,6 +230,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         });
+
+
         btn_req = (Button) findViewById(R.id.btn_req);
         btn_req.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,6 +245,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         });
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -194,7 +257,33 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
     }
+    private void getAddress(){
+        Location location = null;
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
 
+        Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
+        StringBuilder builder = new StringBuilder();
+        try {
+            List<Address> address = geoCoder.getFromLocation(latitude, longitude, 1);
+            int maxLines = address.get(0).getMaxAddressLineIndex();
+            for (int i=0; i<maxLines; i++) {
+                String addressStr = address.get(0).getAddressLine(i);
+                builder.append(addressStr);
+                builder.append(" ");
+            }
+
+            String finalAddr = builder.toString(); //This is the complete address.
+
+            sourceAddress.setText(finalAddr); //This will display the final address.
+
+        } catch (IOException e) {
+            // Handle IOException
+        } catch (NullPointerException e) {
+            // Handle NullPointerException
+        }
+
+    }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == placePicker_req) {
             if (resultCode == RESULT_OK) {
@@ -439,7 +528,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        locationManager.removeUpdates(Main2Activity.this);
+        locationManager.removeUpdates(this);
     }
 
     @Override
@@ -459,10 +548,19 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        MarkerOptions options = new MarkerOptions();
+
+//        MarkerOptions options = new MarkerOptions();
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         mMap.animateCamera(CameraUpdateFactory.zoomBy(14));
+       if (lastLocation != null) {
+          final double currentLat = lastLocation.getLatitude();final double currentlng = lastLocation.getLongitude();
+           LatLng loc = new LatLng(currentLat,currentlng);
+            mMap.addMarker(new MarkerOptions().position(loc).title("You"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLat,currentlng), 15));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000,null);
+        }
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

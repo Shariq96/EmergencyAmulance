@@ -125,7 +125,7 @@
                         @Override
                         public void run() {
                             if (api_pass.equals("true")) {
-                                Toast.makeText(getApplicationContext(), "Login", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "MainActivity", Toast.LENGTH_LONG).show();
                                 editor.putBoolean("login", true);
                                 editor.apply();
                                 editor.commit();
