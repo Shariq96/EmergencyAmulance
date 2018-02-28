@@ -146,6 +146,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 1000, this);
 
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         Log.i("Latitude------------", "Lattitude1:" +latitude);
@@ -153,44 +154,39 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         LatLng currentLocation = new LatLng(latitude,longitude);
         Log.i("Longitude-------------", "latlong:" +currentLocation);
        // mMap.addMarker(new MarkerOptions().position(loc).title("You"));
-        Marker currentLocMarker = mMap.addMarker(new MarkerOptions()
-                .position(currentLocation)
-                .title("You are Here")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 15));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000,null);
 
-        Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
+       /* if(currentLocation!=null)
+       {
+           Marker currentLocMarker = mMap.addMarker(new MarkerOptions()
+                   .position(currentLocation)
+                   .title("You are Here")
+                   .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
-        StringBuilder builder = new StringBuilder();
-        try {
-            List<Address> address = geoCoder.getFromLocation(latitude, longitude, 1);
-            int maxLines = address.get(0).getMaxAddressLineIndex();
-            for (int i=0; i<maxLines; i++) {
-                String addressStr = address.get(0).getAddressLine(i);
-                builder.append(addressStr);
-                builder.append(" ");
-            }
-
-            String finalAddr = builder.toString(); //This is the complete address.
+           mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 15));
+           mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000,null);
+       }*/
+            sourceAddress = (EditText)findViewById(R.id._source);
+            String finalAddr = getCompleteAddressString(latitude,longitude);
             Log.i("Latitude------------", "Lattitude:" +latitude);
             Log.i("Longitude-------------", "Longitude:" +longitude);
-            Log.i("Address-------------", "Address:" +finalAddr);
+            sourceAddress.setText(finalAddr);
 
-            sourceAddress.setText(finalAddr); //This will display the final address.
 
-        } catch (IOException e) {
-            // Handle IOException
-        } catch (NullPointerException e) {
-            // Handle NullPointerException
+        //Updated 28Feb2018 - Aligned at TopRight
+        if (mMap != null &&
+                mapFragment.getView().findViewById(Integer.parseInt("1")) != null) {
+            // Get the button view
+            View locationButton = ((View) mapFragment.getView().findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+            // and next place it, on bottom right (as Google Maps app)
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
+                    locationButton.getLayoutParams();
+            // position on right bottom
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+            layoutParams.setMargins(0, 0, 30, 30);
         }
-        View Locatiob_Button = ((View) mapFragment.getView().findViewById(Integer.parseInt("1")).getParent())
-                .findViewById(Integer.parseInt("2"));
 
-        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) Locatiob_Button.getLayoutParams();
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-        rlp.setMargins(0, 0, 30, 200);
+
 
         mapFragment.getMapAsync(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMsgReciver,
@@ -301,7 +297,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                     LatLng destloc = place.getLatLng();
                     destlang = destloc.longitude;
                     destlat = destloc.latitude;
-                    editText.setText(address);
+
+                    String finaladdr = getCompleteAddressString(destlat,destlang);
+
+                    editText.setText(finaladdr.toString());
                     setDestMarker(destlang, destlat);
 
 
@@ -311,7 +310,29 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         }
     }
+    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
 
+                for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                strAdd = strReturnedAddress.toString();
+                Log.w("My Current loction addr", strReturnedAddress.toString());
+            } else {
+                Log.w("My Current loction addr", "No Address returned!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.w("My Current loction addr", "Canont get Address!");
+        }
+        return strAdd;
+    }
     private void setDestMarker(double lang, double lat) {
         mMap.clear();
         MarkerOptions markerOptions = new MarkerOptions();
@@ -552,9 +573,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 //        MarkerOptions options = new MarkerOptions();
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        mMap.animateCamera(CameraUpdateFactory.zoomBy(14));
+    //    mMap.animateCamera(CameraUpdateFactory.zoomBy(14));
        if (lastLocation != null) {
-          final double currentLat = lastLocation.getLatitude();final double currentlng = lastLocation.getLongitude();
+          final double currentLat = lastLocation.getLatitude();
+          final double currentlng = lastLocation.getLongitude();
            LatLng loc = new LatLng(currentLat,currentlng);
             mMap.addMarker(new MarkerOptions().position(loc).title("You"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLat,currentlng), 15));
