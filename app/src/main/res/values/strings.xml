@@ -80,4 +80,9 @@
     <string name="cancel">Cancel</string>
     <string name="dropoff_location">Dropoff Location</string>
     <string name="pickup_location">Pickup Location</string>
+    <string name="crictical">Crictical</string>
+    <string name="deadbody">DeadBody</string>
+    <string name="routine">Routine</string>
+    <string name="fare">Fare :</string>
+    <string name="distance">Distance:</string>
 </resources>

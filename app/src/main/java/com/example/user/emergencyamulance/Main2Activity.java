@@ -40,6 +40,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -109,6 +110,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
     private double destlang, destlat;
+    private TextView _getdistance;
+    private TextView _getfare;
 
     GPSTracker gpsTracker;
     String hello;
@@ -169,6 +172,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         }
 
         sourceAddress = (EditText) findViewById(R.id._source);
+        _getdistance = (TextView) findViewById(R.id.txt_Distance);
+        _getfare = (TextView) findViewById(R.id.txt_Fare);
+
         String finalAddr = getCompleteAddressString(latitude, longitude);
         Log.i("Latitude------------", "sourceLattitude:" + latitude);
         Log.i("Longitude-------------", "source Longitude:" + longitude);
@@ -322,12 +328,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                     LatLng destloc = place.getLatLng();
                     destlang = destloc.longitude;
                     destlat = destloc.latitude;
-
                     String finaladdr = getCompleteAddressString(destlat,destlang);
-
                     destinationAddr.setText(finaladdr.toString());
                     setDestMarker(destlang, destlat);
-
 
                 } else {
                     Toast.makeText(this, "Please Select Appropriate Location", Toast.LENGTH_SHORT).show();
@@ -381,10 +384,13 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         }
         return strAdd;
     }
-    private void setDestMarker(double lang, double lat) {
+
+
+
+    private void setDestMarker(double destination_lang, double destination_lat) {
         mMap.clear();
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(new LatLng(lat, lang));
+        markerOptions.position(new LatLng(destination_lat, destination_lang));
         markerOptions.title("Destination");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -392,11 +398,17 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         }
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(client);
         float result[] = new float[10];
-        Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(), lat, lang, result);
+        Location.distanceBetween(sourcelocation.latitude, sourcelocation.longitude, destination_lat, destination_lang, result);
+        int distanceinmeters = (int) result[0];
+
+        _getdistance.setText("Distance: " + (distanceinmeters * 1000) + "km");
+        _getfare.setText("Est. Fare: " + (distanceinmeters + 300) + "Rs");
+
         markerOptions.snippet("Distance = " + result[0]);
         mMap.addMarker(markerOptions);
-        mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
         setDirections();
+
 
     }
     private void setDirections()

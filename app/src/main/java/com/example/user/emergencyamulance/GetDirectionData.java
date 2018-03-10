@@ -48,8 +48,8 @@ public class GetDirectionData extends AsyncTask<Object,String,String> {
         int count = directions.length;
         for (int i = 0; i < count; i++) {
             PolylineOptions options = new PolylineOptions();
-            options.color(Color.BLACK);
-            options.width(15);
+            options.color(Color.RED);
+            options.width(20);
             options.addAll(PolyUtil.decode(directions[i]));
             mMap.addPolyline(options);
 

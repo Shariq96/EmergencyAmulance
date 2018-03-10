@@ -3,17 +3,18 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/firsticon"
-        android:title="@string/first" />
+        android:icon="@drawable/firsticonpngxx"
+        android:title="@string/routine"
+        />
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/secondicon"
-        android:title="@string/sec" />
+        android:icon="@drawable/secondiconxx"
+        android:title="@string/crictical" />
 
     <item
         android:id="@+id/b_nav_fourth"
-        android:icon="@drawable/fourthicon"
-        android:title="@string/fourth" />
+        android:icon="@drawable/thirdiconxx"
+        android:title="@string/deadbody" />
 
 </menu>
