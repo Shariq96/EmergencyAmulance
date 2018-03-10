@@ -141,10 +141,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
 
-      //  locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-      //  location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-     //   locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,   0, this);
+       locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+       locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,   0, this);
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         gpsTracker = new GPSTracker(this);
 
         if(gpsTracker.canGetLocation()) {
@@ -570,7 +570,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             isFirst_time =false;
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            locationManager.removeUpdates(this);
+          locationManager.removeUpdates(this);
         }
     }
 

@@ -68,46 +68,48 @@ public class GPSTracker extends Service implements LocationListener {
             } else {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
-                    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        locationManager.requestLocationUpdates(
-                                LocationManager.NETWORK_PROVIDER,
-                                0,
-                                0, this);
-                        Log.d("Network", "Network");
-                        if (locationManager != null) {
-                            location = locationManager
-                                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                            if (location != null) {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                                Log.i("Latitude------------", "NetLan:" + latitude);
-                                Log.i("Longitude-------------", "NetLon:" + longitude);
-                            }
-                    }
+                    if (ActivityCompat.checkSelfPermission((Main2Activity)mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission((Main2Activity)mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                     }
+                    locationManager.requestLocationUpdates(
+                            LocationManager.NETWORK_PROVIDER,
+                            0,
+                            0, this);
+                    Log.d("Network", "Network");
+                    if (locationManager != null) {
+                        location = locationManager
+                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        if (location != null) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                            Log.i("Latitude------------", "NetLan:" + latitude);
+                            Log.i("Longitude-------------", "NetLon:" + longitude);
+                        }
+                    }
+
                 }
 
                 // If GPS enabled, get latitude/longitude using GPS Services
                 if (isGPSEnabled) {
                     if (location == null) {
-                        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            locationManager.requestLocationUpdates(
-                                    LocationManager.GPS_PROVIDER,
-                                    0,
-                                    0, this);
-                            Log.d("GPS Enabled", "GPS Enabled");
-                            if (locationManager != null) {
-                                location = locationManager
-                                        .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                                if (location != null) {
-                                    latitude = location.getLatitude();
-                                    longitude = location.getLongitude();
-                                    Log.i("Latitude------------", "GPSLan:" + latitude);
-                                    Log.i("Longitude-------------", "GPSlon:" + longitude);
-                                }
+                        if (ActivityCompat.checkSelfPermission((Main2Activity)mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission((Main2Activity)mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
                         }
 
+                        locationManager.requestLocationUpdates(
+                                LocationManager.GPS_PROVIDER,
+                                0,
+                                0, this);
+                        Log.d("GPS Enabled", "GPS Enabled");
+                        if (locationManager != null) {
+                            location = locationManager
+                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            if (location != null) {
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+                                Log.i("Latitude------------", "GPSLan:" + latitude);
+                                Log.i("Longitude-------------", "GPSlon:" + longitude);
+                            }
                         }
                     }
                 }
