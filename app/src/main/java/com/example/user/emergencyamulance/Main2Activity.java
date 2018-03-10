@@ -110,7 +110,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private static final float MIN_DISTANCE = 1000;
     private double destlang, destlat;
     private EditText sourceAddress;
-
+    GPSTracker gpsTracker;
     String hello;
     String url = "http://724d8461.ngrok.io/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
@@ -141,40 +141,31 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
 
-      locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+      //  locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+      //  location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+     //   locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,   0, this);
 
-      locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,   0, this);
-        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        gpsTracker = new GPSTracker(this);
 
+        if(gpsTracker.canGetLocation()) {
 
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            Log.i("Latitude------------", "Lattitude1:" + latitude);
-            Log.i("Longitude-------------", "Longitude1:" + longitude);
-            LatLng currentLocation = new LatLng(latitude, longitude);
-            Log.i("Longitude-------------", "latlong:" + currentLocation);
-
-            // mMap.addMarker(new MarkerOptions().position(loc).title("You"));
-
-
-        // mMap.addMarker(new MarkerOptions().position(loc).title("You"));
-
-       /* if(currentLocation!=null)
-       {
-           Marker currentLocMarker = mMap.addMarker(new MarkerOptions()
-                   .position(currentLocation)
-                   .title("You are Here")
-                   .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
-           mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 15));
-           mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000,null);
-       }*/
-
+             latitude = gpsTracker.getLatitude();
+             longitude = gpsTracker.getLongitude();
+            Log.i("Latitude------------", "GPSLan:" + latitude);
+            Log.i("Longitude-------------", "GPSlon:" + longitude);
+            // \n is for new line
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+        } else {
+            // Can't get location.
+            // GPS or network is not enabled.
+            // Ask user to enable GPS/network in settings.
+            gpsTracker.showSettingsAlert();
+        }
 
         sourceAddress = (EditText) findViewById(R.id._source);
         String finalAddr = getCompleteAddressString(latitude, longitude);
-        Log.i("Latitude------------", "Lattitude:" + latitude);
-       Log.i("Longitude-------------", "Longitude:" + longitude);
+        Log.i("Latitude------------", "sourceLattitude:" + latitude);
+        Log.i("Longitude-------------", "source Longitude:" + longitude);
         sourceAddress.setText(finalAddr);
 
 
@@ -233,6 +224,25 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         });
 
 
+        editText = (EditText) findViewById(R.id._source);
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+                Intent intent;
+                try {
+                    intent = intentBuilder.build(Main2Activity.this);
+                    startActivityForResult(intent, placePicker_req);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+
         btn_req = (Button) findViewById(R.id.btn_req);
         btn_req.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,6 +268,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
     }
+
+
+
     private void getAddress(){
         Location location = null;
         latitude = location.getLatitude();
