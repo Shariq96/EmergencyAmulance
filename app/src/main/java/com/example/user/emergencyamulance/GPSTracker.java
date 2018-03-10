@@ -80,6 +80,8 @@ public class GPSTracker extends Service implements LocationListener {
                             if (location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
+                                Log.i("Latitude------------", "NetLan:" + latitude);
+                                Log.i("Longitude-------------", "NetLon:" + longitude);
                             }
                     }
 
@@ -101,6 +103,8 @@ public class GPSTracker extends Service implements LocationListener {
                                 if (location != null) {
                                     latitude = location.getLatitude();
                                     longitude = location.getLongitude();
+                                    Log.i("Latitude------------", "GPSLan:" + latitude);
+                                    Log.i("Longitude-------------", "GPSlon:" + longitude);
                                 }
                         }
 

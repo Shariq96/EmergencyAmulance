@@ -224,6 +224,25 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         });
 
 
+        editText = (EditText) findViewById(R.id._source);
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+                Intent intent;
+                try {
+                    intent = intentBuilder.build(Main2Activity.this);
+                    startActivityForResult(intent, placePicker_req);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+
         btn_req = (Button) findViewById(R.id.btn_req);
         btn_req.setOnClickListener(new View.OnClickListener() {
             @Override
