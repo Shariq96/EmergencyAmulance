@@ -109,7 +109,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
     private double destlang, destlat;
-    private EditText sourceAddress;
+
     GPSTracker gpsTracker;
     String hello;
     String url = "http://724d8461.ngrok.io/api/useracc/GetRequest";
@@ -118,10 +118,13 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     public static FrameLayout f1;
     CancelationFragment cf = new CancelationFragment();
 
-    int placePicker_req = 1;
+    int destinationPicker_req = 1;
+    int sourcePicker_req = 2;
     private double longitude;
     private double latitude;
     private Location location;
+    private EditText destinationAddr;
+    private EditText sourceAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,15 +209,15 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
         //Places Api
-        editText = (EditText) findViewById(R.id._destination);
-        editText.setOnClickListener(new View.OnClickListener() {
+        destinationAddr = (EditText) findViewById(R.id._destination);
+        destinationAddr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
                 Intent intent;
                 try {
                     intent = intentBuilder.build(Main2Activity.this);
-                    startActivityForResult(intent, placePicker_req);
+                    startActivityForResult(intent, destinationPicker_req);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
                 } catch (GooglePlayServicesNotAvailableException e) {
@@ -224,15 +227,15 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         });
 
 
-        editText = (EditText) findViewById(R.id._source);
-        editText.setOnClickListener(new View.OnClickListener() {
+
+        sourceAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
                 Intent intent;
                 try {
                     intent = intentBuilder.build(Main2Activity.this);
-                    startActivityForResult(intent, placePicker_req);
+                    startActivityForResult(intent, sourcePicker_req);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
                 } catch (GooglePlayServicesNotAvailableException e) {
@@ -299,7 +302,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == placePicker_req) {
+        if (requestCode == destinationPicker_req) {
             if (resultCode == RESULT_OK) {
                 boolean isAnHospital = false;
                 Place place = PlacePicker.getPlace(data, this);
@@ -318,7 +321,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
                     String finaladdr = getCompleteAddressString(destlat,destlang);
 
-                    editText.setText(finaladdr.toString());
+                    destinationAddr.setText(finaladdr.toString());
                     setDestMarker(destlang, destlat);
 
 
@@ -327,7 +330,30 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         }
-    }
+        else if (requestCode == sourcePicker_req) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+
+                String address = String.format("Place : %s", place.getAddress());
+                    LatLng sourceloc = place.getLatLng();
+                  double  sourclan = sourceloc.longitude;
+                   double  sourclon = sourceloc.latitude;
+
+                    String finaladdr = getCompleteAddressString(sourclan,sourclon);
+
+                    sourceAddress.setText(finaladdr.toString());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(new LatLng(sourclan, sourclon));
+                    markerOptions.title("You are Here");
+                    mMap.addMarker(markerOptions);
+                    mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
+                    }
+                } else {
+                    Toast.makeText(this, "Please Select Again", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
 
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
