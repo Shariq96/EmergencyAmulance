@@ -134,26 +134,28 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-        startService(new Intent(this,GetDriverMarkers.class));
+        startService(new Intent(this, GetDriverMarkers.class));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
-                1000, this);
+      //  locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+      //  location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+     //   locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,   0, this);
 
-        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        LatLng locationlatest = getLocation();
 
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-        Log.i("Latitude------------", "Lattitude1:" +latitude);
-        Log.i("Longitude-------------", "Longitude1:" +longitude);
-        LatLng currentLocation = new LatLng(latitude,longitude);
-        Log.i("Longitude-------------", "latlong:" +currentLocation);
-       // mMap.addMarker(new MarkerOptions().position(loc).title("You"));
+        latitude = locationlatest.latitude;
+        longitude = locationlatest.longitude;
+        Log.i("Latitude------------", "Lattitude1:" + latitude);
+        Log.i("Longitude-------------", "Longitude1:" + longitude);
+        LatLng currentLocation = new LatLng(latitude, longitude);
+        Log.i("Longitude-------------", "latlong:" + currentLocation);
+
+
+        // mMap.addMarker(new MarkerOptions().position(loc).title("You"));
 
        /* if(currentLocation!=null)
        {
@@ -165,11 +167,13 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 15));
            mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000,null);
        }*/
-            sourceAddress = (EditText)findViewById(R.id._source);
-            String finalAddr = getCompleteAddressString(latitude,longitude);
-            Log.i("Latitude------------", "Lattitude:" +latitude);
-            Log.i("Longitude-------------", "Longitude:" +longitude);
-            sourceAddress.setText(finalAddr);
+
+
+        sourceAddress = (EditText) findViewById(R.id._source);
+        String finalAddr = getCompleteAddressString(latitude, longitude);
+        Log.i("Latitude------------", "Lattitude:" + latitude);
+        Log.i("Longitude-------------", "Longitude:" + longitude);
+        sourceAddress.setText(finalAddr);
 
 
         //Updated 28Feb2018 - Aligned at TopRight
@@ -185,7 +189,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
             layoutParams.setMargins(0, 0, 30, 30);
         }
-
 
 
         mapFragment.getMapAsync(this);
@@ -253,6 +256,40 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
     }
+
+    public LatLng getLocation() {
+        // Get the location manager
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String bestProvider = locationManager.getBestProvider(criteria, false);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+        }
+        Location location = locationManager.getLastKnownLocation(bestProvider);
+
+        Double lat,lon;
+        try {
+            lat = location.getLatitude ();
+
+            lon = location.getLongitude ();
+            Log.i("Latitude------------", "Lat:" + latitude);
+            Log.i("Longitude-------------", "Lon:" + longitude);
+
+            return new LatLng(lat, lon);
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private void getAddress(){
         Location location = null;
         latitude = location.getLatitude();
@@ -310,6 +347,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         }
     }
+
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
