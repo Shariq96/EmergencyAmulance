@@ -110,7 +110,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private static final float MIN_DISTANCE = 1000;
     private double destlang, destlat;
     private EditText sourceAddress;
-
+    GPSTracker gpsTracker;
     String hello;
     String url = "http://724d8461.ngrok.io/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
@@ -145,34 +145,27 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
       //  location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
      //   locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,   0, this);
 
-        LatLng locationlatest = getLocation();
+        gpsTracker = new GPSTracker(this);
 
-        latitude = locationlatest.latitude;
-        longitude = locationlatest.longitude;
-        Log.i("Latitude------------", "Lattitude1:" + latitude);
-        Log.i("Longitude-------------", "Longitude1:" + longitude);
-        LatLng currentLocation = new LatLng(latitude, longitude);
-        Log.i("Longitude-------------", "latlong:" + currentLocation);
+        if(gpsTracker.canGetLocation()) {
 
-
-        // mMap.addMarker(new MarkerOptions().position(loc).title("You"));
-
-       /* if(currentLocation!=null)
-       {
-           Marker currentLocMarker = mMap.addMarker(new MarkerOptions()
-                   .position(currentLocation)
-                   .title("You are Here")
-                   .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
-           mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 15));
-           mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000,null);
-       }*/
-
+             latitude = gpsTracker.getLatitude();
+             longitude = gpsTracker.getLongitude();
+            Log.i("Latitude------------", "GPSLan:" + latitude);
+            Log.i("Longitude-------------", "GPSlon:" + longitude);
+            // \n is for new line
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+        } else {
+            // Can't get location.
+            // GPS or network is not enabled.
+            // Ask user to enable GPS/network in settings.
+            gpsTracker.showSettingsAlert();
+        }
 
         sourceAddress = (EditText) findViewById(R.id._source);
         String finalAddr = getCompleteAddressString(latitude, longitude);
-        Log.i("Latitude------------", "Lattitude:" + latitude);
-        Log.i("Longitude-------------", "Longitude:" + longitude);
+        Log.i("Latitude------------", "sourceLattitude:" + latitude);
+        Log.i("Longitude-------------", "source Longitude:" + longitude);
         sourceAddress.setText(finalAddr);
 
 
@@ -257,38 +250,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-    public LatLng getLocation() {
-        // Get the location manager
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, false);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-        }
-        Location location = locationManager.getLastKnownLocation(bestProvider);
-
-        Double lat,lon;
-        try {
-            lat = location.getLatitude ();
-
-            lon = location.getLongitude ();
-            Log.i("Latitude------------", "Lat:" + latitude);
-            Log.i("Longitude-------------", "Lon:" + longitude);
-
-            return new LatLng(lat, lon);
-        }
-        catch (NullPointerException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     private void getAddress(){
         Location location = null;
@@ -585,9 +547,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onLocationChanged(Location location) {
 
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        locationManager.removeUpdates(this);
+       // LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+       // mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+       // locationManager.removeUpdates(this);
     }
 
     @Override
