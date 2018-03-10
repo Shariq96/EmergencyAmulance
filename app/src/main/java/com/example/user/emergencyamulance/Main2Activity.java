@@ -318,6 +318,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 }
                 if (isAnHospital == true) {
                     String address = String.format("Place : %s", place.getAddress());
+
                     LatLng destloc = place.getLatLng();
                     destlang = destloc.longitude;
                     destlat = destloc.latitude;
@@ -340,9 +341,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 String address = String.format("Place : %s", place.getAddress());
                 sourcelocation = place.getLatLng();
                 sourclan = sourcelocation.latitude;
-                  sourclon = sourcelocation.longitude;
+                sourclon = sourcelocation.longitude;
                 String finaladdr = getCompleteAddressString(sourclan,sourclon);
-                    sourceAddress.setText(finaladdr.toString());
+                sourceAddress.setText(finaladdr.toString());
+
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(new LatLng(sourclan, sourclon));
                     markerOptions.title("You are Here");
