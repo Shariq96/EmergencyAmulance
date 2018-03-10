@@ -125,6 +125,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private Location location;
     private EditText destinationAddr;
     private EditText sourceAddress;
+    private double sourclan;
+    private double sourclon;
+    private LatLng sourcelocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -335,9 +338,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 Place place = PlacePicker.getPlace(data, this);
 
                 String address = String.format("Place : %s", place.getAddress());
-                    LatLng sourceloc = place.getLatLng();
-                double  sourclan = sourceloc.latitude;
-                double  sourclon = sourceloc.longitude;
+                sourcelocation = place.getLatLng();
+                sourclan = sourcelocation.latitude;
+                  sourclon = sourcelocation.longitude;
                 String finaladdr = getCompleteAddressString(sourclan,sourclon);
                     sourceAddress.setText(finaladdr.toString());
                     MarkerOptions markerOptions = new MarkerOptions();
@@ -776,7 +779,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             return null;
         }
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(client);
-        gDirectionUrl.append("origin="+currentLocation.getLatitude()+","+currentLocation.getLongitude());
+        gDirectionUrl.append("origin="+sourcelocation.latitude+","+sourcelocation.longitude);
         gDirectionUrl.append("&destination="+destlat+","+destlang);
         gDirectionUrl.append("&key="+"AIzaSyB5WDX6S95k_KvAdN7PjdXzz9XIneDhIsc");
         return (gDirectionUrl.toString());
