@@ -336,11 +336,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
                 String address = String.format("Place : %s", place.getAddress());
                     LatLng sourceloc = place.getLatLng();
-                  double  sourclan = sourceloc.longitude;
-                   double  sourclon = sourceloc.latitude;
-
-                    String finaladdr = getCompleteAddressString(sourclan,sourclon);
-
+                double  sourclan = sourceloc.latitude;
+                double  sourclon = sourceloc.longitude;
+                String finaladdr = getCompleteAddressString(sourclan,sourclon);
                     sourceAddress.setText(finaladdr.toString());
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(new LatLng(sourclan, sourclon));
