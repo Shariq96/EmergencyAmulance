@@ -50,7 +50,6 @@
                 android:layout_width="115dp"
                 android:layout_height="50dp"
                 android:layout_alignParentLeft="true"
-                android:background="@drawable/firstitems"
                 android:layout_alignParentStart="true"/>
 
             <Button
@@ -58,7 +57,6 @@
                 android:layout_width="115dp"
                 android:layout_height="50dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/seconditems"
 
                 />
 
@@ -67,7 +65,6 @@
                 android:layout_width="115dp"
                 android:layout_height="50dp"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/fourthitems"
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
 
