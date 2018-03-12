@@ -133,7 +133,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
 
-        //TODO: En k tafseel likhu idr Comment kar k
+        //TODO: En k tafseel likhu idr Comment kar k 
+            // bhai yeh navigaton drawer ka builtin h
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -194,6 +195,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         }
 
         //TODO: Ye kia scene hai bae comment to kr
+            // getting map fragment and myFunction screen per dikhata h k apka driver n req accept ki h
+            // dd jo driver ki location arahi h wo map per show karta h
         mapFragment.getMapAsync(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMsgReciver,
                 new IntentFilter("myFunction"));
@@ -201,6 +204,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 new IntentFilter("dd"));
 
         //TODO: CancelButton: Es ka kia karna hai bae ye tw bhd mein ae ga na ya esi button pe kam hai osi tarha
+            //bhai cancel button tb show hoga jb request k button per click hoga
         //TODO: ya dialogbox bana hai
         btn_cancel.setVisibility(View.GONE);
         btn_cancel.setOnClickListener(new View.OnClickListener() {
