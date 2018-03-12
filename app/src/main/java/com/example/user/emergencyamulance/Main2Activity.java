@@ -1,6 +1,5 @@
 package com.example.user.emergencyamulance;
 
-import android.*;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -17,8 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -49,25 +45,17 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -110,8 +98,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
     private double destlang, destlat;
-    private TextView _getdistance;
-    private TextView _getfare;
+    private TextView estdistance;
+    private TextView estfare;
 
     GPSTracker gpsTracker;
     String hello;
@@ -121,69 +109,79 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     public static FrameLayout f1;
     CancelationFragment cf = new CancelationFragment();
 
-    int destinationPicker_req = 1;
+    int destination_reqcode = 1;
     int sourcePicker_req = 2;
-    private double longitude;
-    private double latitude;
+    private double sourceLongitude;
+    private double sourceLatitude;
     private Location location;
     private EditText destinationAddr;
     private EditText sourceAddress;
     private double sourclan;
     private double sourclon;
     private LatLng sourcelocation;
+    private int baseFee = 300;
+    private int costPerKM = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { checkLocationPermission(); }
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_drawer);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkLocationPermission();
-        }
-        startService(new Intent(this, GetDriverMarkers.class));
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
 
-       locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //TODO: En k tafseel likhu idr Comment kar k
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-       locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,   0, this);
-        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+
+        //initializing items
+        sourceAddress = (EditText) findViewById(R.id._source);
+        estdistance = (TextView) findViewById(R.id.txt_Distance);
+        estfare = (TextView) findViewById(R.id.txt_Fare);
+        btn_cancel = (Button) findViewById(R.id.btn_cncel);
+        destinationAddr = (EditText) findViewById(R.id._destination);
+        btn_req = (Button) findViewById(R.id.btn_req);
+
+
+
+
+
+
+        //Service for Drivers Location
+        startService(new Intent(this, GetDriverMarkers.class));
+        //EnablingLocationServices
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,   0, this);
+
+        //Getting Location Co-ordinates
         gpsTracker = new GPSTracker(this);
-
         if(gpsTracker.canGetLocation()) {
 
-             latitude = gpsTracker.getLatitude();
-             longitude = gpsTracker.getLongitude();
-            Log.i("Latitude------------", "GPSLan:" + latitude);
-            Log.i("Longitude-------------", "GPSlon:" + longitude);
-            // \n is for new line
-            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+            sourceLatitude = gpsTracker.getLatitude();
+            sourceLongitude = gpsTracker.getLongitude();
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + sourceLatitude + "\nLong: " + sourceLongitude, Toast.LENGTH_LONG).show();
+
         } else {
-            // Can't get location.
-            // GPS or network is not enabled.
-            // Ask user to enable GPS/network in settings.
             gpsTracker.showSettingsAlert();
         }
+        //setting default location address oncreate
+        String sourceAddr = getCompleteAddressString(sourceLatitude, sourceLongitude);
+        sourceAddress.setText(sourceAddr);
 
-        sourceAddress = (EditText) findViewById(R.id._source);
-        _getdistance = (TextView) findViewById(R.id.txt_Distance);
-        _getfare = (TextView) findViewById(R.id.txt_Fare);
-
-        String finalAddr = getCompleteAddressString(latitude, longitude);
-        Log.i("Latitude------------", "sourceLattitude:" + latitude);
-        Log.i("Longitude-------------", "source Longitude:" + longitude);
-        sourceAddress.setText(finalAddr);
-
-
-        //Updated 28Feb2018 - Aligned at TopRight
-        if (mMap != null &&
-                mapFragment.getView().findViewById(Integer.parseInt("1")) != null) {
+        //Updated 28Feb2018 - getMyLocationPointer
+        if (mMap != null && mapFragment.getView().findViewById(Integer.parseInt("1")) != null) {
             // Get the button view
             View locationButton = ((View) mapFragment.getView().findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
             // and next place it, on bottom right (as Google Maps app)
@@ -195,17 +193,15 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             layoutParams.setMargins(0, 0, 30, 30);
         }
 
-
+        //TODO: Ye kia scene hai bae comment to kr
         mapFragment.getMapAsync(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMsgReciver,
                 new IntentFilter("myFunction"));
         LocalBroadcastManager.getInstance(this).registerReceiver(displayDrivers,
                 new IntentFilter("dd"));
-        //  f1 = (FrameLayout)findViewById(R.id.frame);
-        //    _progdialog = new SpotsDialog(Main2Activity.this, R.style.Custom);
 
-
-        btn_cancel = (Button) findViewById(R.id.btn_cncel);
+        //TODO: CancelButton: Es ka kia karna hai bae ye tw bhd mein ae ga na ya esi button pe kam hai osi tarha
+        //TODO: ya dialogbox bana hai
         btn_cancel.setVisibility(View.GONE);
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,11 +210,22 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 replaceFragment(cf);
             }
         });
-//Setting Places Types Filter for PlaceAutoCompleteResults
 
+       //TODO: RequestButton
+        btn_req.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    _progdialog.show();
+                    run(url, v);
 
-        //Places Api
-        destinationAddr = (EditText) findViewById(R.id._destination);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        //Places Api OnClickListeners
         destinationAddr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,7 +233,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 Intent intent;
                 try {
                     intent = intentBuilder.build(Main2Activity.this);
-                    startActivityForResult(intent, destinationPicker_req);
+                    startActivityForResult(intent, destination_reqcode);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
                 } catch (GooglePlayServicesNotAvailableException e) {
@@ -234,8 +241,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         });
-
-
 
         sourceAddress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,65 +258,11 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-
-
-        btn_req = (Button) findViewById(R.id.btn_req);
-        btn_req.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    _progdialog.show();
-                    run(url, v);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
     }
 
-
-
-    private void getAddress(){
-        Location location = null;
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-
-        Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
-        StringBuilder builder = new StringBuilder();
-        try {
-            List<Address> address = geoCoder.getFromLocation(latitude, longitude, 1);
-            int maxLines = address.get(0).getMaxAddressLineIndex();
-            for (int i=0; i<maxLines; i++) {
-                String addressStr = address.get(0).getAddressLine(i);
-                builder.append(addressStr);
-                builder.append(" ");
-            }
-
-            String finalAddr = builder.toString(); //This is the complete address.
-
-            sourceAddress.setText(finalAddr); //This will display the final address.
-
-        } catch (IOException e) {
-            // Handle IOException
-        } catch (NullPointerException e) {
-            // Handle NullPointerException
-        }
-
-    }
+    //PlacesApiResults and Implementation
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == destinationPicker_req) {
+        if (requestCode == destination_reqcode) {
             if (resultCode == RESULT_OK) {
                 boolean isAnHospital = false;
                 Place place = PlacePicker.getPlace(data, this);
@@ -320,16 +271,15 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                         isAnHospital = true;
                         break;
                     }
-
                 }
-                if (isAnHospital == true) {
-                    String address = String.format("Place : %s", place.getAddress());
 
-                    LatLng destloc = place.getLatLng();
-                    destlang = destloc.longitude;
-                    destlat = destloc.latitude;
-                    String finaladdr = getCompleteAddressString(destlat,destlang);
-                    destinationAddr.setText(finaladdr.toString());
+                if (isAnHospital == true) {
+                    String dest_address = String.format(" %s", place.getName());
+                    LatLng destinationlocation = place.getLatLng();
+                    destlat = destinationlocation.latitude;
+                    destlang = destinationlocation.longitude;
+                    String destaddr_Name = getCompleteAddressString(destlat,destlang);
+                    destinationAddr.setText(destaddr_Name);
                     setDestMarker(destlang, destlat);
 
                 } else {
@@ -341,12 +291,13 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
 
-                String address = String.format("Place : %s", place.getAddress());
+                String address = String.format(" %s", place.getName());
+
                 sourcelocation = place.getLatLng();
                 sourclan = sourcelocation.latitude;
                 sourclon = sourcelocation.longitude;
                 String finaladdr = getCompleteAddressString(sourclan,sourclon);
-                sourceAddress.setText(finaladdr.toString());
+                sourceAddress.setText(finaladdr);
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(new LatLng(sourclan, sourclon));
@@ -393,20 +344,28 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         markerOptions.position(new LatLng(destination_lat, destination_lang));
         markerOptions.title("Destination");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
             return;
         }
+
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(client);
         float result[] = new float[10];
-        Location.distanceBetween(sourcelocation.latitude, sourcelocation.longitude, destination_lat, destination_lang, result);
-        int distanceinmeters = (int) result[0];
+        //TODO: Es ko check karo kia panga de ra
+        if (sourceLatitude >= 0.0){
+            Location.distanceBetween(sourceLatitude, sourceLongitude, destination_lat, destination_lang, result);
+        }
+        else{
+            Location.distanceBetween(sourcelocation.latitude, sourcelocation.longitude, destination_lat, destination_lang, result);
+        }
 
-        _getdistance.setText("Distance: " + (distanceinmeters * 1000) + "km");
-        _getfare.setText("Est. Fare: " + (distanceinmeters + 300) + "Rs");
+        int distance = (int) result[0] / 1000 ;
+
+        estdistance.setText("Distance: " + distance + "km");
+        estfare.setText("Est. Fare: " + ((distance * costPerKM) + baseFee) + "Rs");
+
 
         markerOptions.snippet("Distance = " + result[0]);
         mMap.addMarker(markerOptions);
-        mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
         setDirections();
 
 
@@ -422,12 +381,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-    /*public void alliswell() {
-        f1.setVisibility(View.GONE);
-        btn_cancel.setVisibility(View.GONE);
-        btn_req.setVisibility(View.VISIBLE);
-
-    } */
 
     @Override
     protected void onDestroy() {
@@ -684,6 +637,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
         switch (requestCode) {
             case REQUEST_LOCATION_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -708,7 +662,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         loc1.setLongitude(myloc.getLongitude());
         for (int i = 0; i != ltlong.length; i++) {
             Location loc2 = new Location("");
-            loc2.setLatitude(ltlong[i].latitude);
+            loc2.setLatitude(ltlong[i].sourceLatitude);
             loc2.setLongitude(ltlong[i].longitude);
             float distanceInMeters = loc1.distanceTo(loc2);
             if (i == 0) {
