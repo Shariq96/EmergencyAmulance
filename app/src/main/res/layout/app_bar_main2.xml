@@ -57,6 +57,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <AutoCompleteTextView
+                    android:id="@+id/_autosource"
+                    android:layout_width="280dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="start"
+                    android:layout_margin="10dp"
+                    android:background="#FFF"
+                    android:drawableLeft="@drawable/pickup_location_black_24dp"
+                    android:drawableStart="@drawable/pickup_location_black_24dp"
+                    android:fontFamily="@font/alegreya_sans"
+                    android:hint="Testing"
+                    android:textSize="14sp" />
+
                 <EditText
                     android:id="@+id/_source"
                     android:layout_width="280dp"
@@ -68,7 +81,8 @@
                     android:drawableStart="@drawable/pickup_location_black_24dp"
                     android:fontFamily="@font/alegreya_sans"
                     android:hint="@string/pickup_location"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="gone"/>
 
                 <EditText
                     android:id="@+id/_destination"

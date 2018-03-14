@@ -32,6 +32,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -39,16 +40,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.emergencyamulance.Helper.PlaceAutocompleteAdapter;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -56,10 +64,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -100,6 +110,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private double destlang, destlat;
     private TextView estdistance;
     private TextView estfare;
+    private AutocompleteFilter _typeFilter;
+    private LatLngBounds bounds;
 
     GPSTracker gpsTracker;
     String hello;
@@ -109,6 +121,11 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     public static FrameLayout f1;
     CancelationFragment cf = new CancelationFragment();
 
+
+    //place api intent builder
+    private PlacePicker.IntentBuilder destinationLoc_Builder;
+    private PlacePicker.IntentBuilder sourceLoc_Builder;
+
     int destination_reqcode = 1;
     int sourcePicker_req = 2;
     private double sourceLongitude;
@@ -116,11 +133,22 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private Location location;
     private EditText destinationAddr;
     private EditText sourceAddress;
+    private AutoCompleteTextView _autosearchaddr;
     private double sourclan;
     private double sourclon;
     private LatLng sourcelocation;
     private int baseFee = 300;
     private int costPerKM = 10;
+    private PlaceAutocompleteAdapter placeAutocompleteAdapter;
+    private GoogleApiClient mGoogleApiClient;
+    private GeoDataClient mGeoDataClient;
+    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
+            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +160,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_drawer);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
+
+        mGeoDataClient = Places.getGeoDataClient(this, null);
+
+
 
         //TODO: En k tafseel likhu idr Comment kar k 
             // bhai yeh navigaton drawer ka builtin h
@@ -154,10 +186,14 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         btn_cancel = (Button) findViewById(R.id.btn_cncel);
         destinationAddr = (EditText) findViewById(R.id._destination);
         btn_req = (Button) findViewById(R.id.btn_req);
+        _autosearchaddr = (AutoCompleteTextView) findViewById(R.id._autosource);
 
 
 
 
+        //
+        placeAutocompleteAdapter = new PlaceAutocompleteAdapter(this,mGeoDataClient, bounds, _typeFilter);
+        _autosearchaddr.setAdapter(placeAutocompleteAdapter);
 
 
         //Service for Drivers Location
@@ -229,14 +265,31 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
+        //Filtering addresses for places api based on the location
+        _typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                .setTypeFilter(3)   //administrative level 3 of locating area
+                .build();
+
+        //for filteration of address
+        //making this location as center position
+        LatLng center = new LatLng(sourceLatitude,sourceLongitude);
+        LatLng northSide = SphericalUtil.computeOffset(center,100000,0); //heading 0 = north & distance in meters
+        LatLng southSide =  SphericalUtil.computeOffset(center,100000,180); // 180 = south
+
+        bounds = new LatLngBounds.Builder()
+                .include(northSide)
+                .include(southSide)
+                .build();
+
         //Places Api OnClickListeners
         destinationAddr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-                Intent intent;
+                destinationLoc_Builder = new PlacePicker.IntentBuilder().setLatLngBounds(bounds);
+            Intent intent;
                 try {
-                    intent = intentBuilder.build(Main2Activity.this);
+                    intent = destinationLoc_Builder.build(Main2Activity.this);
                     startActivityForResult(intent, destination_reqcode);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -249,10 +302,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         sourceAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-                Intent intent;
+                sourceLoc_Builder = new PlacePicker.IntentBuilder().setLatLngBounds(bounds);
+            Intent intent;
                 try {
-                    intent = intentBuilder.build(Main2Activity.this);
+                    intent = sourceLoc_Builder.build(Main2Activity.this);
                     startActivityForResult(intent, sourcePicker_req);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -601,7 +654,14 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             mMap.addMarker(new MarkerOptions().position(loc).title("You"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLat,currentlng), 15));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000,null);
-        }
+
+
+
+       }
+
+
+
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -634,6 +694,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
                 .build();
         client.connect();
     }
