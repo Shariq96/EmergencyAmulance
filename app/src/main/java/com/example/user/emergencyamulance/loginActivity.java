@@ -36,7 +36,7 @@
         String mobno, password;
         String api_mob, api_pass;
 
-        public String url = "http://724d8461.ngrok.io/api/useracc/get";
+        public String url = "http://192.168.0.103:51967//api/useracc/get";
 
         private FirebaseAuth mAuth;
         SharedPreferences.Editor editor;

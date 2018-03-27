@@ -50,8 +50,8 @@ public class registeration extends AppCompatActivity {
     LoginButton loginButton;
     Button btn;
     CallbackManager callbackManager;
-    JSONObject jbobj;
-    public String url = "http://724d8461.ngrok.io/api/useracc/post";
+        JSONObject jbobj;
+    public String url = "http://192.168.0.103:51967/api/useracc/post";
     jbobject jb = new jbobject();
     String Token = FirebaseInstanceId.getInstance().getToken();
 

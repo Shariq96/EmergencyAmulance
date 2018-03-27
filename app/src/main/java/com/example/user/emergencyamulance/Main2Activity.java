@@ -71,6 +71,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.maps.android.SphericalUtil;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,8 +82,10 @@ import dmax.dialog.SpotsDialog;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Main2Activity extends AppCompatActivity implements OnMapReadyCallback,
@@ -115,13 +119,14 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     GPSTracker gpsTracker;
     String hello;
-    String url = "http://724d8461.ngrok.io/api/useracc/GetRequest";
+    String url = "http://192.168.0.103:51967/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
     SpotsDialog _progdialog;
     public static FrameLayout f1;
     CancelationFragment cf = new CancelationFragment();
-
-
+    private String service ;
+    jbobject jb = new jbobject();
+    JSONObject jbobj;
     //place api intent builder
     private PlacePicker.IntentBuilder destinationLoc_Builder;
     private PlacePicker.IntentBuilder sourceLoc_Builder;
@@ -165,7 +170,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
 
-        //TODO: En k tafseel likhu idr Comment kar k 
+        //TODO: En k tafseel likhu idr Comment kar k
             // bhai yeh navigaton drawer ka builtin h
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -186,14 +191,14 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         btn_cancel = (Button) findViewById(R.id.btn_cncel);
         destinationAddr = (EditText) findViewById(R.id._destination);
         btn_req = (Button) findViewById(R.id.btn_req);
-        _autosearchaddr = (AutoCompleteTextView) findViewById(R.id._autosource);
+      //  _autosearchaddr = (AutoCompleteTextView) findViewById(R.id._autosource);
 
 
 
 
         //
-        placeAutocompleteAdapter = new PlaceAutocompleteAdapter(this,mGeoDataClient, bounds, _typeFilter);
-        _autosearchaddr.setAdapter(placeAutocompleteAdapter);
+      //  placeAutocompleteAdapter = new PlaceAutocompleteAdapter(this,mGeoDataClient, bounds, _typeFilter);
+            //_autosearchaddr.setAdapter(placeAutocompleteAdapter);
 
 
         //Service for Drivers Location
@@ -256,8 +261,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onClick(View v) {
                 try {
-                    _progdialog.show();
-                    run(url, v);
+                    jbobj = jb.reqObject("03338983584",sourceLatitude,sourceLongitude,token,service);
+//                    _progdialog.show();
+                    run(url, v,jbobj);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -339,6 +345,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                     destinationAddr.setText(destaddr_Name);
                     setDestMarker(destlang, destlat);
 
+
                 } else {
                     Toast.makeText(this, "Please Select Appropriate Location", Toast.LENGTH_SHORT).show();
                 }
@@ -400,6 +407,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(new LatLng(destination_lat, destination_lang));
         markerOptions.title("Destination");
+        MarkerOptions SourceMarker = new MarkerOptions();
+        SourceMarker.position(new LatLng(sourclan, sourclon));
+        SourceMarker.title("Source");
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -422,6 +433,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
         markerOptions.snippet("Distance = " + result[0]);
         mMap.addMarker(markerOptions);
+       Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(), destlat, destlang, result);
+        mMap.addMarker(SourceMarker);
         mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
         setDirections();
 
@@ -668,7 +681,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 googleApiClient();
                 mMap.setMyLocationEnabled(true);
-                mMap.setTrafficEnabled(true);
+              //  mMap.setTrafficEnabled(true);
                 mMap.getUiSettings().setZoomGesturesEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 mMap.getUiSettings().setCompassEnabled(true);
@@ -679,7 +692,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         } else {
             googleApiClient();
             mMap.setMyLocationEnabled(true);
-            mMap.setTrafficEnabled(true);
+            //mMap.setTrafficEnabled(true);
             mMap.getUiSettings().setZoomGesturesEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
             mMap.getUiSettings().setCompassEnabled(true);
@@ -746,17 +759,13 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     OkHttpClient Client = new OkHttpClient();
 
-    public void run(String url, View v) throws IOException {
+    public void run(String url, View v,JSONObject jbobj) throws IOException {
         // OkHttpClient client = new OkHttpClient();
-        LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
-        urlBuilder.addQueryParameter("mobile_no", "3338983584");
-        urlBuilder.addQueryParameter("lat", String.valueOf(lastLocation.getLatitude()));
-        urlBuilder.addQueryParameter("longi", String.valueOf(lastLocation.getLongitude()));
-        urlBuilder.addQueryParameter("token", token);
-        String url1 = urlBuilder.build().toString();
+      //  LatLng latLng = new LatLng(sourceLatitude, sourceLongitude);
+        RequestBody body = RequestBody.create(JSON,jbobj.toString());
         Request request = new Request.Builder()
-                .url(url1)
+                .url(url)
+                .post(body)
                 .build();
         Client.newCall(request).enqueue(new Callback() {
             @Override
@@ -784,7 +793,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                             Toast.makeText(getApplicationContext(), "Got it", Toast.LENGTH_LONG).show();
                             btn_req.setVisibility(View.GONE);
                             btn_cancel.setVisibility(View.VISIBLE);
-                            _progdialog.cancel();
+//                            _progdialog.cancel();
 
                         } else {
                             Toast.makeText(getApplicationContext(), "No Amb Nearby", Toast.LENGTH_LONG).show();
@@ -813,7 +822,12 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             return null;
         }
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(client);
-        gDirectionUrl.append("origin="+sourcelocation.latitude+","+sourcelocation.longitude);
+        if (sourclan  == 0.0 && sourclon == 0.0){
+            gDirectionUrl.append("origin="+sourceLatitude+","+sourceLongitude);
+
+        }
+        else{
+        gDirectionUrl.append("origin="+sourclan+","+sourclon);}
         gDirectionUrl.append("&destination="+destlat+","+destlang);
         gDirectionUrl.append("&key="+"AIzaSyB5WDX6S95k_KvAdN7PjdXzz9XIneDhIsc");
         return (gDirectionUrl.toString());
@@ -828,5 +842,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
     }
-
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
 }

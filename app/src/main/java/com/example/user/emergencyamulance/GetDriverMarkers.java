@@ -32,7 +32,7 @@ import okhttp3.Response;
 public class GetDriverMarkers extends Service {
     OkHttpClient client = new OkHttpClient();
     Timer mTimer;
-    public String url = "http://192.168.0.104:51967/api/useracc/getDriver";
+    public String url = "http://192.168.0.103:51967/api/useracc/getDriver";
     TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {
