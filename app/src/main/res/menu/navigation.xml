@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navbar_routine"
         android:icon="@drawable/firsticonpngxx"
         android:title="@string/routine"
         />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navbar_crictical"
         android:icon="@drawable/secondiconxx"
         android:title="@string/crictical" />
 
     <item
-        android:id="@+id/b_nav_fourth"
+        android:id="@+id/navbar_deadbody"
         android:icon="@drawable/thirdiconxx"
         android:title="@string/deadbody" />
 

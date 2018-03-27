@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.user.emergencyamulance.Main2Activity"
+
     >
 
     <android.support.design.widget.AppBarLayout
@@ -22,14 +23,55 @@
 
     </android.support.design.widget.AppBarLayout>
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="55dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardElevation="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:background="#00ffffff">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:background="#00fafafa">
+
+            <EditText
+                android:id="@+id/_source"
+                android:layout_height="match_parent"
+                android:background="#20ffffff"
+                android:layout_width="150dp"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/pickup_location_black_24dp"
+                android:drawableStart="@drawable/pickup_location_black_24dp"
+                android:fontFamily="@font/alegreya_sans"
+                android:hint="@string/pickup_location"
+                android:textSize="14sp"
+
+
+                 />
+
+            <EditText
+                android:id="@+id/_destination"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#0DFFFFFF"
+                android:drawableLeft="@drawable/ic_edit_location_black_24dp"
+                android:drawableStart="@drawable/ic_edit_location_black_24dp"
+                android:fontFamily="@font/alegreya_sans"
+                android:hint="@string/dropoff_location"
+                android:textSize="14sp"
+                />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
 
         <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
@@ -39,10 +81,7 @@
             android:layout_height="match_parent"
 
             />
-
-
-    </RelativeLayout>
-
+   
     
 
 
@@ -58,42 +97,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/mapView"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/_source"
-                    android:layout_width="180dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="start"
-                    android:layout_margin="10dp"
-                    android:background="#FFF"
-                    android:drawableLeft="@drawable/pickup_location_black_24dp"
-                    android:drawableStart="@drawable/pickup_location_black_24dp"
-                    android:fontFamily="@font/alegreya_sans"
-                    android:hint="@string/pickup_location"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/_destination"
-                    android:layout_width="180dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="end"
-                    android:layout_margin="10dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#FFF"
-                    android:drawableLeft="@drawable/ic_edit_location_black_24dp"
-                    android:drawableStart="@drawable/ic_edit_location_black_24dp"
-                    android:fontFamily="@font/alegreya_sans"
-                    android:hint="@string/dropoff_location"
-                    android:textSize="14sp" />
-
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -114,7 +117,8 @@
                     android:text="@string/fare"
                     android:textAlignment="textStart"
                     android:textColor="@color/cast_expanded_controller_background_color"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    />
 
                 <TextView
                     android:id="@+id/txt_Distance"
@@ -129,7 +133,8 @@
                     android:text="@string/distance"
                     android:textAlignment="textStart"
                     android:textColor="@color/cast_expanded_controller_background_color"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -185,5 +190,5 @@
         android:textSize="25sp" />
 </RelativeLayout>
 </RelativeLayout>
-</RelativeLayout>
+
 

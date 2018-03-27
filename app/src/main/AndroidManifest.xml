@@ -23,12 +23,13 @@
     <application
         android:name=".myApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/madadlogo"
+        android:icon="@mipmap/madadicon"
         android:label="MADAD"
-        android:roundIcon="@mipmap/madadlogo_round"
+        android:roundIcon="@mipmap/madadicon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreen">
+        <activity android:name=".SplashActivity"
+            android:theme="@style/SplashTheme">
             loginActivity
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,7 +55,7 @@
 
         <activity
             android:name=".Main2Activity"
-            android:label="@string/title_activity_main2"
+            android:label="                        M A D A D   "
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".loginActivity" />
 

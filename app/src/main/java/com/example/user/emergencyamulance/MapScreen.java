@@ -17,13 +17,13 @@ public class MapScreen extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
+                case R.id.navbar_routine:
                     mTextMessage.setText(R.string.title_home);
                     return true;
-                case R.id.navigation_dashboard:
+                case R.id.navbar_crictical:
                     mTextMessage.setText(R.string.title_dashboard);
                     return true;
-                case R.id.b_nav_fourth:
+                case R.id.navbar_deadbody:
                     mTextMessage.setText(R.string.title_notifications);
                     return true;
             }

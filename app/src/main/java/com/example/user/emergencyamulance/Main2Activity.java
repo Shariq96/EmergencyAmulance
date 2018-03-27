@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -56,13 +57,13 @@ import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -74,6 +75,7 @@ import com.google.maps.android.SphericalUtil;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -149,7 +151,13 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private GeoDataClient mGeoDataClient;
     private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
             new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
-
+    private String sourceAddressName;
+    private LatLng gpsTrackerLocation;
+    private String destAddressName;
+    private boolean locationFlag = false;
+    private BottomNavigationView bottomBar;
+    private String serviceType = ""; // 1 for Routine, 2 for Crictical, 3 for Normal
+    private LatLng finalsourceLocation;
 
 
 
@@ -191,6 +199,29 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         btn_cancel = (Button) findViewById(R.id.btn_cncel);
         destinationAddr = (EditText) findViewById(R.id._destination);
         btn_req = (Button) findViewById(R.id.btn_req);
+     //   _autosearchaddr = (AutoCompleteTextView) findViewById(R.id._autosource);
+        bottomBar = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
+
+
+
+        bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch (item.getItemId()) {
+                    case R.id.navbar_routine:
+                        serviceType = "1";
+                        break;
+                    case R.id.navbar_crictical:
+                        serviceType = "2";
+                        break;
+                    case R.id.navbar_deadbody:
+                        serviceType = "3";
+                        break;
+                }
+           return true;
+            }
+        });
       //  _autosearchaddr = (AutoCompleteTextView) findViewById(R.id._autosource);
 
 
@@ -213,13 +244,14 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
             sourceLatitude = gpsTracker.getLatitude();
             sourceLongitude = gpsTracker.getLongitude();
+           gpsTrackerLocation = new LatLng(sourceLatitude,sourceLongitude);
             Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + sourceLatitude + "\nLong: " + sourceLongitude, Toast.LENGTH_LONG).show();
 
         } else {
             gpsTracker.showSettingsAlert();
         }
         //setting default location address oncreate
-        String sourceAddr = getCompleteAddressString(sourceLatitude, sourceLongitude);
+        String sourceAddr = getCompleteAddressString(gpsTrackerLocation.latitude, gpsTrackerLocation.longitude);
         sourceAddress.setText(sourceAddr);
 
         //Updated 28Feb2018 - getMyLocationPointer
@@ -256,12 +288,20 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
+        if (locationFlag == true)
+        {
+            finalsourceLocation = new LatLng(sourcelocation.latitude,sourcelocation.longitude);
+        }
+        else{
+            finalsourceLocation = new LatLng(gpsTrackerLocation.latitude,gpsTrackerLocation.longitude);
+        }
+
        //TODO: RequestButton
         btn_req.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    jbobj = jb.reqObject("03338983584",sourceLatitude,sourceLongitude,token,service);
+                    jbobj = jb.reqObject("03338983584",finalsourceLocation.latitude,finalsourceLocation.longitude,token,serviceType);
 //                    _progdialog.show();
                     run(url, v,jbobj);
 
@@ -337,7 +377,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 }
 
                 if (isAnHospital == true) {
-                    String dest_address = String.format(" %s", place.getName());
+                    destAddressName = String.format(" %s", place.getName());
                     LatLng destinationlocation = place.getLatLng();
                     destlat = destinationlocation.latitude;
                     destlang = destinationlocation.longitude;
@@ -355,17 +395,16 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
 
-                String address = String.format(" %s", place.getName());
+                sourceAddressName = String.format(" %s", place.getName());
 
                 sourcelocation = place.getLatLng();
-                sourclan = sourcelocation.latitude;
-                sourclon = sourcelocation.longitude;
-                String finaladdr = getCompleteAddressString(sourclan,sourclon);
+                String finaladdr = getCompleteAddressString(sourcelocation.latitude,sourcelocation.longitude);
                 sourceAddress.setText(finaladdr);
-
+                locationFlag = true;
                     MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(new LatLng(sourclan, sourclon));
-                    markerOptions.title("You are Here");
+                    markerOptions.position(sourcelocation);
+                    markerOptions.title(sourceAddressName);
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.currlocmarker));
                     mMap.addMarker(markerOptions);
                     mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
                     }
@@ -373,6 +412,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                     Toast.makeText(this, "Please Select Again", Toast.LENGTH_SHORT).show();
                 }
             }
+
 
 
 
@@ -406,10 +446,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         mMap.clear();
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(new LatLng(destination_lat, destination_lang));
-        markerOptions.title("Destination");
-        MarkerOptions SourceMarker = new MarkerOptions();
-        SourceMarker.position(new LatLng(sourclan, sourclon));
-        SourceMarker.title("Source");
+        markerOptions.title(destAddressName);
+
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -419,7 +457,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         float result[] = new float[10];
         //TODO: Es ko check karo kia panga de ra
         if (sourceLatitude >= 0.0){
-            Location.distanceBetween(sourceLatitude, sourceLongitude, destination_lat, destination_lang, result);
+            Location.distanceBetween(gpsTrackerLocation.latitude, gpsTrackerLocation.longitude, destination_lat, destination_lang, result);
         }
         else{
             Location.distanceBetween(sourcelocation.latitude, sourcelocation.longitude, destination_lat, destination_lang, result);
@@ -430,11 +468,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         estdistance.setText("Distance: " + distance + "km");
         estfare.setText("Est. Fare: " + ((distance * costPerKM) + baseFee) + "Rs");
 
-
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.destinationhospitalmarker));
         markerOptions.snippet("Distance = " + result[0]);
         mMap.addMarker(markerOptions);
-       Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(), destlat, destlang, result);
-        mMap.addMarker(SourceMarker);
         mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
         setDirections();
 
@@ -660,28 +696,21 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         mMap.animateCamera(CameraUpdateFactory.zoomBy(14));
-       if (lastLocation != null) {
-          final double currentLat = lastLocation.getLatitude();
-          final double currentlng = lastLocation.getLongitude();
-           LatLng loc = new LatLng(currentLat,currentlng);
-            mMap.addMarker(new MarkerOptions().position(loc).title("You"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLat,currentlng), 15));
+        MarkerOptions markerOptions = new MarkerOptions()
+                   .title(sourceAddressName)
+                   .position(gpsTrackerLocation)
+                    .draggable(true)
+                   .icon(BitmapDescriptorFactory.fromResource(R.drawable.currlocmarker));
+            mMap.addMarker(markerOptions);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTrackerLocation.latitude,gpsTrackerLocation.longitude), 15));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000,null);
-
-
-
-       }
-
-
-
-
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 googleApiClient();
-                mMap.setMyLocationEnabled(true);
-              //  mMap.setTrafficEnabled(true);
+              mMap.setMyLocationEnabled(false);
+                mMap.setTrafficEnabled(false);
                 mMap.getUiSettings().setZoomGesturesEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 mMap.getUiSettings().setCompassEnabled(true);
@@ -691,8 +720,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         } else {
             googleApiClient();
-            mMap.setMyLocationEnabled(true);
-            //mMap.setTrafficEnabled(true);
+            mMap.setMyLocationEnabled(false);
+            mMap.setTrafficEnabled(false);
             mMap.getUiSettings().setZoomGesturesEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
             mMap.getUiSettings().setCompassEnabled(true);
@@ -756,6 +785,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
         Toast.makeText(this, result, Toast.LENGTH_LONG).show();
     } */
+
+
+
+
 
     OkHttpClient Client = new OkHttpClient();
 
@@ -822,12 +855,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             return null;
         }
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(client);
-        if (sourclan  == 0.0 && sourclon == 0.0){
-            gDirectionUrl.append("origin="+sourceLatitude+","+sourceLongitude);
-
-        }
-        else{
-        gDirectionUrl.append("origin="+sourclan+","+sourclon);}
+        gDirectionUrl.append("origin="+finalsourceLocation.latitude+","+ finalsourceLocation.longitude);
         gDirectionUrl.append("&destination="+destlat+","+destlang);
         gDirectionUrl.append("&key="+"AIzaSyB5WDX6S95k_KvAdN7PjdXzz9XIneDhIsc");
         return (gDirectionUrl.toString());
