@@ -38,7 +38,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".Controllers.Welcome" />
 
         <meta-data
@@ -75,10 +74,9 @@
         <service
             android:name=".Helper.RegistrationIntentService"
             android:exported="false" />
-
         <service
             android:name=".JSONParsing.GetDriverMarkers"
-            android:exported="false"/>
+            android:exported="false" />
 
         <receiver
             android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
@@ -92,6 +90,7 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".Controllers.FeedbackController"></activity>
     </application>
 
 </manifest>

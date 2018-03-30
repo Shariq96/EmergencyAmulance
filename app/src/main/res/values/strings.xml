@@ -88,4 +88,7 @@
     <string name="reasons_for_cancellation">REASONS FOR CANCELLATION</string>
 
     <string name="submit">SUBMIT</string>
+    <string name="rate_your_experience">Rate Your Experience</string>
+    <string name="share_your_experience_or_any_suggestion">Share your experience or Any suggestion...</string>
+    <string name="rate_the_driving">Rate the Driving</string>
 </resources>
