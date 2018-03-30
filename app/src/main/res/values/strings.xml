@@ -85,4 +85,7 @@
     <string name="routine">Routine</string>
     <string name="fare">Fare :</string>
     <string name="distance">Distance:</string>
+    <string name="reasons_for_cancellation">REASONS FOR CANCELLATION</string>
+
+    <string name="submit">SUBMIT</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.Helper;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,8 +9,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
+import com.example.user.emergencyamulance.Controllers.Home;
+import com.example.user.emergencyamulance.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -20,6 +21,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyAndroidFirebaseMsgService extends FirebaseMessagingService {
     private static final String TAG = "MyAndroidFCMService";
+
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -43,7 +45,7 @@ public class MyAndroidFirebaseMsgService extends FirebaseMessagingService {
     }
 
     private void createNotification(String messageBody) {
-        Intent intent = new Intent(this, Main2Activity.class);
+        Intent intent = new Intent(this, Home.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent resultIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);

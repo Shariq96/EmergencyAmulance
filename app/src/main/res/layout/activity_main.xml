@@ -6,23 +6,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context="com.example.user.emergencyamulance.MainActivity">
+    tools:context="com.example.user.emergencyamulance.Controllers.Welcome">
 
 
     <com.facebook.login.widget.LoginButton
+        android:id="@+id/fb_login_Btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:id="@+id/fb_login_Btn"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp" />
 
     <Button
+        android:id="@+id/selfbtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/selfbtn"
-        android:text="Self Registration"
+        android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:layout_gravity="center"/>
+        android:text="Self Registration" />
 
 
 

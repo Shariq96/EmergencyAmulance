@@ -1,73 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/white_background"
-    android:alpha="0.6"
+    android:background="@color/topBar"
+    android:orientation="vertical"
+
 
     >
 
     <RadioGroup
         android:id="@+id/rg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="45dp"
-        android:layout_marginRight="45dp"
-        android:layout_marginTop="120dp"
-        android:layout_marginBottom="50dp"
-        android:alpha="1"
+        android:layout_width="420dp"
+        android:layout_height="135dp"
+        android:layout_marginTop="100dp">
 
-
-        >
 
         <RadioButton
-            android:id="@+id/radioButton1"
-            android:layout_width="match_parent"
+            android:id="@+id/radioButton5"
+            android:layout_width="174dp"
             android:layout_height="wrap_content"
-            android:text="Driver is too late"
-            android:paddingLeft="20dp"
-            android:textSize="30sp"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/average_sans"
+            android:text="@string/mistakenly_booked"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
         <RadioButton
-            android:id="@+id/radioButton2"
-            android:layout_width="match_parent"
-            android:text="Bkd by Mistake"
-            android:paddingLeft="20dp"
+            android:id="@+id/radioButton"
+            android:layout_width="174dp"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center"
+            android:fontFamily="@font/average_sans"
+            android:text="@string/driver_is_late"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
         <RadioButton
-            android:id="@+id/radioButton3"
-            android:textSize="30sp"
-            android:layout_width="match_parent"
+            android:id="@+id/radioButton6"
+            android:layout_width="174dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:text="Patient is f9 now"
-            android:alpha="1"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center"
+            android:fontFamily="@font/average_sans"
+            android:text="@string/patient_is_fine"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RadioGroup>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_marginTop="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal">
 
-    >
-        <Button
-            android:layout_width="170dp"
-            android:layout_height="70dp"
-            android:text="SUBMIT"
-            android:id="@+id/btn_sumbit"
-            android:textSize="25sp"/>
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="152dp"
+                android:layout_height="37dp"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_submit" />
 
         </LinearLayout>
 
 
-    </RadioGroup>
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.JSONParsing;
 
 /**
  * Created by User on 2/15/2018.

@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/topBar</item>
         <item name="colorPrimaryDark">@color/topBar</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/topBar</item>
 
 
 
@@ -25,7 +25,7 @@
         <item name="DialogSpotColor">@color/white</item>
         <item name="DialogSpotCount">3</item>
         <item name="android:background">#ef3131</item>
-        
+
     </style>
 
 

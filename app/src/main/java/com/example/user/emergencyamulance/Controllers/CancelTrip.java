@@ -1,4 +1,4 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.Controllers;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,12 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.Frame;
+import com.example.user.emergencyamulance.Helper.FragmentChangeListner;
+import com.example.user.emergencyamulance.R;
 
 import java.io.IOException;
 
@@ -25,16 +25,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.example.user.emergencyamulance.Main2Activity.Status;
-import static com.example.user.emergencyamulance.Main2Activity.Trip_id;
-import static com.example.user.emergencyamulance.Main2Activity.btn_cancel;
-import static com.example.user.emergencyamulance.Main2Activity.btn_req;
-import static com.example.user.emergencyamulance.Main2Activity.d_token;
-import static com.example.user.emergencyamulance.Main2Activity.f1;
+import static com.example.user.emergencyamulance.Controllers.Home.Status;
+import static com.example.user.emergencyamulance.Controllers.Home.Trip_id;
+import static com.example.user.emergencyamulance.Controllers.Home.btn_cancel;
+import static com.example.user.emergencyamulance.Controllers.Home.btn_req;
+import static com.example.user.emergencyamulance.Controllers.Home.d_token;
+import static com.example.user.emergencyamulance.Controllers.Home.f1;
 
 
-
-public class CancelationFragment extends Fragment implements FragmentChangeListner {
+public class CancelTrip extends Fragment implements FragmentChangeListner {
     View v;
     Button btn;
     RadioButton radioReasonBtn;
@@ -42,6 +41,12 @@ public class CancelationFragment extends Fragment implements FragmentChangeListn
     int selectedId;
     String val;
     String url = "http://192.168.0.103:51967//api/useracc/cancelRideUser";
+    /*    public  void onClickListnerButton()
+        {
+            Home main2Activity = new Home();
+            main2Activity.alliswell();
+        }*/
+    OkHttpClient Client = new OkHttpClient();
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,12 +86,7 @@ public class CancelationFragment extends Fragment implements FragmentChangeListn
         return  v;
 
     }
-/*    public  void onClickListnerButton()
-    {
-        Main2Activity main2Activity = new Main2Activity();
-        main2Activity.alliswell();
-    }*/
-    OkHttpClient Client = new OkHttpClient();
+
     public void post(String url, String val) throws IOException {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
         urlBuilder.addQueryParameter("Trip_id",Trip_id);
@@ -133,7 +133,7 @@ public class CancelationFragment extends Fragment implements FragmentChangeListn
 
     @Override
     public void replaceFragment(Fragment fragment) {
-        CancelationFragment cf = new CancelationFragment();
+        CancelTrip cf = new CancelTrip();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();;
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(cf);

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.user.emergencyamulance.Main2Activity"
+    tools:context="com.example.user.emergencyamulance.Controllers.Home"
 
     >
 
@@ -18,52 +18,108 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            />
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:fontFamily="@font/alegreya_sans"
+                android:gravity="center_vertical"
+                android:text="M A D A D"
+                android:textAlignment="center"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-
-<android.support.v7.widget.CardView
-    android:layout_width="match_parent"
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:cardElevation="8dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="50dp"
-        android:background="#00ffffff">
+        app:cardElevation="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal"
-            android:background="#00fafafa">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="6">
 
-            <EditText
-                android:id="@+id/_source"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#20ffffff"
-                android:layout_width="150dp"
-                android:layout_weight="1"
-                android:drawableLeft="@drawable/pickup_location_black_24dp"
-                android:drawableStart="@drawable/pickup_location_black_24dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/trackmylocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/desc"
+                    android:paddingEnd="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="5dp"
+                    android:src="@drawable/mylocationtrackicon" />
+
+                <EditText
+                    android:id="@+id/_source"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:layout_weight="3"
+                    android:background="#FFF"
+                    android:fontFamily="@font/alegreya_sans"
+                    android:gravity="left |center_vertical"
+                    android:hint="@string/pickup_location"
+                    android:paddingTop="5dp"
+                    android:textSize="14sp" />
+
+                <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/desc"
+                    android:paddingEnd="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="5dp"
+                    android:src="@drawable/destinationmarkericon" />
+
+                <EditText
+                    android:id="@+id/_destination"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="3"
+                    android:background="#FFF"
+                    android:fontFamily="@font/alegreya_sans"
+                    android:gravity="center_vertical"
+                    android:hint="@string/dropoff_location"
+                    android:paddingTop="5dp"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <TextView
+
+                android:id="@+id/_nearestambulancetext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/topBar"
                 android:fontFamily="@font/alegreya_sans"
-                android:hint="@string/pickup_location"
-                android:textSize="14sp"
-
-
-                 />
-
-            <EditText
-                android:id="@+id/_destination"
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#0DFFFFFF"
-                android:drawableLeft="@drawable/ic_edit_location_black_24dp"
-                android:drawableStart="@drawable/ic_edit_location_black_24dp"
-                android:fontFamily="@font/alegreya_sans"
-                android:hint="@string/dropoff_location"
+                android:gravity="center_horizontal"
+                android:text="Nearest Ambulance is 6 min Away!!"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 />
 
@@ -72,25 +128,12 @@
     </android.support.v7.widget.CardView>
 
 
-
-        <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/mapView"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            />
-   
-    
-
-
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:cardElevation="8dp"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        app:cardElevation="8dp">
 
 
         <LinearLayout
@@ -118,7 +161,7 @@
                     android:textAlignment="textStart"
                     android:textColor="@color/cast_expanded_controller_background_color"
                     android:textSize="18sp"
-                    />
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/txt_Distance"
@@ -134,7 +177,7 @@
                     android:textAlignment="textStart"
                     android:textColor="@color/cast_expanded_controller_background_color"
                     android:textSize="18sp"
-                    />
+                    android:visibility="gone" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -146,12 +189,12 @@
                     android:id="@+id/bottomNavigationBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?android:attr/windowBackground"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:menu="@menu/navigation"
 
-                    android:background="?android:attr/windowBackground"/>
+                    app:menu="@menu/navigation" />
 
             </LinearLayout>
 
@@ -161,7 +204,7 @@
                 android:layout_height="50dp"
                 android:background="@color/topBar"
                 android:fontFamily="@font/alice"
-                android:text="DAL TA RASHAA"
+                android:text="CONFIRM"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -174,21 +217,15 @@
     </android.support.v7.widget.CardView>
 
 
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:id="@+id/innerlayout">
-
-    <Button
-        android:id="@+id/btn_cncel"
+    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mapView"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/alegreya_sans"
-        android:text="@string/cancel"
-        android:textColor="#000000"
-        android:textSize="25sp" />
-</RelativeLayout>
+        android:layout_height="match_parent"
+
+        />
+
 </RelativeLayout>
 
 

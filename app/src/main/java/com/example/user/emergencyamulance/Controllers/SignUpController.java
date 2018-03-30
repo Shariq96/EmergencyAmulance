@@ -1,9 +1,6 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.Controllers;
 
         import android.content.Intent;
-        import android.os.Parcel;
-        import android.os.Parcelable;
-        import android.support.annotation.NonNull;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.util.Log;
@@ -11,20 +8,18 @@ package com.example.user.emergencyamulance;
         import android.widget.Button;
         import android.widget.EditText;
         import android.widget.ImageView;
-        import android.widget.LinearLayout;
         import android.widget.Toast;
 
+        import com.example.user.emergencyamulance.JSONParsing.JsonParsingObject;
+        import com.example.user.emergencyamulance.R;
         import com.facebook.CallbackManager;
-        import com.facebook.FacebookActivity;
         import com.facebook.FacebookCallback;
         import com.facebook.FacebookException;
         import com.facebook.FacebookSdk;
         import com.facebook.GraphRequest;
         import com.facebook.GraphResponse;
-        import com.facebook.login.LoginManager;
         import com.facebook.login.LoginResult;
         import com.facebook.login.widget.LoginButton;
-        import com.facebook.login.widget.ProfilePictureView;
         import com.google.firebase.iid.FirebaseInstanceId;
 
         import java.io.IOException;
@@ -39,8 +34,12 @@ package com.example.user.emergencyamulance;
         import okhttp3.Request;
         import okhttp3.RequestBody;
         import okhttp3.Response;
-public class registeration extends AppCompatActivity {
 
+public class SignUpController extends AppCompatActivity {
+
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+    public String url = "http://192.168.0.103:51967/api/useracc/post";
     EditText name, pass, email, phone;
     ImageView signup_btn,fb;
     String password, eMail, namee, Jsonobj, hello, mob_no ,addr1 ,mob1;
@@ -51,9 +50,9 @@ public class registeration extends AppCompatActivity {
     Button btn;
     CallbackManager callbackManager;
         JSONObject jbobj;
-    public String url = "http://192.168.0.103:51967/api/useracc/post";
-    jbobject jb = new jbobject();
+    JsonParsingObject jb = new JsonParsingObject();
     String Token = FirebaseInstanceId.getInstance().getToken();
+    OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,14 +83,14 @@ public class registeration extends AppCompatActivity {
                 parameters.putString("fields", "id,name,email,gender, birthday");
                 request.setParameters(parameters);
                 request.executeAsync();
-                Intent intent = new Intent(registeration.this, Main2Activity.class);
+                Intent intent = new Intent(SignUpController.this, Home.class);
                 startActivity(intent);
-                Toast.makeText(registeration.this, "MainActivity SuccessFull ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpController.this, "Welcome SuccessFull ", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(registeration.this, "MainActivity Canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpController.this, "Welcome Canceled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -131,12 +130,13 @@ public class registeration extends AppCompatActivity {
             }
         });
 
-    } @Override
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         callbackManager.onActivityResult(requestCode,resultCode,data);
     }
-
 
     public void post(String url, JSONObject jbobj) throws IOException {
         RequestBody body = RequestBody.create(JSON,jbobj.toString());
@@ -156,12 +156,12 @@ public class registeration extends AppCompatActivity {
                 //  myResponse = myResponse.substring(1, myResponse.length() - 1); // yara
                 myResponse = myResponse.replace("\\", "");
                 hello = myResponse;
-                registeration.this.runOnUiThread(new Runnable() {
+                SignUpController.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (hello.equals("true")) {
                             Toast.makeText(getApplicationContext(), "Registered!", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(registeration.this, Main2Activity.class);
+                            Intent intent = new Intent(SignUpController.this, Home.class);
                             startActivity(intent);
 
 
@@ -179,7 +179,9 @@ public class registeration extends AppCompatActivity {
             }
         });
 
-    } private void setProfileToView(JSONObject jsonObject) {
+    }
+
+    private void setProfileToView(JSONObject jsonObject) {
         try {
             emmail = jsonObject.getString("email");
             gender=jsonObject.getString("gender");
@@ -192,7 +194,6 @@ public class registeration extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    OkHttpClient client = new OkHttpClient();
 
     public void postfb(String url, JSONObject jbobj) throws IOException {
         RequestBody body = RequestBody.create(JSON,jbobj.toString());
@@ -212,12 +213,12 @@ public class registeration extends AppCompatActivity {
                 //  myResponse = myResponse.substring(1, myResponse.length() - 1); // yara
                 myResponse = myResponse.replace("\\", "");
                 hello = myResponse;
-                registeration.this.runOnUiThread(new Runnable() {
+                SignUpController.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (hello.equals("true")) {
                             Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(registeration.this, Main2Activity.class);
+                            Intent intent = new Intent(SignUpController.this, Home.class);
                             startActivity(intent);
 
 
@@ -226,7 +227,7 @@ public class registeration extends AppCompatActivity {
 
                         }
                         else{
-                            Toast.makeText(registeration.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpController.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -234,8 +235,4 @@ public class registeration extends AppCompatActivity {
         });
 
     }
-
-
-    public static final MediaType JSON
-            = MediaType.parse("application/json; charset=utf-8");
 }

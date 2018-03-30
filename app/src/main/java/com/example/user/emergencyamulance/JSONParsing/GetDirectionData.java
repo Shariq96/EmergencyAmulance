@@ -1,11 +1,11 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.JSONParsing;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
 
+import com.example.user.emergencyamulance.Helper.DownloadUrl;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
 

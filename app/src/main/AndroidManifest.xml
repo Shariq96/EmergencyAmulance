@@ -21,14 +21,15 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
-        android:name=".myApplication"
+        android:name=".Helper.myApplication"
         android:allowBackup="true"
         android:icon="@mipmap/madadicon"
         android:label="MADAD"
         android:roundIcon="@mipmap/madadicon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity"
+        <activity
+            android:name=".Models.SplashActivity"
             android:theme="@style/SplashTheme">
             loginActivity
             <intent-filter>
@@ -37,14 +38,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+
+        <activity android:name=".Controllers.Welcome" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".registeration" />
-        <activity android:name=".Verifymobile" />
+        <activity android:name=".Controllers.SignUpController" />
+        <activity android:name=".Controllers.Verifymobile" />
+        <activity android:name=".Controllers.CancelTrip" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -54,26 +57,27 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".Main2Activity"
-            android:label="                        M A D A D   "
+            android:name=".Controllers.Home"
+            android:label="M A D A D"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".loginActivity" />
+        <activity android:name=".Controllers.LoginController" />
 
-        <service android:name=".MyAndroidFirebaseMsgService">
+        <service android:name=".Helper.MyAndroidFirebaseMsgService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".MyAndroidFirebaseInstanceIdService">
+        <service android:name=".Helper.MyAndroidFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name=".RegistrationIntentService"
+            android:name=".Helper.RegistrationIntentService"
             android:exported="false" />
 
-        <service android:name=".GetDriverMarkers"
+        <service
+            android:name=".JSONParsing.GetDriverMarkers"
             android:exported="false"/>
 
         <receiver
@@ -88,13 +92,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".MapScreen"
-            android:label="@string/title_activity_map_screen" />
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".verify_account"></activity>
     </application>
 
 </manifest>

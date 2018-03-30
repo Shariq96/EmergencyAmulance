@@ -1,4 +1,4 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.Helper;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -11,10 +11,11 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.example.user.emergencyamulance.Controllers.Home;
+import com.example.user.emergencyamulance.R;
 
 
-public class
-RegistrationIntentService extends IntentService{
+public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
 
@@ -24,6 +25,7 @@ RegistrationIntentService extends IntentService{
     @Override
     protected void onHandleIntent(Intent intent) {
         String data = intent.getDataString();
+
         if(myApplication.isActivityVisible()){
             Intent intnt = new Intent("myFunction");
             intnt.putExtra("mobile_no",data);
@@ -33,7 +35,7 @@ RegistrationIntentService extends IntentService{
         }
     }
     private void sendNotification( String messageBody) {
-        Intent intent = new Intent(this, Main2Activity.class);
+        Intent intent = new Intent(this, Home.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent resultIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);

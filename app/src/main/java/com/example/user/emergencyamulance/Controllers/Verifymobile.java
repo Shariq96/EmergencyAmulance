@@ -1,4 +1,4 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.Controllers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.user.emergencyamulance.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -25,17 +26,19 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 public class Verifymobile extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "PhoneAuthActivity";
+    public static String Mobile_No = "0";
+    private static boolean verified = false;
     EditText mPhoneNumberField, mVerificationField;
     Button mStartButton, mVerifyButton, mResendButton;
-    public static String Mobile_No = "0";
-
+    String mVerificationId;
     private FirebaseAuth mAuth;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
-    String mVerificationId;
 
-    private static final String TAG = "PhoneAuthActivity";
-
+    public static boolean getVariable() {
+        return verified;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,7 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
             }
         };
     }
+
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -92,7 +96,7 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
-                            Intent in = new Intent(getBaseContext(),registeration.class);
+                            Intent in = new Intent(getBaseContext(), SignUpController.class);
                             in.putExtra("mobile_no",mPhoneNumberField.getText().toString());
                             startActivity(in);
                             finish();
@@ -106,6 +110,7 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
                     }
                 });
     }
+
     private void startPhoneNumberVerification(String phoneNumber) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,        // Phone number to verify
@@ -139,17 +144,17 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
         }
         return true;
     }
+
     @Override
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(Verifymobile.this, Main2Activity.class));
+            startActivity(new Intent(Verifymobile.this, Home.class));
             finish();
 
         }
     }
-
 
     @Override
     public void onClick(View v) {
@@ -174,12 +179,6 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
                 resendVerificationCode(mPhoneNumberField.getText().toString(), mResendToken);
                 break;
         }
-    }
-
-    private static boolean verified = false;
-    public static boolean getVariable()
-    {
-        return verified;
     }
 
 }

@@ -1,4 +1,4 @@
-    package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.Controllers;
 
     import android.content.Intent;
     import android.content.SharedPreferences;
@@ -11,13 +11,11 @@
     import android.widget.TextView;
     import android.widget.Toast;
 
+    import com.example.user.emergencyamulance.R;
     import com.google.firebase.auth.FirebaseAuth;
-
-    import org.json.JSONObject;
 
     import java.io.IOException;
 
-    import dmax.dialog.SpotsDialog;
     import okhttp3.Call;
     import okhttp3.Callback;
     import okhttp3.HttpUrl;
@@ -26,7 +24,11 @@
     import okhttp3.Request;
     import okhttp3.Response;
 
-    public class loginActivity extends AppCompatActivity {
+public class LoginController extends AppCompatActivity {
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+    public static boolean LogedIn = false;
+    public String url = "http://192.168.0.103:51967//api/useracc/get";
         EditText mobile_no;
         EditText pass;
         CheckBox sv_pass;
@@ -35,14 +37,10 @@
         OkHttpClient Client;
         String mobno, password;
         String api_mob, api_pass;
-
-        public String url = "http://192.168.0.103:51967//api/useracc/get";
-
-        private FirebaseAuth mAuth;
         SharedPreferences.Editor editor;
         SharedPreferences pref;
-
-        public static boolean LogedIn = false;
+    OkHttpClient client = new OkHttpClient();
+    private FirebaseAuth mAuth;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +59,8 @@
             signup_txt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   Intent signup_intent = new Intent(loginActivity.this, Verifymobile.class);
-                   loginActivity.this.startActivity(signup_intent);
+                    Intent signup_intent = new Intent(LoginController.this, Verifymobile.class);
+                    LoginController.this.startActivity(signup_intent);
 
                }
             });
@@ -121,16 +119,16 @@
                     api_pass = myResponse;
                     //api_pass = jarray.getJSONObject(0).getString("password");
 
-                    loginActivity.this.runOnUiThread(new Runnable() {
+                    LoginController.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (api_pass.equals("true")) {
-                                Toast.makeText(getApplicationContext(), "MainActivity", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_LONG).show();
                                 editor.putBoolean("login", true);
                                 editor.apply();
                                 editor.commit();
                                 LogedIn = true;
-                                Intent intent = new Intent(loginActivity.this, Main2Activity.class);
+                                Intent intent = new Intent(LoginController.this, Home.class);
                                 startActivity(intent);
                             } else {
                                 Toast.makeText(getApplicationContext(), "Wrong Credentials", Toast.LENGTH_LONG).show();
@@ -149,11 +147,6 @@
             });
 
         }
-
-        public static final MediaType JSON
-                = MediaType.parse("application/json; charset=utf-8");
-
-        OkHttpClient client = new OkHttpClient();
 
 
     }

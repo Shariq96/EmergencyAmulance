@@ -1,4 +1,4 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.Controllers;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -37,11 +37,17 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.user.emergencyamulance.Helper.PlaceAutocompleteAdapter;
+import com.example.user.emergencyamulance.Helper.FragmentChangeListner;
+import com.example.user.emergencyamulance.JSONParsing.GetDirectionData;
+import com.example.user.emergencyamulance.JSONParsing.GetDriverMarkers;
+import com.example.user.emergencyamulance.JSONParsing.JsonParsingObject;
+import com.example.user.emergencyamulance.Models.GPSTracker;
+import com.example.user.emergencyamulance.R;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -53,7 +59,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 
@@ -70,12 +75,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.maps.android.SphericalUtil;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -83,58 +86,59 @@ import java.util.Locale;
 import dmax.dialog.SpotsDialog;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class Main2Activity extends AppCompatActivity implements OnMapReadyCallback,
+public class Home extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener, NavigationView.OnNavigationItemSelectedListener, FragmentChangeListner, android.location.LocationListener {
 
-    private GoogleMap mMap;
-    private GoogleApiClient client;
-    private LocationRequest request;
-    private Location lastLocation;
-    ArrayList driverList = new ArrayList();
-    private PlaceAutocomplete places;
-    private Location myloc;
-    private Marker currentLocation;
-    public static Button btn_req, btn_cancel;
     public static final int REQUEST_LOCATION_CODE = 99;
-    SupportMapFragment mapFragment;
-    public static Boolean Status = false;
-    public boolean first_time = true;
-    public static String mobile_no, latLong, d_token, Trip_id, Click_action;
-    private static EditText editText;
-    private LocationManager locationManager;
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
-    private double destlang, destlat;
-    private TextView estdistance;
-    private TextView estfare;
-    private AutocompleteFilter _typeFilter;
-    private LatLngBounds bounds;
-
+    public static Button btn_req, btn_cancel;
+    public static Boolean Status = false;
+    public static String mobile_no, latLong, d_token, Trip_id, Click_action;
+    public static FrameLayout f1;
+    private static EditText editText;
+    public boolean first_time = true;
+    ArrayList driverList = new ArrayList();
+    SupportMapFragment mapFragment;
     GPSTracker gpsTracker;
     String hello;
     String url = "http://192.168.0.103:51967/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
     SpotsDialog _progdialog;
-    public static FrameLayout f1;
-    CancelationFragment cf = new CancelationFragment();
-    private String service ;
-    jbobject jb = new jbobject();
+    CancelTrip cf = new CancelTrip();
+    JsonParsingObject jb = new JsonParsingObject();
     JSONObject jbobj;
+    int destination_reqcode = 1;
+    int sourcePicker_req = 2;
+    boolean isFirst_time = true;
+    OkHttpClient Client = new OkHttpClient();
+    private GoogleMap mMap;
+    private GoogleApiClient client;
+    private LocationRequest request;
+    private Location lastLocation;
+    private PlaceAutocomplete places;
+    private Location myloc;
+    private Marker currentLocation;
+    private LocationManager locationManager;
+    private double destlang, destlat;
+    private TextView estdistance;
+    private TextView estfare;
+    private AutocompleteFilter _typeFilter;
+    private LatLngBounds bounds;
+    private String service ;
     //place api intent builder
     private PlacePicker.IntentBuilder destinationLoc_Builder;
     private PlacePicker.IntentBuilder sourceLoc_Builder;
-
-    int destination_reqcode = 1;
-    int sourcePicker_req = 2;
     private double sourceLongitude;
     private double sourceLatitude;
     private Location location;
@@ -146,11 +150,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private LatLng sourcelocation;
     private int baseFee = 300;
     private int costPerKM = 10;
-    private PlaceAutocompleteAdapter placeAutocompleteAdapter;
-    private GoogleApiClient mGoogleApiClient;
-    private GeoDataClient mGeoDataClient;
-    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
-            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
     private String sourceAddressName;
     private LatLng gpsTrackerLocation;
     private String destAddressName;
@@ -158,10 +157,21 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private BottomNavigationView bottomBar;
     private String serviceType = ""; // 1 for Routine, 2 for Crictical, 3 for Normal
     private LatLng finalsourceLocation;
-
-
-
-
+    private ImageView myLocationTrackerIcon;
+    private BroadcastReceiver mMsgReciver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Status = true;
+            displayAlert(intent);
+        }
+    };
+    private BroadcastReceiver displayDrivers = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            driverList = intent.getStringArrayListExtra("list");
+            showDriver(driverList);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +184,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
 
-        mGeoDataClient = Places.getGeoDataClient(this, null);
 
 
 
@@ -190,7 +199,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        gpsTrackerLocation = getMyLocation();
 
         //initializing items
         sourceAddress = (EditText) findViewById(R.id._source);
@@ -201,7 +210,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         btn_req = (Button) findViewById(R.id.btn_req);
      //   _autosearchaddr = (AutoCompleteTextView) findViewById(R.id._autosource);
         bottomBar = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
-
+        myLocationTrackerIcon = (ImageView) findViewById(R.id.trackmylocation);
 
 
         bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -222,14 +231,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
            return true;
             }
         });
-      //  _autosearchaddr = (AutoCompleteTextView) findViewById(R.id._autosource);
-
-
-
-
-        //
-      //  placeAutocompleteAdapter = new PlaceAutocompleteAdapter(this,mGeoDataClient, bounds, _typeFilter);
-            //_autosearchaddr.setAdapter(placeAutocompleteAdapter);
 
 
         //Service for Drivers Location
@@ -238,21 +239,20 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,   0, this);
 
-        //Getting Location Co-ordinates
-        gpsTracker = new GPSTracker(this);
-        if(gpsTracker.canGetLocation()) {
 
-            sourceLatitude = gpsTracker.getLatitude();
-            sourceLongitude = gpsTracker.getLongitude();
-           gpsTrackerLocation = new LatLng(sourceLatitude,sourceLongitude);
-            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + sourceLatitude + "\nLong: " + sourceLongitude, Toast.LENGTH_LONG).show();
+        myLocationTrackerIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (gpsTracker.canGetLocation()) {
+                    LatLng currentLocation = getMyLocation();
+                    setSourceLocationAddress(currentLocation);
+                    setMyLocationMarker(mMap, currentLocation);
+                }
+            }
+        });
 
-        } else {
-            gpsTracker.showSettingsAlert();
-        }
-        //setting default location address oncreate
-        String sourceAddr = getCompleteAddressString(gpsTrackerLocation.latitude, gpsTrackerLocation.longitude);
-        sourceAddress.setText(sourceAddr);
+
+
 
         //Updated 28Feb2018 - getMyLocationPointer
         if (mMap != null && mapFragment.getView().findViewById(Integer.parseInt("1")) != null) {
@@ -268,7 +268,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         }
 
         //TODO: Ye kia scene hai bae comment to kr
-            // getting map fragment and myFunction screen per dikhata h k apka driver n req accept ki h
+        // getting map fragment and myFunction  screen per dikhata h k apka driver n req accept ki h
             // dd jo driver ki location arahi h wo map per show karta h
         mapFragment.getMapAsync(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMsgReciver,
@@ -276,17 +276,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         LocalBroadcastManager.getInstance(this).registerReceiver(displayDrivers,
                 new IntentFilter("dd"));
 
-        //TODO: CancelButton: Es ka kia karna hai bae ye tw bhd mein ae ga na ya esi button pe kam hai osi tarha
-            //bhai cancel button tb show hoga jb request k button per click hoga
-        //TODO: ya dialogbox bana hai
-        btn_cancel.setVisibility(View.GONE);
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                f1.setVisibility(v.VISIBLE);
-                replaceFragment(cf);
-            }
-        });
 
         if (locationFlag == true)
         {
@@ -311,31 +300,15 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-        //Filtering addresses for places api based on the location
-        _typeFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
-                .setTypeFilter(3)   //administrative level 3 of locating area
-                .build();
-
-        //for filteration of address
-        //making this location as center position
-        LatLng center = new LatLng(sourceLatitude,sourceLongitude);
-        LatLng northSide = SphericalUtil.computeOffset(center,100000,0); //heading 0 = north & distance in meters
-        LatLng southSide =  SphericalUtil.computeOffset(center,100000,180); // 180 = south
-
-        bounds = new LatLngBounds.Builder()
-                .include(northSide)
-                .include(southSide)
-                .build();
 
         //Places Api OnClickListeners
         destinationAddr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                destinationLoc_Builder = new PlacePicker.IntentBuilder().setLatLngBounds(bounds);
+                destinationLoc_Builder = new PlacePicker.IntentBuilder();
             Intent intent;
                 try {
-                    intent = destinationLoc_Builder.build(Main2Activity.this);
+                    intent = destinationLoc_Builder.build(Home.this);
                     startActivityForResult(intent, destination_reqcode);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -348,10 +321,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         sourceAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sourceLoc_Builder = new PlacePicker.IntentBuilder().setLatLngBounds(bounds);
+                sourceLoc_Builder = new PlacePicker.IntentBuilder();
             Intent intent;
                 try {
-                    intent = sourceLoc_Builder.build(Main2Activity.this);
+                    intent = sourceLoc_Builder.build(Home.this);
                     startActivityForResult(intent, sourcePicker_req);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -360,6 +333,47 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         });
+
+    }
+
+    //getting current Location LatLng for mapReady and tracker button
+    private LatLng getMyLocation() {
+
+        //Getting Location Co-ordinates
+        gpsTracker = new GPSTracker(this);
+        if (gpsTracker.canGetLocation()) {
+
+            sourceLatitude = gpsTracker.getLatitude();
+            sourceLongitude = gpsTracker.getLongitude();
+            gpsTrackerLocation = new LatLng(sourceLatitude, sourceLongitude);
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + sourceLatitude + "\nLong: " + sourceLongitude, Toast.LENGTH_LONG).show();
+            //setting default location address oncreate
+
+        } else {
+            gpsTracker.showSettingsAlert();
+        }
+
+        return gpsTrackerLocation;
+    }
+
+    private void setSourceLocationAddress(LatLng currentLatLng) {
+
+        String sourceAddr = getCompleteAddressString(currentLatLng.latitude, currentLatLng.longitude);
+        sourceAddress.setText(sourceAddr);
+
+    }
+
+    private void setMyLocationMarker(GoogleMap googleMap, LatLng latLng) {
+
+        mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        MarkerOptions markerOptions = new MarkerOptions()
+                .title(sourceAddressName)
+                .position(latLng)
+                .draggable(true)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mylocationtrackicon));
+        mMap.addMarker(markerOptions);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 15));
 
     }
 
@@ -413,9 +427,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
 
-
-
-
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -440,10 +451,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         return strAdd;
     }
 
-
-
     private void setDestMarker(double destination_lang, double destination_lat) {
-        mMap.clear();
+
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(new LatLng(destination_lat, destination_lang));
         markerOptions.title(destAddressName);
@@ -468,14 +477,15 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         estdistance.setText("Distance: " + distance + "km");
         estfare.setText("Est. Fare: " + ((distance * costPerKM) + baseFee) + "Rs");
 
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.destinationhospitalmarker));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.destinationmarkericon));
         markerOptions.snippet("Distance = " + result[0]);
         mMap.addMarker(markerOptions);
-        mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(8));
         setDirections();
 
 
     }
+
     private void setDirections()
     {   Object[] dataTransfer = new Object[3];
         String url = getDirectionUrl();
@@ -487,27 +497,11 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMsgReciver);
         super.onDestroy();
     }
-
-    private BroadcastReceiver mMsgReciver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Status = true;
-            displayAlert(intent);
-        }
-    };
-    private BroadcastReceiver displayDrivers = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            driverList = intent.getStringArrayListExtra("list");
-            showDriver(driverList);
-        }
-    };
 
     private void showDriver(ArrayList driverList) {
         mMap.clear();
@@ -609,7 +603,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         } else if (id == R.id.nav_signout) {
             LoginManager.getInstance().logOut();
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(Main2Activity.this, loginActivity.class));
+            startActivity(new Intent(Home.this, LoginController.class));
             finish();
         }
 
@@ -644,7 +638,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             return true;
     }
 
-
     @Override
     public void onConnectionSuspended(int i) {
         request = new LocationRequest();
@@ -663,14 +656,13 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-    boolean isFirst_time = true;
     @Override
     public void onLocationChanged(Location location) {
         if (isFirst_time) {
             isFirst_time =false;
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-          locationManager.removeUpdates(this);
+            locationManager.removeUpdates(this);
         }
     }
 
@@ -694,17 +686,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
 //        MarkerOptions options = new MarkerOptions();
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        mMap.animateCamera(CameraUpdateFactory.zoomBy(14));
-        MarkerOptions markerOptions = new MarkerOptions()
-                   .title(sourceAddressName)
-                   .position(gpsTrackerLocation)
-                    .draggable(true)
-                   .icon(BitmapDescriptorFactory.fromResource(R.drawable.currlocmarker));
-            mMap.addMarker(markerOptions);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTrackerLocation.latitude,gpsTrackerLocation.longitude), 15));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000,null);
 
+        setSourceLocationAddress(gpsTrackerLocation);
+        setMyLocationMarker(mMap, gpsTrackerLocation);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -728,37 +712,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             mMap.getUiSettings().setRotateGesturesEnabled(true);
             mMap.getUiSettings().setAllGesturesEnabled(true);
 
-        }
-    }
-
-    protected synchronized void googleApiClient() {
-        client = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .build();
-        client.connect();
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-            case REQUEST_LOCATION_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //permission is granted
-                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        if (client == null) {
-                            googleApiClient();
-                        }
-                        mMap.setMyLocationEnabled(true);
-                    }
-                } else {
-                    Toast.makeText(this, "PermissionDenied", Toast.LENGTH_LONG).show();
-                }
         }
     }
 
@@ -786,11 +739,35 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         Toast.makeText(this, result, Toast.LENGTH_LONG).show();
     } */
 
+    protected synchronized void googleApiClient() {
+        client = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .build();
+        client.connect();
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-
-
-    OkHttpClient Client = new OkHttpClient();
+        switch (requestCode) {
+            case REQUEST_LOCATION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //permission is granted
+                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        if (client == null) {
+                            googleApiClient();
+                        }
+                        mMap.setMyLocationEnabled(true);
+                    }
+                } else {
+                    Toast.makeText(this, "PermissionDenied", Toast.LENGTH_LONG).show();
+                }
+        }
+    }
 
     public void run(String url, View v,JSONObject jbobj) throws IOException {
         // OkHttpClient client = new OkHttpClient();
@@ -819,7 +796,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                 // api_pass = myResponse;
                 //api_pass = jarray.getJSONObject(0).getString("password");
 
-                Main2Activity.this.runOnUiThread(new Runnable() {
+                Home.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (hello.equals("true")) {
@@ -870,6 +847,4 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
     }
-    public static final MediaType JSON
-            = MediaType.parse("application/json; charset=utf-8");
 }

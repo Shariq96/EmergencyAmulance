@@ -1,4 +1,4 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.JSONParsing;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -7,7 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.example.user.emergencyamulance.Helper.myApplication;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,9 +30,9 @@ import okhttp3.Response;
  */
 
 public class GetDriverMarkers extends Service {
+    public String url = "http://192.168.0.103:51967/api/useracc/getDriver";
     OkHttpClient client = new OkHttpClient();
     Timer mTimer;
-    public String url = "http://192.168.0.103:51967/api/useracc/getDriver";
     TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {

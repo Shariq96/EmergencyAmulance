@@ -1,4 +1,4 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.Helper;
 
 import android.app.Activity;
 import android.app.Application;
@@ -10,6 +10,11 @@ import android.support.multidex.MultiDex;
 
 public class myApplication extends Application implements Application.ActivityLifecycleCallbacks {
     private static boolean isActive;
+
+    public static boolean isActivityVisible() {
+        return isActive;
+    }
+
     @Override
     public void onCreate()
     {
@@ -26,9 +31,6 @@ public class myApplication extends Application implements Application.ActivityLi
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 
-    }
-    public static boolean isActivityVisible(){
-        return isActive;
     }
 
     @Override

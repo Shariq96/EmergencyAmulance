@@ -1,4 +1,4 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.Controllers;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.user.emergencyamulance.JSONParsing.JsonParsingObject;
+import com.example.user.emergencyamulance.R;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -32,7 +34,10 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
-public class MainActivity extends AppCompatActivity  {
+public class Welcome extends AppCompatActivity {
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+    public String url = "http://192.168.0.103:51967/api/useracc/post";
     LoginButton loginButton;
     Button btn;
     CallbackManager callbackManager;
@@ -42,9 +47,9 @@ public class MainActivity extends AppCompatActivity  {
      String facebookName;
     String mob1;
     String hello;
-    public String url = "http://192.168.0.103:51967/api/useracc/post";
-    jbobject jb = new jbobject();
+    JsonParsingObject jb = new JsonParsingObject();
     String Token = FirebaseInstanceId.getInstance().getToken();
+    OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +62,9 @@ public class MainActivity extends AppCompatActivity  {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signup_intent = new Intent(MainActivity.this, registeration.class);
+                Intent signup_intent = new Intent(Welcome.this, SignUpController.class);
                 signup_intent.putExtra("mobile_no",mob1);
-                MainActivity.this.startActivity(signup_intent);
+                Welcome.this.startActivity(signup_intent);
 
             }
         });
@@ -88,14 +93,14 @@ public class MainActivity extends AppCompatActivity  {
                 parameters.putString("fields", "id,name,email,gender, birthday");
                 request.setParameters(parameters);
                 request.executeAsync();
-                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                Intent intent = new Intent(Welcome.this, Home.class);
                 startActivity(intent);
-                Toast.makeText(MainActivity.this, "MainActivity SuccessFull ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Welcome.this, "Welcome SuccessFull ", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(MainActivity.this, "MainActivity Canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Welcome.this, "Welcome Canceled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -111,6 +116,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onActivityResult(requestCode,resultCode,data);
         callbackManager.onActivityResult(requestCode,resultCode,data);
     }
+
     private void setProfileToView(JSONObject jsonObject) {
         try {
             email = jsonObject.getString("email");
@@ -124,7 +130,6 @@ public class MainActivity extends AppCompatActivity  {
             e.printStackTrace();
         }
     }
-    OkHttpClient client = new OkHttpClient();
 
     public void post(String url, JSONObject jbobj) throws IOException {
         RequestBody body = RequestBody.create(JSON,jbobj.toString());
@@ -144,12 +149,12 @@ public class MainActivity extends AppCompatActivity  {
                 //  myResponse = myResponse.substring(1, myResponse.length() - 1); // yara
                 myResponse = myResponse.replace("\\", "");
                  hello = myResponse;
-                MainActivity.this.runOnUiThread(new Runnable() {
+                Welcome.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (hello.equals("true")) {
                             Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                            Intent intent = new Intent(Welcome.this, Home.class);
                             startActivity(intent);
 
 
@@ -158,7 +163,7 @@ public class MainActivity extends AppCompatActivity  {
 
                         }
                         else{
-                            Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Welcome.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -166,8 +171,4 @@ public class MainActivity extends AppCompatActivity  {
         });
 
     }
-
-
-    public static final MediaType JSON
-            = MediaType.parse("application/json; charset=utf-8");
 }

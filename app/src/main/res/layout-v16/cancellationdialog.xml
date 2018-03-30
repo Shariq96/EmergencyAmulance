@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialogbg"
+
+    tools:layout_editor_absoluteY="25dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="44dp"
+        android:fontFamily="@font/average_sans"
+        android:text="@string/reasons_for_cancellation"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/rg"
+        android:layout_width="420dp"
+        android:layout_height="134dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="128dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/radioButton6"
+            android:layout_width="221dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/average_sans"
+            android:text="@string/patient_is_fine"
+            android:textColor="@color/white"
+            android:textSize="21sp" />
+
+        <RadioButton
+            android:id="@+id/radioButton5"
+            android:layout_width="221dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/average_sans"
+            android:text="@string/mistakenly_booked"
+            android:textColor="@color/white"
+            android:textSize="21sp" />
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="221dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/average_sans"
+            android:text="@string/driver_is_late"
+            android:textColor="@color/white"
+            android:textSize="21sp" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/btn_submitofCancellation"
+            android:layout_width="152dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/topBar"
+            android:text="@string/submit"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rg" />
+
+
+        <Button
+            android:id="@+id/btn_cancelofCancellation"
+            android:layout_width="152dp"
+            android:layout_height="45dp"
+            android:background="@color/topBar"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rg" />
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

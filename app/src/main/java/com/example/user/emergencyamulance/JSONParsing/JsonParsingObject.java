@@ -1,4 +1,4 @@
-package com.example.user.emergencyamulance;
+package com.example.user.emergencyamulance.JSONParsing;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,7 +7,7 @@ import org.json.JSONObject;
  * Created by User on 12/6/2017.
  */
 
-public class jbobject
+public class JsonParsingObject
 {
     public JSONObject reqObject (String Contact_No,double lat, double longi,String token_no,String Service_type)
     {
