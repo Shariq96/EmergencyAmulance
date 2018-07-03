@@ -180,7 +180,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { checkLocationPermission(); }
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-        setContentView(R.layout.activity_drawer);
+        setContentView(R.layout.activity_home);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
 
@@ -289,7 +289,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         btn_req.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
+                /*try {
                     jbobj = jb.reqObject("03338983584",finalsourceLocation.latitude,finalsourceLocation.longitude,token,serviceType);
 //                    _progdialog.show();
                     run(url, v,jbobj);
@@ -297,6 +297,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                */
+                Intent intent = new Intent(getApplicationContext(), FeedbackController.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -418,7 +422,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(sourcelocation);
                     markerOptions.title(sourceAddressName);
-                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.currlocmarker));
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.mylocationtrackicon));
                     mMap.addMarker(markerOptions);
                     mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
                     }
