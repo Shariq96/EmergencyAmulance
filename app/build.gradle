@@ -5,7 +5,7 @@ android {
     buildToolsVersion "27.0.1"
     defaultConfig {
         applicationId "com.example.user.emergencyamulance"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -30,11 +30,19 @@ dependencies {
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support:support-vector-drawable:26.1.0'
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
+
+
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'io.michaelrocks:libphonenumber-android:8.8.5'
+
+    implementation 'com.github.joielechong:countrycodepicker:2.1.8'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:26.+'
+
     compile 'com.android.support:design:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.squareup.okhttp3:okhttp:3.3.1'
@@ -48,6 +56,10 @@ dependencies {
     compile 'com.google.maps.android:android-maps-utils:0.5'
     compile 'com.github.d-max:spots-dialog:0.7@aar'
     compile 'com.github.GrenderG:Toasty:1.2.8'
+    compile 'com.rom4ek:arcnavigationview:1.0.3'
+    compile 'com.github.jrvansuita:MaterialAbout:+'
+    compile 'com.github.florent37:awesomebar:1.0.3'
+
     testCompile 'junit:junit:4.12'
 }
 

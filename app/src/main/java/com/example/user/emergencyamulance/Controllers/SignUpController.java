@@ -41,7 +41,8 @@ public class SignUpController extends AppCompatActivity {
             = MediaType.parse("application/json; charset=utf-8");
     public String url = "http://192.168.0.103:51967/api/useracc/post";
     EditText name, pass, email, phone;
-    ImageView signup_btn,fb;
+    Button signup_btn;
+    ImageView fb;
     String password, eMail, namee, Jsonobj, hello, mob_no ,addr1 ,mob1;
     String emmail;
     String gender;
@@ -108,7 +109,7 @@ public class SignUpController extends AppCompatActivity {
 
         mob1 = getIntent().getStringExtra("mobile_no");
 
-        signup_btn = (ImageView) findViewById(R.id.btn_reg_me);
+        signup_btn =  findViewById(R.id.btn_reg_me);
         signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,165 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
+    android:background="@color/white"
     tools:context="com.example.user.emergencyamulance.Controllers.SignUpController"
-    tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="25dp">
+    android:orientation="vertical"
+    >
 
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/topbar"
-        android:layout_width="0dp"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/topBar"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-    <TextView
-        android:id="@+id/lbl_reg_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/average_sans"
-        android:text="Registration User"
-        android:textColor="@android:color/background_light"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="@+id/topbar"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/topbar" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:fontFamily="@font/alegreya_sans"
+                android:gravity="center_vertical"
+                android:text="Registration"
+                android:textAlignment="center"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
 
     <TextView
         android:id="@+id/lbl_OR"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="OR"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/txt_Username"
-        app:layout_constraintEnd_toEndOf="@+id/txt_Username"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/txt_Username"
-        app:layout_constraintTop_toBottomOf="@+id/fb_login_Btn" />
+        android:fontFamily="@font/average_sans"
+        android:layout_gravity="center"
+         />
 
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/fb_login_Btn"
-        android:layout_width="266dp"
-        android:layout_height="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/lbl_OR"
-        app:layout_constraintStart_toStartOf="@+id/lbl_OR"
-        app:layout_constraintTop_toBottomOf="@+id/topbar"
         app:srcCompat="@drawable/reg_signup" />
 
-    <EditText
-        android:id="@+id/txt_Username"
-        android:layout_width="360dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="74dp"
-        android:background="@drawable/reg_name"
-        android:ems="10"
-        android:fontFamily="@font/average_sans"
-        android:hint="@string/fill_username"
-        android:inputType="textPersonName"
-        android:paddingLeft="62dp"
-        android:paddingStart="62dp"
-        android:textColorHint="@color/txtColor"
-        app:layout_constraintEnd_toEndOf="@+id/txt_Phone"
-        app:layout_constraintHorizontal_bias="0.485"
-        app:layout_constraintStart_toStartOf="@+id/txt_Phone"
-        app:layout_constraintTop_toBottomOf="@+id/fb_login_Btn" />
+<LinearLayout
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:layout_marginTop="30dp">
 
-    <EditText
-        android:id="@+id/txt_Phone"
-        android:layout_width="360dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/reg_phone"
-        android:ems="10"
-        android:fontFamily="@font/average_sans"
-        android:hint="@string/fill_Phone"
-        android:inputType="textPersonName"
-        android:paddingLeft="62dp"
-        android:paddingStart="62dp"
-        app:layout_constraintEnd_toEndOf="@+id/txt_Email"
-        app:layout_constraintStart_toStartOf="@+id/txt_Email"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Username" />
 
-    <EditText
-        android:id="@+id/txt_Email"
-        android:layout_width="360dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/reg_cnic"
-        android:ems="10"
-        android:fontFamily="@font/average_sans"
-        android:hint="@string/fill_cnic"
-        android:inputType="textPersonName"
-        android:paddingLeft="62dp"
-        android:paddingStart="62dp"
-        app:layout_constraintEnd_toEndOf="@+id/txt_Password"
-        app:layout_constraintStart_toStartOf="@+id/txt_Password"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Phone" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
 
-    <EditText
-        android:id="@+id/txt_Password"
-        android:layout_width="360dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/reg_password"
-        android:ems="10"
-        android:fontFamily="@font/average_sans"
-        android:hint="@string/fill_pass"
-        android:inputType="textPersonName"
-        android:paddingLeft="62dp"
-        android:paddingStart="62dp"
-        app:layout_constraintEnd_toEndOf="@+id/btn_reg_me"
-        app:layout_constraintStart_toStartOf="@+id/btn_reg_me"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Email" />
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="45dp"
+            android:padding="5dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/desc"
+            android:src="@drawable/icon_name" />
+
+        <EditText
+            android:id="@+id/txt_Username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:background="@drawable/states_rounded_corners"
+            android:fontFamily="@font/alegreya_sans"
+            android:gravity="left"
+            android:paddingLeft="20dp"
+            android:hint="Name"
+            android:paddingTop="5dp"
+            android:textSize="18sp"
+            android:inputType="textPersonName"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="45dp"
+            android:padding="5dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/desc"
+            android:src="@drawable/icon_phone"
+            />
+
+        <EditText
+            android:id="@+id/txt_Phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:paddingLeft="20dp"
+            android:fontFamily="@font/alegreya_sans"
+            android:gravity="left |center_vertical"
+            android:hint="Phone Number"
+            android:paddingTop="5dp"
+            android:background="@drawable/states_rounded_corners"
+            android:textSize="18sp"
+            android:inputType="phone"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+
+            android:layout_width="50dp"
+            android:layout_height="45dp"
+            android:padding="5dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/desc"
+            android:src="@drawable/ic_email_black_24dp" />
+
+        <EditText
+            android:id="@+id/txt_Email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:background="@drawable/states_rounded_corners"
+            android:fontFamily="@font/alegreya_sans"
+            android:gravity="left"
+            android:paddingLeft="20dp"
+            android:hint="Email"
+            android:paddingTop="5dp"
+            android:textSize="18sp"
+            android:inputType="textEmailAddress"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="45dp"
+            android:padding="5dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/desc"
+            android:src="@drawable/ic_lock_black_24dp" />
+
+        <EditText
+            android:id="@+id/txt_Password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:background="@drawable/states_rounded_corners"
+            android:fontFamily="@font/alegreya_sans"
+            android:gravity="left |center_vertical"
+            android:hint="Password"
+            android:paddingLeft="20dp"
+            android:paddingTop="5dp"
+            android:textSize="18sp"
+            android:inputType="textPassword"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView5"
-        android:layout_width="341dp"
-        android:layout_height="46dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:contentDescription="@string/txt_agreement"
         android:text="By Clicking “Register”, you agree to Terms and Conditions and Privacy Policy."
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_reg_me" />
+        />
 
-    <ImageView
+</LinearLayout>
+
+    <Button
         android:id="@+id/btn_reg_me"
-        android:layout_width="360dp"
-        android:layout_height="55dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        app:layout_constraintEnd_toEndOf="@+id/textView5"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Password"
-        app:srcCompat="@drawable/reg_register" />
+        android:background="@color/topBar"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:text="Register" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

@@ -4,6 +4,7 @@ package com.example.user.emergencyamulance.Controllers;
     import android.content.SharedPreferences;
     import android.support.v7.app.AppCompatActivity;
     import android.os.Bundle;
+    import android.util.Log;
     import android.view.View;
     import android.widget.Button;
     import android.widget.CheckBox;
@@ -32,6 +33,7 @@ public class LoginController extends AppCompatActivity {
         EditText mobile_no;
         EditText pass;
         CheckBox sv_pass;
+        TextView forgetpass;
         Button btn_login;
         TextView signup_txt;
         OkHttpClient Client;
@@ -56,14 +58,26 @@ public class LoginController extends AppCompatActivity {
             sv_pass = (CheckBox) findViewById(R.id.chk_pass);
             btn_login = (Button) findViewById(R.id.button);
             signup_txt = (TextView) findViewById(R.id.textView2);
+
             signup_txt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent signup_intent = new Intent(LoginController.this, Verifymobile.class);
+                    Intent signup_intent = new Intent(LoginController.this, SignUpController.class);
                     LoginController.this.startActivity(signup_intent);
 
                }
             });
+
+            forgetpass = findViewById(R.id.forgetpass);
+
+            forgetpass.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent forget = new Intent(LoginController.this, Verifymobile.class);
+                    LoginController.this.startActivity(forget);
+                }
+            });
+
             pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
             editor = pref.edit();
             btn_login.setOnClickListener(new View.OnClickListener() {
