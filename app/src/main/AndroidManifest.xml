@@ -33,11 +33,7 @@
             android:name=".Models.SplashActivity"
             android:theme="@style/SplashTheme">
             loginActivity
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Controllers.Welcome" />
 
@@ -59,7 +55,16 @@
         <activity
             android:name=".Controllers.Home"
             android:label="M A D A D"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
         <activity android:name=".Controllers.LoginController" />
 
         <service android:name=".Helper.MyAndroidFirebaseMsgService">
