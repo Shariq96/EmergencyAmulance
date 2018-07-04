@@ -75,6 +75,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.rom4ek.arcnavigationview.ArcNavigationView;
 
 import org.json.JSONObject;
 
@@ -153,6 +154,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     private String sourceAddressName;
     private LatLng gpsTrackerLocation;
     private String destAddressName;
+    private ArcNavigationView NavigationViewArc;
     private boolean locationFlag = false;
     private BottomNavigationView bottomBar;
     private String serviceType = ""; // 1 for Routine, 2 for Crictical, 3 for Normal
@@ -196,6 +198,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
