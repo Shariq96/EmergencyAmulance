@@ -15,6 +15,10 @@ package com.example.user.emergencyamulance.Controllers;
     import com.example.user.emergencyamulance.R;
     import com.google.firebase.auth.FirebaseAuth;
 
+    import org.json.JSONArray;
+    import org.json.JSONException;
+    import org.json.JSONObject;
+
     import java.io.IOException;
 
     import okhttp3.Call;
@@ -29,10 +33,11 @@ public class LoginController extends AppCompatActivity {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
     public static boolean LogedIn = false;
-    public String url = "http://192.168.0.103:51967//api/useracc/get";
+    public String url = "http://192.168.0.101:51967//api/useracc/get";
         EditText mobile_no;
         EditText pass;
         CheckBox sv_pass;
+    String pass1,name,id,contact,token;
         TextView forgetpass;
         Button btn_login;
         TextView signup_txt;
@@ -41,6 +46,9 @@ public class LoginController extends AppCompatActivity {
         String api_mob, api_pass;
         SharedPreferences.Editor editor;
         SharedPreferences pref;
+    JSONArray array = null;
+    JSONObject jsonObj = null;
+
     OkHttpClient client = new OkHttpClient();
     private FirebaseAuth mAuth;
 
@@ -126,24 +134,38 @@ public class LoginController extends AppCompatActivity {
                     String myResponse = response.body().string();
                     //  myResponse = myResponse.substring(1, myResponse.length() - 1); // yara
                     myResponse = myResponse.replace("\\", "");
+                    try {
+                         array= new JSONArray(myResponse);
+                         jsonObj = array.getJSONObject(0);
+                        pass1 = jsonObj.getString("pass");
+                         name = jsonObj.getString("Customer_name");
+                        id = jsonObj.getString("Customer_id");
+                        contact = jsonObj.getString("Contact_No");
+                         token = jsonObj.getString("token_no");
+                        String new1 = pass1;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-                   //SONObject jarray = null;
-                     //jarray = new JSONObject(myResponse);
-                    //api_pass = jarray.getString("password");
-                    api_pass = myResponse;
-                    //api_pass = jarray.getJSONObject(0).getString("password");
+
+
 
                     LoginController.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (api_pass.equals("true")) {
+                            if (password.equals(pass1)) {
                                 Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_LONG).show();
                                 editor.putBoolean("login", true);
+                                editor.putString("name",name);
+                                editor.putString("contact",contact);
+                                editor.putString("id",id);
+                                editor.putString("token",token);
                                 editor.apply();
                                 editor.commit();
                                 LogedIn = true;
                                 Intent intent = new Intent(LoginController.this, Home.class);
                                 startActivity(intent);
+                                finish();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Wrong Credentials", Toast.LENGTH_LONG).show();
 

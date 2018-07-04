@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -112,7 +113,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     SupportMapFragment mapFragment;
     GPSTracker gpsTracker;
     String hello;
-    String url = "http://192.168.0.103:51967/api/useracc/GetRequest";
+    String url = "http://192.168.0.101:51967/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
     SpotsDialog _progdialog;
     CancelTrip cf = new CancelTrip();
@@ -135,7 +136,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     private TextView estfare;
     private AutocompleteFilter _typeFilter;
     private LatLngBounds bounds;
-    private String service ;
+    private String service;
     //place api intent builder
     private PlacePicker.IntentBuilder destinationLoc_Builder;
     private PlacePicker.IntentBuilder sourceLoc_Builder;
@@ -154,6 +155,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     private LatLng gpsTrackerLocation;
     private String destAddressName;
     private boolean locationFlag = false;
+    private TextView textView;
+    SharedPreferences MyPref;
+    SharedPreferences.Editor editor;
     private BottomNavigationView bottomBar;
     private String serviceType = ""; // 1 for Routine, 2 for Crictical, 3 for Normal
     private LatLng finalsourceLocation;
@@ -177,7 +181,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { checkLocationPermission(); }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermission();
+        }
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_home);
@@ -186,9 +192,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
 
 
-
         //TODO: En k tafseel likhu idr Comment kar k
-            // bhai yeh navigaton drawer ka builtin h
+        // bhai yeh navigaton drawer ka builtin h
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -198,6 +203,12 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        MyPref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        editor = MyPref.edit();
+        String new1 = MyPref.getString("name","user").toString();
+        textView = (TextView) findViewById(R.id.lbl_sidenav_username);
+       // textView.setText();
+
 
         gpsTrackerLocation = getMyLocation();
 
@@ -205,10 +216,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         sourceAddress = (EditText) findViewById(R.id._source);
         estdistance = (TextView) findViewById(R.id.txt_Distance);
         estfare = (TextView) findViewById(R.id.txt_Fare);
-      //  btn_cancel = (Button) findViewById(R.id.btn_cncel);
+        //  btn_cancel = (Button) findViewById(R.id.btn_cncel);
         destinationAddr = (EditText) findViewById(R.id._destination);
         btn_req = (Button) findViewById(R.id.btn_req);
-     //   _autosearchaddr = (AutoCompleteTextView) findViewById(R.id._autosource);
+        //   _autosearchaddr = (AutoCompleteTextView) findViewById(R.id._autosource);
         bottomBar = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
         myLocationTrackerIcon = (ImageView) findViewById(R.id.trackmylocation);
 
@@ -228,7 +239,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                         serviceType = "3";
                         break;
                 }
-           return true;
+                return true;
             }
         });
 
@@ -237,7 +248,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         startService(new Intent(this, GetDriverMarkers.class));
         //EnablingLocationServices
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,   0, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
 
         myLocationTrackerIcon.setOnClickListener(new View.OnClickListener() {
@@ -250,8 +261,6 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                 }
             }
         });
-
-
 
 
         //Updated 28Feb2018 - getMyLocationPointer
@@ -269,7 +278,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
         //TODO: Ye kia scene hai bae comment to kr
         // getting map fragment and myFunction  screen per dikhata h k apka driver n req accept ki h
-            // dd jo driver ki location arahi h wo map per show karta h
+        // dd jo driver ki location arahi h wo map per show karta h
         mapFragment.getMapAsync(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMsgReciver,
                 new IntentFilter("myFunction"));
@@ -277,15 +286,13 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                 new IntentFilter("dd"));
 
 
-        if (locationFlag == true)
-        {
-            finalsourceLocation = new LatLng(sourcelocation.latitude,sourcelocation.longitude);
-        }
-        else{
-            finalsourceLocation = new LatLng(gpsTrackerLocation.latitude,gpsTrackerLocation.longitude);
+        if (locationFlag == true) {
+            finalsourceLocation = new LatLng(sourcelocation.latitude, sourcelocation.longitude);
+        } else {
+//            finalsourceLocation = new LatLng(gpsTrackerLocation.latitude,gpsTrackerLocation.longitude);
         }
 
-       //TODO: RequestButton
+        //TODO: RequestButton
         btn_req.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,7 +317,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             @Override
             public void onClick(View v) {
                 destinationLoc_Builder = new PlacePicker.IntentBuilder();
-            Intent intent;
+                Intent intent;
                 try {
                     intent = destinationLoc_Builder.build(Home.this);
                     startActivityForResult(intent, destination_reqcode);
@@ -326,7 +333,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             @Override
             public void onClick(View v) {
                 sourceLoc_Builder = new PlacePicker.IntentBuilder();
-            Intent intent;
+                Intent intent;
                 try {
                     intent = sourceLoc_Builder.build(Home.this);
                     startActivityForResult(intent, sourcePicker_req);
@@ -337,7 +344,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                 }
             }
         });
-
+//       textView.setText(hello);
     }
 
     //getting current Location LatLng for mapReady and tracker button
@@ -399,7 +406,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                     LatLng destinationlocation = place.getLatLng();
                     destlat = destinationlocation.latitude;
                     destlang = destinationlocation.longitude;
-                    String destaddr_Name = getCompleteAddressString(destlat,destlang);
+                    String destaddr_Name = getCompleteAddressString(destlat, destlang);
                     destinationAddr.setText(destaddr_Name);
                     setDestMarker(destlang, destlat);
 
@@ -408,28 +415,27 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                     Toast.makeText(this, "Please Select Appropriate Location", Toast.LENGTH_SHORT).show();
                 }
             }
-        }
-        else if (requestCode == sourcePicker_req) {
+        } else if (requestCode == sourcePicker_req) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
 
                 sourceAddressName = String.format(" %s", place.getName());
 
                 sourcelocation = place.getLatLng();
-                String finaladdr = getCompleteAddressString(sourcelocation.latitude,sourcelocation.longitude);
+                String finaladdr = getCompleteAddressString(sourcelocation.latitude, sourcelocation.longitude);
                 sourceAddress.setText(finaladdr);
                 locationFlag = true;
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(sourcelocation);
-                    markerOptions.title(sourceAddressName);
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(sourcelocation);
+                markerOptions.title(sourceAddressName);
                 markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.mylocationtrackicon));
-                    mMap.addMarker(markerOptions);
-                    mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
-                    }
-                } else {
-                    Toast.makeText(this, "Please Select Again", Toast.LENGTH_SHORT).show();
-                }
+                mMap.addMarker(markerOptions);
+                mMap.animateCamera(CameraUpdateFactory.zoomBy(-2));
             }
+        } else {
+            Toast.makeText(this, "Please Select Again", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
@@ -469,14 +475,13 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(client);
         float result[] = new float[10];
         //TODO: Es ko check karo kia panga de ra
-        if (sourceLatitude >= 0.0){
+        if (sourceLatitude >= 0.0) {
             Location.distanceBetween(gpsTrackerLocation.latitude, gpsTrackerLocation.longitude, destination_lat, destination_lang, result);
-        }
-        else{
+        } else {
             Location.distanceBetween(sourcelocation.latitude, sourcelocation.longitude, destination_lat, destination_lang, result);
         }
 
-        int distance = (int) result[0] / 1000 ;
+        int distance = (int) result[0] / 1000;
 
         estdistance.setText("Distance: " + distance + "km");
         estfare.setText("Est. Fare: " + ((distance * costPerKM) + baseFee) + "Rs");
@@ -490,13 +495,13 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
     }
 
-    private void setDirections()
-    {   Object[] dataTransfer = new Object[3];
+    private void setDirections() {
+        Object[] dataTransfer = new Object[3];
         String url = getDirectionUrl();
         GetDirectionData gdd = new GetDirectionData();
-        dataTransfer[0] =mMap;
-        dataTransfer[1]= url;
-        dataTransfer[2] = new LatLng(destlat,destlang);
+        dataTransfer[0] = mMap;
+        dataTransfer[1] = url;
+        dataTransfer[2] = new LatLng(destlat, destlang);
         gdd.execute(dataTransfer);
 
     }
@@ -513,11 +518,11 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
             String temp = driverList.get(i).toString();
             String[] latlong = temp.split(",");
-                    double latitude = Double.parseDouble(latlong[0]);
-                    double longitude = Double.parseDouble(latlong[1]);
+            double latitude = Double.parseDouble(latlong[0]);
+            double longitude = Double.parseDouble(latlong[1]);
             MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(new LatLng(latitude,longitude));
-        mMap.addMarker(markerOptions);
+            markerOptions.position(new LatLng(latitude, longitude));
+            mMap.addMarker(markerOptions);
 
         }
 
@@ -595,7 +600,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         int id = item.getItemId();
 
         if (id == R.id.nav_history) {
-            // Handle the camera action
+            Intent intent = new Intent(getApplicationContext(),HistoryActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_setting) {
 
         } else if (id == R.id.nav_policies) {
@@ -607,6 +613,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         } else if (id == R.id.nav_signout) {
             LoginManager.getInstance().logOut();
             FirebaseAuth.getInstance().signOut();
+            FirebaseAuth.getInstance().signOut();
+            editor.putBoolean("login", false);
+            editor.apply();
             startActivity(new Intent(Home.this, LoginController.class));
             finish();
         }
@@ -663,7 +672,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     @Override
     public void onLocationChanged(Location location) {
         if (isFirst_time) {
-            isFirst_time =false;
+            isFirst_time = false;
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             locationManager.removeUpdates(this);
@@ -697,7 +706,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 googleApiClient();
-              mMap.setMyLocationEnabled(false);
+                mMap.setMyLocationEnabled(false);
                 mMap.setTrafficEnabled(false);
                 mMap.getUiSettings().setZoomGesturesEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -773,10 +782,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         }
     }
 
-    public void run(String url, View v,JSONObject jbobj) throws IOException {
+    public void run(String url, View v, JSONObject jbobj) throws IOException {
         // OkHttpClient client = new OkHttpClient();
-      //  LatLng latLng = new LatLng(sourceLatitude, sourceLongitude);
-        RequestBody body = RequestBody.create(JSON,jbobj.toString());
+        //  LatLng latLng = new LatLng(sourceLatitude, sourceLongitude);
+        RequestBody body = RequestBody.create(JSON, jbobj.toString());
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
@@ -836,9 +845,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             return null;
         }
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(client);
-        gDirectionUrl.append("origin="+finalsourceLocation.latitude+","+ finalsourceLocation.longitude);
-        gDirectionUrl.append("&destination="+destlat+","+destlang);
-        gDirectionUrl.append("&key="+"AIzaSyB5WDX6S95k_KvAdN7PjdXzz9XIneDhIsc");
+        gDirectionUrl.append("origin=" + finalsourceLocation.latitude + "," + finalsourceLocation.longitude);
+        gDirectionUrl.append("&destination=" + destlat + "," + destlang);
+        gDirectionUrl.append("&key=" + "AIzaSyB5WDX6S95k_KvAdN7PjdXzz9XIneDhIsc");
         return (gDirectionUrl.toString());
     }
 
