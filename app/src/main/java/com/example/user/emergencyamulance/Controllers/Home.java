@@ -205,7 +205,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         sourceAddress = (EditText) findViewById(R.id._source);
         estdistance = (TextView) findViewById(R.id.txt_Distance);
         estfare = (TextView) findViewById(R.id.txt_Fare);
-        btn_cancel = (Button) findViewById(R.id.btn_cncel);
+      //  btn_cancel = (Button) findViewById(R.id.btn_cncel);
         destinationAddr = (EditText) findViewById(R.id._destination);
         btn_req = (Button) findViewById(R.id.btn_req);
      //   _autosearchaddr = (AutoCompleteTextView) findViewById(R.id._autosource);
