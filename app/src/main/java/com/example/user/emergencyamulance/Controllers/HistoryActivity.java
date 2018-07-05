@@ -34,7 +34,7 @@
         private RecyclerView rv;
         SharedPreferences myPref;
         private ListView historylist;
-        public String url = "http://192.168.0.101:51967//api/useracc/gethistory";
+        public String url = "http://192.168.0.102:51967//api/useracc/gethistory";
         private String id;
         JSONArray array = null;
         JSONObject jsonObj = null;

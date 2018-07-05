@@ -114,7 +114,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     SupportMapFragment mapFragment;
     GPSTracker gpsTracker;
     String hello;
-    String url = "http://192.168.0.101:51967/api/useracc/GetRequest";
+    String url = "http://192.168.0.102:51967/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
     SpotsDialog _progdialog;
     CancelTrip cf = new CancelTrip();
@@ -292,25 +292,25 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         if (locationFlag == true) {
             finalsourceLocation = new LatLng(sourcelocation.latitude, sourcelocation.longitude);
         } else {
-//            finalsourceLocation = new LatLng(gpsTrackerLocation.latitude,gpsTrackerLocation.longitude);
+              finalsourceLocation = new LatLng(gpsTrackerLocation.latitude,gpsTrackerLocation.longitude);
         }
 
         //TODO: RequestButton
         btn_req.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*try {
-                    jbobj = jb.reqObject("03338983584",finalsourceLocation.latitude,finalsourceLocation.longitude,token,serviceType);
+                try {
+                    jbobj = jb.reqObject(MyPref.getString("id","1024"),"03338983584",sourcelocation.latitude,sourcelocation.longitude,token,serviceType);
 //                    _progdialog.show();
                     run(url, v,jbobj);
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                */
-                Intent intent = new Intent(getApplicationContext(), FeedbackController.class);
+
+               /* Intent intent = new Intent(getApplicationContext(), FeedbackController.class);
                 startActivity(intent);
-                finish();
+                finish();*/
             }
         });
 
@@ -596,14 +596,13 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_history) {
-            Intent intent = new Intent(getApplicationContext(),HistoryActivity.class);
+            Intent intent = new Intent(Home.this,HistoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_setting) {
 
@@ -818,7 +817,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                         if (hello.equals("true")) {
                             Toast.makeText(getApplicationContext(), "Got it", Toast.LENGTH_LONG).show();
                             btn_req.setVisibility(View.GONE);
-                            btn_cancel.setVisibility(View.VISIBLE);
+//                            btn_cancel.setVisibility(View.VISIBLE);
 //                            _progdialog.cancel();
 
                         } else {
@@ -848,7 +847,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             return null;
         }
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(client);
-        gDirectionUrl.append("origin=" + finalsourceLocation.latitude + "," + finalsourceLocation.longitude);
+        gDirectionUrl.append("origin=" + currentLocation.getLatitude() + "," + currentLocation.getLongitude());
         gDirectionUrl.append("&destination=" + destlat + "," + destlang);
         gDirectionUrl.append("&key=" + "AIzaSyB5WDX6S95k_KvAdN7PjdXzz9XIneDhIsc");
         return (gDirectionUrl.toString());
