@@ -148,6 +148,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     private AutoCompleteTextView _autosearchaddr;
     private double sourclan;
     private double sourclon;
+    private TextView lbl_sidenav_userName;
     private LatLng sourcelocation;
     private int baseFee = 300;
     private int costPerKM = 10;
@@ -235,6 +236,13 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
 
+        lbl_sidenav_userName = findViewById(R.id.lbl_sidenav_username);
+        lbl_sidenav_userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lbl_sidenav_userName.setText("Sharik Khattak");
+            }
+        });
 
         //Service for Drivers Location
         startService(new Intent(this, GetDriverMarkers.class));
@@ -591,8 +599,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         return super.onOptionsItemSelected(item);
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
+
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -606,6 +616,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         } else if (id == R.id.nav_about) {
 
         } else if (id == R.id.nav_howitworks) {
+            Intent feedback = new Intent(Home.this, FeedbackController.class);
+            startActivity(feedback);
 
         } else if (id == R.id.nav_signout) {
             LoginManager.getInstance().logOut();

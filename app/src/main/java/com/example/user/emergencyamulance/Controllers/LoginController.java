@@ -2,6 +2,7 @@ package com.example.user.emergencyamulance.Controllers;
 
     import android.content.Intent;
     import android.content.SharedPreferences;
+    import android.os.CountDownTimer;
     import android.support.v7.app.AppCompatActivity;
     import android.os.Bundle;
     import android.util.Log;
@@ -17,6 +18,7 @@ package com.example.user.emergencyamulance.Controllers;
 
     import java.io.IOException;
 
+    import es.dmoral.toasty.Toasty;
     import okhttp3.Call;
     import okhttp3.Callback;
     import okhttp3.HttpUrl;
@@ -83,14 +85,30 @@ public class LoginController extends AppCompatActivity {
             btn_login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {
-                        mobno = mobile_no.getText().toString();
-                        password = pass.getText().toString();
-                        run();
+                    // try {
+                    Intent forget = new Intent(LoginController.this, Home.class);
+                    LoginController.this.startActivity(forget);
+                    //     mobno = mobile_no.getText().toString();
+                    //    password = pass.getText().toString();
+                    //   run();
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    //  } catch (IOException e) {
+                    //     e.printStackTrace();
+                    //  }
+                    CountDownTimer countDownTimer = new CountDownTimer(3000, 1000) {
+
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            Toasty.info(getApplicationContext(), "Login Sucessful", Toast.LENGTH_LONG, true).show();
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            Toasty.success(getApplicationContext(), "Welcome!", Toast.LENGTH_LONG, true).show();
+                        }
+                    };
+
+                    countDownTimer.start();
 
 
                 }

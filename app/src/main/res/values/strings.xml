@@ -78,7 +78,7 @@
     <string name="send">Send</string>
     <string name="request">Request</string>
     <string name="cancel">Cancel</string>
-    <string name="dropoff_location">Dropoff Location</string>
+    <string name="dropoff_location">Choose Hospital/Clinic</string>
     <string name="pickup_location">Pickup Location</string>
     <string name="crictical">Crictical</string>
     <string name="deadbody">DeadBody</string>
@@ -91,4 +91,7 @@
     <string name="rate_your_experience">Rate Your Experience</string>
     <string name="share_your_experience_or_any_suggestion">Share your experience or Any suggestion...</string>
     <string name="rate_the_driving">Rate the Driving</string>
+    <string name="m_a_d_a_d">M A D A D</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="nearest_ambulance_is_6_min_away">Nearest Ambulance is 6 min Away!!</string>
 </resources>

@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.user.emergencyamulance.R;
+import com.example.user.emergencyamulance.forget_password;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -32,6 +34,7 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
     EditText mPhoneNumberField, mVerificationField;
     Button mStartButton, mVerifyButton, mResendButton;
     String mVerificationId;
+    TextView Verifyyournumber;
     private FirebaseAuth mAuth;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
@@ -54,9 +57,22 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
         mVerifyButton = (Button) findViewById(R.id.btn_ver_verify);
         mResendButton = (Button) findViewById(R.id.btn_ver_resend);
 
+        Verifyyournumber = (TextView) findViewById(R.id.textView4);
+
+        Verifyyournumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent changepass = new Intent(Verifymobile.this, forget_password.class);
+                startActivity(changepass);
+
+            }
+        });
+
+
         mStartButton.setOnClickListener(this);
         mVerifyButton.setOnClickListener(this);
         mResendButton.setOnClickListener(this);
+
 
         mAuth = FirebaseAuth.getInstance();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
