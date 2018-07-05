@@ -42,19 +42,12 @@
         </activity>
         <activity android:name=".Controllers.Welcome" />
 
-
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".Controllers.SignUpController" >
-
-
-        </activity>
-        <activity android:name=".Controllers.Verifymobile" >
-
-        </activity>
+        <activity android:name=".Controllers.SignUpController"></activity>
+        <activity android:name=".Controllers.Verifymobile"></activity>
         <activity android:name=".Controllers.CancelTrip" />
 
         <meta-data
@@ -88,8 +81,7 @@
             android:name=".Helper.RegistrationIntentService"
             android:exported="false" />
         <service
-            android:name=".JSONParsing.GetDriverMarkers"
-            android:exported="false" />
+            android:name=".JSONParsing.GetDriverMarkers" />
 
         <receiver
             android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
@@ -103,7 +95,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Controllers.FeedbackController"></activity>
+        <activity android:name=".Controllers.FeedbackController" />
+        <activity android:name=".Controllers.HistoryActivity" />
+        <activity android:name=".Controllers.cardview"></activity>
         <activity android:name=".forget_password"></activity>
     </application>
 
