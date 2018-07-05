@@ -111,6 +111,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     private static EditText editText;
     public boolean first_time = true;
     ArrayList driverList = new ArrayList();
+    String mintime;
     SupportMapFragment mapFragment;
     GPSTracker gpsTracker;
     String hello;
@@ -143,8 +144,11 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     private PlacePicker.IntentBuilder sourceLoc_Builder;
     private double sourceLongitude;
     private double sourceLatitude;
+    public static double sourceLongitude1;
+    public static double sourceLatitude1;
     private Location location;
     private EditText destinationAddr;
+    private TextView nearestAmbtext;
     private EditText sourceAddress;
     private AutoCompleteTextView _autosearchaddr;
     private double sourclan;
@@ -178,6 +182,14 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             showDriver(driverList);
         }
     };
+    private BroadcastReceiver displayMintime = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mintime = intent.getStringExtra("minTime");
+            showmin(mintime);
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,6 +231,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         sourceAddress = (EditText) findViewById(R.id._source);
         estdistance = (TextView) findViewById(R.id.txt_Distance);
         estfare = (TextView) findViewById(R.id.txt_Fare);
+        nearestAmbtext = (TextView) findViewById(R.id._nearestambulancetext);
         //  btn_cancel = (Button) findViewById(R.id.btn_cncel);
         destinationAddr = (EditText) findViewById(R.id._destination);
         btn_req = (Button) findViewById(R.id.btn_req);
@@ -287,6 +300,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                 new IntentFilter("myFunction"));
         LocalBroadcastManager.getInstance(this).registerReceiver(displayDrivers,
                 new IntentFilter("dd"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(displayMintime,
+                new IntentFilter("mintime"));
 
 
         if (locationFlag == true) {
@@ -350,6 +365,36 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 //       textView.setText(hello);
     }
 
+    @Override
+    protected void onResume() {
+
+        startService(new Intent(this,
+                GetDriverMarkers.class));
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        stopService(new Intent(this,
+                GetDriverMarkers.class));
+        super.onPause();
+    }
+
+    @Override
+    protected void onStart() {
+
+        startService(new Intent(this,
+                GetDriverMarkers.class));
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        stopService(new Intent(this,
+                GetDriverMarkers.class));
+        super.onStop();
+    }
+
     //getting current Location LatLng for mapReady and tracker button
     private LatLng getMyLocation() {
 
@@ -359,6 +404,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
             sourceLatitude = gpsTracker.getLatitude();
             sourceLongitude = gpsTracker.getLongitude();
+            sourceLatitude1 = sourceLatitude;
+            sourceLongitude1 = sourceLongitude;
             gpsTrackerLocation = new LatLng(sourceLatitude, sourceLongitude);
             Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + sourceLatitude + "\nLong: " + sourceLongitude, Toast.LENGTH_LONG).show();
             //setting default location address oncreate
@@ -513,6 +560,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMsgReciver);
         super.onDestroy();
+    }
+    private void showmin(String mintime)
+    {
+        nearestAmbtext.setText("Nearest Ambulance is "+ mintime+ " mins away");
     }
 
     private void showDriver(ArrayList driverList) {
