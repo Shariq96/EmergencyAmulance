@@ -97,7 +97,7 @@ import okhttp3.Response;
 public class Home extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, NavigationView.OnNavigationItemSelectedListener, FragmentChangeListner, android.location.LocationListener {
+        LocationListener, ArcNavigationView.OnNavigationItemSelectedListener, FragmentChangeListner, android.location.LocationListener {
 
     public static final int REQUEST_LOCATION_CODE = 99;
     public static final MediaType JSON
@@ -217,8 +217,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        NavigationViewArc = findViewById(R.id.nav_view);
+        NavigationViewArc.setNavigationItemSelectedListener(this);
         MyPref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         editor = MyPref.edit();
         String new1 = MyPref.getString("name","user").toString();
