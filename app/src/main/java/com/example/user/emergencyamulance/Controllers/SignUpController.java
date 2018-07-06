@@ -205,7 +205,7 @@ public class SignUpController extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(getApplicationContext(), "somethng went wrong", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "somethng went wrong", Toast.LENGTH_LONG).show();
             }
 
             @Override

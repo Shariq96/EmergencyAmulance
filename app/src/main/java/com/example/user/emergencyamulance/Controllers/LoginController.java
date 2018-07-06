@@ -72,7 +72,7 @@ public class LoginController extends AppCompatActivity {
             signup_txt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent signup_intent = new Intent(LoginController.this, SignUpController.class);
+                    Intent signup_intent = new Intent(LoginController.this, Verifymobile.class);
                     LoginController.this.startActivity(signup_intent);
 
                }
@@ -83,8 +83,9 @@ public class LoginController extends AppCompatActivity {
             forgetpass.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent forget = new Intent(LoginController.this, Verifymobile.class);
-                    LoginController.this.startActivity(forget);
+                    Intent forget = new Intent(LoginController.this, verifyForPass.class);
+                    startActivity(forget);
+
                 }
             });
 
@@ -93,16 +94,14 @@ public class LoginController extends AppCompatActivity {
             btn_login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // try {
-                    Intent forget = new Intent(LoginController.this, Home.class);
-                    LoginController.this.startActivity(forget);
-                    //     mobno = mobile_no.getText().toString();
-                    //    password = pass.getText().toString();
-                    //   run();
+                    try {
+                        mobno = mobile_no.getText().toString();
+                        password = pass.getText().toString();
+                        run();
 
-                    //  } catch (IOException e) {
-                    //     e.printStackTrace();
-                    //  }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     CountDownTimer countDownTimer = new CountDownTimer(3000, 1000) {
 
                         @Override

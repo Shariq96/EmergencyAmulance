@@ -112,6 +112,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     public boolean first_time = true;
     ArrayList driverList = new ArrayList();
     String mintime;
+
+    private FirebaseAuth mAuth;
     SupportMapFragment mapFragment;
     GPSTracker gpsTracker;
     String hello;
@@ -223,7 +225,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         editor = MyPref.edit();
         String new1 = MyPref.getString("name","user").toString();
         textView = (TextView) findViewById(R.id.lbl_sidenav_username);
-       // textView.setText();
+//        textView.setText(MyPref.getString("Customer_name","User"));
 
 
         gpsTrackerLocation = getMyLocation();
@@ -260,12 +262,13 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
 
+        lbl_sidenav_userName = findViewById(R.id.lbl_sidenav_username);
 
         //Service for Drivers Location
         startService(new Intent(this, GetDriverMarkers.class));
         //EnablingLocationServices
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 
 
         myLocationTrackerIcon.setOnClickListener(new View.OnClickListener() {
@@ -670,8 +673,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             startActivity(feedback);
 
         } else if (id == R.id.nav_signout) {
+            mAuth = FirebaseAuth.getInstance();
+            mAuth.signOut();
+            mAuth = null;
             LoginManager.getInstance().logOut();
-            FirebaseAuth.getInstance().signOut();
             FirebaseAuth.getInstance().signOut();
             editor.putBoolean("login", false);
             editor.apply();
