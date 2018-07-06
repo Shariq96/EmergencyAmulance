@@ -97,7 +97,7 @@ import okhttp3.Response;
 public class Home extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, ArcNavigationView.OnNavigationItemSelectedListener, FragmentChangeListner, android.location.LocationListener {
+        LocationListener, NavigationView.OnNavigationItemSelectedListener, FragmentChangeListner, android.location.LocationListener {
 
     public static final int REQUEST_LOCATION_CODE = 99;
     public static final MediaType JSON
@@ -217,8 +217,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationViewArc = findViewById(R.id.nav_view);
-        NavigationViewArc.setNavigationItemSelectedListener(this);
+        NavigationView navigattionView = findViewById(R.id.nav_view);
+        navigattionView.setNavigationItemSelectedListener(this);
         MyPref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         editor = MyPref.edit();
         String new1 = MyPref.getString("name","user").toString();
@@ -260,13 +260,6 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
 
-        lbl_sidenav_userName = findViewById(R.id.lbl_sidenav_username);
-        lbl_sidenav_userName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                lbl_sidenav_userName.setText("Sharik Khattak");
-            }
-        });
 
         //Service for Drivers Location
         startService(new Intent(this, GetDriverMarkers.class));
