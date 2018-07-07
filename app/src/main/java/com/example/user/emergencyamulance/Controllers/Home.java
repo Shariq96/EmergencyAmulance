@@ -224,8 +224,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         MyPref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         editor = MyPref.edit();
         String new1 = MyPref.getString("name","user").toString();
-        textView = (TextView) findViewById(R.id.lbl_sidenav_username);
-//        textView.setText(MyPref.getString("Customer_name","User"));
+        View hView = navigattionView.getHeaderView(0);
+        textView = (TextView) hView.findViewById(R.id.username);
+        textView.setText(new1);
 
 
         gpsTrackerLocation = getMyLocation();
@@ -261,8 +262,6 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                 return true;
             }
         });
-
-        lbl_sidenav_userName = findViewById(R.id.lbl_sidenav_username);
 
         //Service for Drivers Location
         startService(new Intent(this, GetDriverMarkers.class));
@@ -319,7 +318,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             @Override
             public void onClick(View v) {
                 try {
-                    jbobj = jb.reqObject(MyPref.getString("id","1024"),"03338983584",sourcelocation.latitude,sourcelocation.longitude,token,serviceType);
+                    jbobj = jb.reqObject(MyPref.getString("id", "1024"), "03338983584", finalsourceLocation.latitude, finalsourceLocation.longitude, token, serviceType);
 //                    _progdialog.show();
                     run(url, v,jbobj);
 
@@ -391,6 +390,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                 GetDriverMarkers.class));
         super.onStart();
     }
+
 
     @Override
     protected void onStop() {
@@ -847,7 +847,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void run(String url, View v, JSONObject jbobj) throws IOException {
-        // OkHttpClient client = new OkHttpClient();
+        //OkHttpClient client = new OkHttpClient();
         //  LatLng latLng = new LatLng(sourceLatitude, sourceLongitude);
         RequestBody body = RequestBody.create(JSON, jbobj.toString());
         Request request = new Request.Builder()

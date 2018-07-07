@@ -138,6 +138,13 @@ public class GetDriverMarkers extends Service {
 
     }
 
+    @Override
+    public void onDestroy() {
+        this.mTimer.cancel();
+        this.timer.cancel();
+
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
