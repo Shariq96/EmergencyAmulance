@@ -133,10 +133,141 @@
     </android.support.v7.widget.CardView>
 
 
-    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.CardView
+        android:id="@+id/trip_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:elevation="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/topBar"
+                android:fontFamily="@font/average_sans"
+                android:gravity="center"
+                android:text="Your Ambulance in On the Way!!"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                app:fontFamily="@font/average_sans" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@color/topBar"
+                    android:fontFamily="@font/average_sans"
+                    android:gravity="center"
+                    android:text="Driver Name"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:fontFamily="@font/alegreya_sans" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@color/topBar"
+                    android:fontFamily="@font/average_sans"
+                    android:gravity="center"
+                    android:text="Vehicle No"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:fontFamily="@font/alegreya_sans" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <TextView
+                    android:id="@+id/driver_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@color/topBar"
+                    android:fontFamily="@font/average_sans"
+                    android:gravity="center"
+                    android:text="Sharik Khattak"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:fontFamily="@font/alegreya_sans" />
+
+                <TextView
+                    android:id="@+id/vehicle_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@color/topBar"
+                    android:fontFamily="@font/average_sans"
+                    android:gravity="center"
+                    android:text="SFX-1307"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:fontFamily="@font/alegreya_sans" />
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <Button
+                    android:id="@+id/cancel_ride"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:background="@color/topBar"
+                    android:text="@string/cancel"
+                    android:textColor="@color/white"
+                    android:textSize="18dp" />
+
+                <Button
+                    android:id="@+id/contact_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/topBar"
+                    android:text="Contact Driver"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="18dp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/request_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
         android:layout_alignParentBottom="true"
         app:cardElevation="8dp">
 

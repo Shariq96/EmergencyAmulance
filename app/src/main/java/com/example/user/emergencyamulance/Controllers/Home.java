@@ -24,6 +24,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -98,6 +99,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener, NavigationView.OnNavigationItemSelectedListener, FragmentChangeListner, android.location.LocationListener {
+
+
+
 
     public static final int REQUEST_LOCATION_CODE = 99;
     public static final MediaType JSON
@@ -192,6 +196,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     };
 
 
+    private CardView trip_panel;
+    private CardView request_panel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -211,6 +218,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         // bhai yeh navigaton drawer ka builtin h
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -219,6 +227,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
         NavigationView navigattionView = findViewById(R.id.nav_view);
         navigattionView.setNavigationItemSelectedListener(this);
+
+
         MyPref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         editor = MyPref.edit();
         String new1 = MyPref.getString("name","user").toString();
@@ -239,6 +249,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         //   _autosearchaddr = (AutoCompleteTextView) findViewById(R.id._autosource);
         bottomBar = (BottomNavigationView) findViewById(R.id.bottomNavigationBar);
         myLocationTrackerIcon = (ImageView) findViewById(R.id.trackmylocation);
+        trip_panel = findViewById(R.id.trip_panel);
+        request_panel= findViewById(R.id.request_panel);
+
 
 
         bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -592,25 +605,12 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         Trip_id = intent.getStringExtra("Trip_id");
 
         if (Click_action == null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(mobile_no)
-                    .setCancelable(
-                            true)
-                    .setPositiveButton("YES",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            }).setNegativeButton("No",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
+
+            request_panel.setVisibility(View.GONE);
+            trip_panel.setVisibility(View.VISIBLE);
+
+
         } else {
-            btn_cancel.setVisibility(View.GONE);
             btn_req.setVisibility(View.VISIBLE);
             Toast.makeText(this, "REASSINING DRIVER. Please Wait", Toast.LENGTH_LONG).show();
         }
