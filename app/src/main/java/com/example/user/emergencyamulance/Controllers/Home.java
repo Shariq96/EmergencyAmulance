@@ -117,7 +117,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     SupportMapFragment mapFragment;
     GPSTracker gpsTracker;
     String hello;
-    String url = "http://192.168.0.102:51967/api/useracc/GetRequest";
+    String url = "http://192.168.0.101:51967/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
     SpotsDialog _progdialog;
     CancelTrip cf = new CancelTrip();
@@ -613,9 +613,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             AlertDialog alert = builder.create();
             alert.show();
         } else {
-            btn_cancel.setVisibility(View.GONE);
+            // btn_cancel.setVisibility(View.GONE);
             btn_req.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "REASSINING DRIVER. Please Wait", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Driver has Canceled. Please Wait", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -857,7 +857,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         Client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(getApplicationContext(), "somethng went wrong", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "somethng went wrong", Toast.LENGTH_LONG).show();
             }
 
             @Override

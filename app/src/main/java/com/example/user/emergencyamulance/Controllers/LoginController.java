@@ -15,12 +15,14 @@ package com.example.user.emergencyamulance.Controllers;
 
     import com.example.user.emergencyamulance.R;
     import com.google.firebase.auth.FirebaseAuth;
+    import com.google.firebase.iid.FirebaseInstanceId;
 
     import org.json.JSONArray;
     import org.json.JSONException;
     import org.json.JSONObject;
 
     import java.io.IOException;
+    import java.net.HttpURLConnection;
 
     import es.dmoral.toasty.Toasty;
     import okhttp3.Call;
@@ -35,7 +37,7 @@ public class LoginController extends AppCompatActivity {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
     public static boolean LogedIn = false;
-    public String url = "http://192.168.0.102:51967//api/useracc/get";
+    public String url = "http:/192.168.0.101:51967/api/useracc/get";
         EditText mobile_no;
         EditText pass;
         CheckBox sv_pass;
@@ -128,10 +130,11 @@ public class LoginController extends AppCompatActivity {
         private void run() throws IOException {
 
             OkHttpClient client = new OkHttpClient();
-
+            token = FirebaseInstanceId.getInstance().getToken();
             HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
             urlBuilder.addQueryParameter("mobile_no", mobno);
             urlBuilder.addQueryParameter("password",password);
+            urlBuilder.addQueryParameter("token", token);
             String url1 = urlBuilder.build().toString();
             Request request = new Request.Builder()
                     .url(url1)
