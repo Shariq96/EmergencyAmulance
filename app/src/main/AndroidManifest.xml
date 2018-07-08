@@ -32,7 +32,11 @@
         <activity
             android:name=".Models.SplashActivity"
             android:theme="@style/SplashTheme">
-            loginActivity
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
 
         </activity>
@@ -45,7 +49,8 @@
         <activity android:name=".Controllers.SignUpController"></activity>
         <activity android:name=".Controllers.Verifymobile"></activity>
         <activity android:name=".Controllers.CancelTrip" />
-
+        <activity android:name=".Controllers.forget_password"></activity>
+        <activity android:name=".Controllers.verifyForPass"></activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAd1s0XsDExOBq_7V2zA5WVUZGeGQjYvYw" />
@@ -57,16 +62,13 @@
             android:name=".Controllers.Home"
             android:label="M A D A D"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
 
-        <activity android:name=".Controllers.LoginController" />
+        <activity android:name=".Controllers.LoginController">
 
+        </activity>
         <service android:name=".Helper.MyAndroidFirebaseMsgService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -98,7 +100,7 @@
         <activity android:name=".Controllers.FeedbackController" />
         <activity android:name=".Controllers.HistoryActivity" />
         <activity android:name=".Controllers.cardview"></activity>
-        <activity android:name=".forget_password"></activity>
+        <activity android:name=".Controllers.forget_password"></activity>
     </application>
 
 </manifest>

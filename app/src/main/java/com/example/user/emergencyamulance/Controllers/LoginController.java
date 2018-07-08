@@ -15,12 +15,14 @@ package com.example.user.emergencyamulance.Controllers;
 
     import com.example.user.emergencyamulance.R;
     import com.google.firebase.auth.FirebaseAuth;
+    import com.google.firebase.iid.FirebaseInstanceId;
 
     import org.json.JSONArray;
     import org.json.JSONException;
     import org.json.JSONObject;
 
     import java.io.IOException;
+    import java.net.HttpURLConnection;
 
     import es.dmoral.toasty.Toasty;
     import okhttp3.Call;
@@ -35,7 +37,7 @@ public class LoginController extends AppCompatActivity {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
     public static boolean LogedIn = false;
-    public String url = "http://192.168.0.102:51967//api/useracc/get";
+    public String url = "http:/192.168.0.101:51967/api/useracc/get";
         EditText mobile_no;
         EditText pass;
         CheckBox sv_pass;
@@ -72,7 +74,7 @@ public class LoginController extends AppCompatActivity {
             signup_txt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent signup_intent = new Intent(LoginController.this, SignUpController.class);
+                    Intent signup_intent = new Intent(LoginController.this, Verifymobile.class);
                     LoginController.this.startActivity(signup_intent);
 
                }
@@ -83,8 +85,9 @@ public class LoginController extends AppCompatActivity {
             forgetpass.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent forget = new Intent(LoginController.this, Verifymobile.class);
-                    LoginController.this.startActivity(forget);
+                    Intent forget = new Intent(LoginController.this, verifyForPass.class);
+                    startActivity(forget);
+
                 }
             });
 
@@ -93,16 +96,14 @@ public class LoginController extends AppCompatActivity {
             btn_login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // try {
-                    Intent forget = new Intent(LoginController.this, Home.class);
-                    LoginController.this.startActivity(forget);
-                    //     mobno = mobile_no.getText().toString();
-                    //    password = pass.getText().toString();
-                    //   run();
+                    try {
+                        mobno = mobile_no.getText().toString();
+                        password = pass.getText().toString();
+                        run();
 
-                    //  } catch (IOException e) {
-                    //     e.printStackTrace();
-                    //  }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     CountDownTimer countDownTimer = new CountDownTimer(3000, 1000) {
 
                         @Override
@@ -129,10 +130,11 @@ public class LoginController extends AppCompatActivity {
         private void run() throws IOException {
 
             OkHttpClient client = new OkHttpClient();
-
+            token = FirebaseInstanceId.getInstance().getToken();
             HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
             urlBuilder.addQueryParameter("mobile_no", mobno);
             urlBuilder.addQueryParameter("password",password);
+            urlBuilder.addQueryParameter("token", token);
             String url1 = urlBuilder.build().toString();
             Request request = new Request.Builder()
                     .url(url1)

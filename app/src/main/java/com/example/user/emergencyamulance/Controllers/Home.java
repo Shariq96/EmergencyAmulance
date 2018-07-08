@@ -116,10 +116,12 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     public boolean first_time = true;
     ArrayList driverList = new ArrayList();
     String mintime;
+
+    private FirebaseAuth mAuth;
     SupportMapFragment mapFragment;
     GPSTracker gpsTracker;
     String hello;
-    String url = "http://192.168.0.102:51967/api/useracc/GetRequest";
+    String url = "http://192.168.0.101:51967/api/useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
     SpotsDialog _progdialog;
     CancelTrip cf = new CancelTrip();
@@ -232,8 +234,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         MyPref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         editor = MyPref.edit();
         String new1 = MyPref.getString("name","user").toString();
-        textView = (TextView) findViewById(R.id.lbl_sidenav_username);
-       // textView.setText();
+        View hView = navigattionView.getHeaderView(0);
+        textView = (TextView) hView.findViewById(R.id.username);
+        textView.setText(new1);
 
 
         gpsTrackerLocation = getMyLocation();
@@ -273,12 +276,11 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
 
-
         //Service for Drivers Location
         startService(new Intent(this, GetDriverMarkers.class));
         //EnablingLocationServices
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 
 
         myLocationTrackerIcon.setOnClickListener(new View.OnClickListener() {
@@ -329,7 +331,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             @Override
             public void onClick(View v) {
                 try {
-                    jbobj = jb.reqObject(MyPref.getString("id","1024"),"03338983584",sourcelocation.latitude,sourcelocation.longitude,token,serviceType);
+                    jbobj = jb.reqObject(MyPref.getString("id", "1024"), "03338983584", finalsourceLocation.latitude, finalsourceLocation.longitude, token, serviceType);
 //                    _progdialog.show();
                     run(url, v,jbobj);
 
@@ -401,6 +403,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
                 GetDriverMarkers.class));
         super.onStart();
     }
+
 
     @Override
     protected void onStop() {
@@ -611,8 +614,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
 
         } else {
+            // btn_cancel.setVisibility(View.GONE);
             btn_req.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "REASSINING DRIVER. Please Wait", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Driver has Canceled. Please Wait", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -670,8 +674,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             startActivity(feedback);
 
         } else if (id == R.id.nav_signout) {
+            mAuth = FirebaseAuth.getInstance();
+            mAuth.signOut();
+            mAuth = null;
             LoginManager.getInstance().logOut();
-            FirebaseAuth.getInstance().signOut();
             FirebaseAuth.getInstance().signOut();
             editor.putBoolean("login", false);
             editor.apply();
@@ -842,7 +848,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void run(String url, View v, JSONObject jbobj) throws IOException {
-        // OkHttpClient client = new OkHttpClient();
+        //OkHttpClient client = new OkHttpClient();
         //  LatLng latLng = new LatLng(sourceLatitude, sourceLongitude);
         RequestBody body = RequestBody.create(JSON, jbobj.toString());
         Request request = new Request.Builder()
@@ -852,7 +858,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         Client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(getApplicationContext(), "somethng went wrong", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "somethng went wrong", Toast.LENGTH_LONG).show();
             }
 
             @Override

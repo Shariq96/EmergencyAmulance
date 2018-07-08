@@ -1,8 +1,10 @@
 package com.example.user.emergencyamulance.Controllers;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -10,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.user.emergencyamulance.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,9 +26,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class Verifymobile extends AppCompatActivity implements View.OnClickListener {
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class verifyForPass extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "PhoneAuthActivity";
     public static String Mobile_No = "0";
@@ -34,21 +44,22 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
     EditText mPhoneNumberField, mVerificationField;
     Button mStartButton, mVerifyButton, mResendButton;
     String mVerificationId;
-    TextView Verifyyournumber;
+    String myResponse;
     private FirebaseAuth mAuth;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    private String url = "http://192.168.0.102:51967//api/useracc/verifyMobile";
 
     public static boolean getVariable() {
         return verified;
     }
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_verifymobile);
-
+        mAuth = FirebaseAuth.getInstance();
         mPhoneNumberField = (EditText) findViewById(R.id.edit_num);
         mVerificationField = (EditText) findViewById(R.id.edit_code);
         Mobile_No = mPhoneNumberField.toString();
@@ -57,22 +68,9 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
         mVerifyButton = (Button) findViewById(R.id.btn_ver_verify);
         mResendButton = (Button) findViewById(R.id.btn_ver_resend);
 
-        Verifyyournumber = (TextView) findViewById(R.id.textView4);
-
-        Verifyyournumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent changepass = new Intent(Verifymobile.this, forget_password.class);
-                startActivity(changepass);
-
-            }
-        });
-
-
         mStartButton.setOnClickListener(this);
         mVerifyButton.setOnClickListener(this);
         mResendButton.setOnClickListener(this);
-
 
         mAuth = FirebaseAuth.getInstance();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -94,6 +92,7 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
                             Snackbar.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onCodeSent(String verificationId,
                                    PhoneAuthProvider.ForceResendingToken token) {
@@ -102,6 +101,7 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
                 mResendToken = token;
             }
         };
+
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
@@ -112,8 +112,8 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
-                            Intent in = new Intent(getBaseContext(), SignUpController.class);
-                            in.putExtra("mobile_no",mPhoneNumberField.getText().toString());
+                            Intent in = new Intent(getBaseContext(), forget_password.class);
+                            in.putExtra("mobile_no", mPhoneNumberField.getText().toString());
                             startActivity(in);
                             finish();
                             verified = true;
@@ -165,37 +165,70 @@ public class Verifymobile extends AppCompatActivity implements View.OnClickListe
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        /*if (currentUser != null) {
-            startActivity(new Intent(Verifymobile.this, SignUpController.class));
+       /* if (currentUser != null) {
+            Intent intent = new Intent(verifyForPass.this   ,forget_password.class);;
+            intent.putExtra("mobile_no",Mobile_No);
+            startActivity(intent);
             finish();
 
-        }*/
+        } */
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_ver_send:
+                run();
+                if (myResponse == "true") ;
+            {
                 if (!validatePhoneNumber()) {
                     return;
                 }
                 startPhoneNumberVerification(mPhoneNumberField.getText().toString());
-
-                break;
+            }
+            break;
             case R.id.btn_ver_verify:
+
                 String code = mVerificationField.getText().toString();
                 if (TextUtils.isEmpty(code)) {
                     mVerificationField.setError("Cannot be empty.");
                     return;
                 }
 
+
                 verifyPhoneNumberWithCode(mVerificationId, code);
                 break;
+
             case R.id.btn_ver_resend:
                 resendVerificationCode(mPhoneNumberField.getText().toString(), mResendToken);
                 break;
         }
     }
 
-}
+    private void run() {
+        OkHttpClient client = new OkHttpClient();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
+        urlBuilder.addQueryParameter("mobile", mPhoneNumberField.getText().toString());
 
+        String url1 = urlBuilder.build().toString();
+        Request request = new Request.Builder()
+                .url(url1)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                myResponse = response.body().string();
+                //  myResponse = myResponse.substring(1, myResponse.length() - 1); // yara
+                myResponse = myResponse.replace("\\", "");
+
+            }
+        });
+    }
+
+
+}
