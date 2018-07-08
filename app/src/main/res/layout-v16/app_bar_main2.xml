@@ -68,6 +68,7 @@
                     android:id="@+id/_source"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
+
                     android:layout_gravity="center_vertical"
                     android:layout_margin="10dp"
                     android:layout_weight="3"
@@ -77,7 +78,7 @@
                     android:hint="@string/pickup_location"
                     android:paddingTop="5dp"
                     android:textSize="12sp"
-                    android:inputType="" />
+                    android:inputType="none" />
             </LinearLayout>
 
             <LinearLayout
@@ -111,7 +112,7 @@
                     android:hint="@string/dropoff_location"
                     android:paddingTop="5dp"
                     android:textSize="12sp"
-                    android:inputType="" />
+                    android:inputType="none" />
 
             </LinearLayout>
 
@@ -138,7 +139,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
+        android:visibility="visible"
         android:elevation="8dp">
 
         <LinearLayout
@@ -167,11 +168,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@color/topBar"
                     android:fontFamily="@font/average_sans"
                     android:gravity="center"
                     android:text="Driver Name"
-                    android:textColor="@color/white"
+                    android:textColor="#777777"
                     android:textSize="20sp"
                     app:fontFamily="@font/alegreya_sans" />
 
@@ -179,11 +179,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@color/topBar"
                     android:fontFamily="@font/average_sans"
                     android:gravity="center"
                     android:text="Vehicle No"
-                    android:textColor="@color/white"
                     android:textSize="20sp"
                     app:fontFamily="@font/alegreya_sans" />
 
@@ -194,18 +192,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="4">
+                android:weightSum="4"
+                android:background="@color/white">
 
                 <TextView
                     android:id="@+id/driver_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@color/topBar"
                     android:fontFamily="@font/average_sans"
                     android:gravity="center"
+                    android:padding="10dp"
                     android:text="Sharik Khattak"
-                    android:textColor="@color/white"
+                    android:textColor="#777777"
                     android:textSize="18sp"
                     app:fontFamily="@font/alegreya_sans" />
 
@@ -214,11 +213,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@color/topBar"
+
                     android:fontFamily="@font/average_sans"
                     android:gravity="center"
+                    android:padding="10dp"
                     android:text="SFX-1307"
-                    android:textColor="@color/white"
+                    android:textColor="#777777"
                     android:textSize="18sp"
                     app:fontFamily="@font/alegreya_sans" />
 
@@ -231,23 +231,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="4">
+                android:weightSum="2">
 
                 <Button
                     android:id="@+id/cancel_ride"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
+                    android:layout_weight="1.25"
                     android:background="@color/topBar"
+                    app:fontFamily="@font/alegreya_sans"
                     android:text="@string/cancel"
                     android:textColor="@color/white"
-                    android:textSize="18dp" />
+                    android:textSize="20sp" />
+
 
                 <Button
                     android:id="@+id/contact_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.75"
+                    app:fontFamily="@font/alegreya_sans"
                     android:background="@color/topBar"
                     android:text="Contact Driver"
                     android:gravity="center"
@@ -267,7 +270,7 @@
         android:id="@+id/request_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
         app:cardElevation="8dp">
 

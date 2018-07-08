@@ -100,7 +100,7 @@
         <activity android:name=".Controllers.FeedbackController" />
         <activity android:name=".Controllers.HistoryActivity" />
         <activity android:name=".Controllers.cardview"></activity>
-        <activity android:name=".Controllers.forget_password"></activity>
+
     </application>
 
 </manifest>
