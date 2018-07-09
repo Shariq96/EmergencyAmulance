@@ -33,11 +33,13 @@ package com.example.user.emergencyamulance.Controllers;
     import okhttp3.Request;
     import okhttp3.Response;
 
+    import static com.example.user.emergencyamulance.Controllers.Home.urlwhole;
+
 public class LoginController extends AppCompatActivity {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
     public static boolean LogedIn = false;
-    public String url = "http:/192.168.0.101:51967/api/useracc/get";
+    public String url = urlwhole + "/useracc/get";
         EditText mobile_no;
         EditText pass;
         CheckBox sv_pass;

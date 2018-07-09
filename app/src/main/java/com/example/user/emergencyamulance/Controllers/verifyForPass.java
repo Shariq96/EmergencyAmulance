@@ -36,6 +36,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.example.user.emergencyamulance.Controllers.Home.urlwhole;
+
 public class verifyForPass extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "PhoneAuthActivity";
@@ -48,7 +50,7 @@ public class verifyForPass extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
-    private String url = "http://192.168.0.102:51967//api/useracc/verifyMobile";
+    private String url = urlwhole + "/useracc/verifyMobile";
 
     public static boolean getVariable() {
         return verified;

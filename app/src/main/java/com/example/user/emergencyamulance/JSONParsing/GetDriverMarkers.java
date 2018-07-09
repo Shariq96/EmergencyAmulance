@@ -31,6 +31,7 @@ import okhttp3.Response;
 
 import static com.example.user.emergencyamulance.Controllers.Home.sourceLatitude1;
 import static com.example.user.emergencyamulance.Controllers.Home.sourceLongitude1;
+import static com.example.user.emergencyamulance.Controllers.Home.urlwhole;
 
 /**
  * Created by User on 2/23/2018.
@@ -42,9 +43,9 @@ public class GetDriverMarkers extends Service {
     GPSTracker  gpsTracker = new GPSTracker(this);
 
     Timer mTimer;
-    public String url = "http://192.168.0.102:51967/api/useracc/getDriver";
+    public String url = urlwhole + "/useracc/getDriver";
     Timer timer;
-    public String url1 = "http://192.168.0.102:51967/api/useracc/getNearestTime";
+    public String url1 = urlwhole + "/useracc/getNearestTime";
     TimerTask timerTask1 = new TimerTask() {
         @Override
         public void run() {

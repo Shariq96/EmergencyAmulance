@@ -35,11 +35,13 @@ package com.example.user.emergencyamulance.Controllers;
         import okhttp3.RequestBody;
         import okhttp3.Response;
 
+        import static com.example.user.emergencyamulance.Controllers.Home.urlwhole;
+
 public class SignUpController extends AppCompatActivity {
 
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
-    public String url = "http://192.168.0.103:51967/api/useracc/post";
+    public String url = urlwhole + "/useracc/post";
     EditText name, pass, email, phone;
     Button signup_btn;
     ImageView fb;

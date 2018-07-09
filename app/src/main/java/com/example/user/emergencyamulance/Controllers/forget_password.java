@@ -20,9 +20,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.example.user.emergencyamulance.Controllers.Home.urlwhole;
+
 public class forget_password extends AppCompatActivity {
 
-    public String url = "http://192.168.0.102:51967//api/useracc/forgetchangePw";
+    public String url = urlwhole + "/useracc/forgetchangePw";
     private Button btn;
     private EditText re_pass, new_pass;
     private String pass, repass, mobile_no;

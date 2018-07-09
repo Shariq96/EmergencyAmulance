@@ -44,8 +44,28 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+
+                android:id="@+id/statustrip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/topBar"
+                android:fontFamily="@font/alegreya_sans"
+                android:gravity="center_horizontal"
+                android:text="@string/nearest_ambulance_is_6_min_away"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:visibility="gone"
+
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:id="@+id/idla"
             android:weightSum="6">
 
             <LinearLayout

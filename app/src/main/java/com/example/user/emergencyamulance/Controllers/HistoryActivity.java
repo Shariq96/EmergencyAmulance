@@ -26,6 +26,8 @@
     import okhttp3.Request;
     import okhttp3.Response;
 
+    import static com.example.user.emergencyamulance.Controllers.Home.urlwhole;
+
     public class HistoryActivity extends AppCompatActivity {
         public static final MediaType JSON
                 = MediaType.parse("application/json; charset=utf-8");
@@ -34,10 +36,11 @@
         private RecyclerView rv;
         SharedPreferences myPref;
         private ListView historylist;
-        public String url = "http://192.168.0.102:51967//api/useracc/gethistory";
+        public String url = urlwhole + "/useracc/gethistory";
         private String id;
         JSONArray array = null;
         JSONObject jsonObj = null;
+        CustomAdapter adapter;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -52,10 +55,10 @@
 
             initializeData();
             initializeAdapter();
-
         }
         private void initializeData(){
             persons = new ArrayList<>();
+            adapter = new CustomAdapter(persons);
             OkHttpClient client = new OkHttpClient();
             HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
             urlBuilder.addQueryParameter("id", id);
@@ -89,15 +92,19 @@
 
 
                         }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
                 }
+
+
             });
         }
 
 
-        private void initializeAdapter(){
-            CustomAdapter adapter = new CustomAdapter(persons);
+        public void initializeAdapter() {
+            adapter = new CustomAdapter(persons);
             rv.setAdapter(adapter);
         }}

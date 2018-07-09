@@ -8,12 +8,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +29,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -42,6 +45,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,6 +81,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.vision.text.Line;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.rom4ek.arcnavigationview.ArcNavigationView;
@@ -123,7 +128,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     SupportMapFragment mapFragment;
     GPSTracker gpsTracker;
     String hello;
-    String url = "http://192.168.0.101:51967/api/useracc/GetRequest";
+    public static String urlwhole = "http://192.168.0.101:51967/api/";
+    String url = urlwhole + "useracc/GetRequest";
     String token = FirebaseInstanceId.getInstance().getToken();
     SpotsDialog _progdialog;
     CancelTrip cf = new CancelTrip();
@@ -142,7 +148,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     private Marker currentLocation;
     private LocationManager locationManager;
     private double destlang, destlat;
-    private TextView estdistance;
+    LinearLayout liner;
     private TextView estfare;
     private AutocompleteFilter _typeFilter;
     private LatLngBounds bounds;
@@ -164,6 +170,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     private TextView lbl_sidenav_userName;
     private LatLng sourcelocation;
     Button cancel;
+    private TextView estdistance, Trip_status;
     private int baseFee = 300;
     private int costPerKM = 10;
     private String sourceAddressName;
@@ -203,6 +210,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
     private CardView trip_panel;
     private CardView request_panel;
+    private Button contact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,12 +234,17 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
 
         cancel = (Button) findViewById(R.id.cancel_ride);
+        contact = (Button) findViewById(R.id.contact_id);
+        liner = (LinearLayout) findViewById(R.id.idla);
+        Trip_status = (TextView) findViewById(R.id.statustrip);
         f1 = (FrameLayout) findViewById(R.id.frame);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_phone_black_24dp);
+        toolbar.setOverflowIcon(drawable);
 
         NavigationView navigattionView = findViewById(R.id.nav_view);
         navigattionView.setNavigationItemSelectedListener(this);
@@ -282,6 +295,30 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
 
+     /*   contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent callIntent = new Intent(Intent.ACTION_CALL); //use ACTION_CALL class
+                callIntent.setData(Uri.parse("tel:" + mobile_no));    //this is the phone number calling
+                //check permission
+                //If the device is running Android 6.0 (API level 23) and the app's targetSdkVersion is 23 or higher,
+                //the system asks the user to grant approval.
+                if (ActivityCompat.checkSelfPermission(Home.this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    //request permission from user if the app hasn't got the required permission
+                    ActivityCompat.requestPermissions(Home.this,
+                            new String[]{Manifest.permission.CALL_PHONE},   //request specific permission from user
+                            10);
+                    return;
+                } else {     //have got permission
+                    try {
+                        startActivity(callIntent);  //call activity and make phone call
+                    } catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(Home.this, "yourActivity is not founded", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });*/
         //Service for Drivers Location
         startService(new Intent(this, GetDriverMarkers.class));
         //EnablingLocationServices
@@ -296,6 +333,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
             }
         });
+
 
         myLocationTrackerIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -623,7 +661,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         Trip_id = intent.getStringExtra("Trip_id");
 
         if (Click_action == null) {
-            nearestAmbtext.setText("D-Status = " + latLong);
+            liner.setVisibility(LinearLayout.GONE);
+            Trip_status.setVisibility(View.VISIBLE);
+            Trip_status.setText(latLong);
             ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
             toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
             if (latLong.equals("ride Started") || latLong.equals("Reached to Patient") || latLong.equals("Reached Dest and Trip Ended")) {
@@ -670,7 +710,16 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_aman) {
+            call_amb("1021");
+            return true;
+        }
+        if (id == R.id.action_chippa) {
+            call_amb("1020");
+            return true;
+        }
+        if (id == R.id.action_edhi) {
+            call_amb("115");
             return true;
         }
 
@@ -949,4 +998,26 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
     }
+
+    private void call_amb(String ph_no) {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL); //use ACTION_CALL class
+        callIntent.setData(Uri.parse("tel:" + ph_no));    //this is the phone number calling
+        //check permission
+        //If the device is running Android 6.0 (API level 23) and the app's targetSdkVersion is 23 or higher,
+        //the system asks the user to grant approval.
+        if (ActivityCompat.checkSelfPermission(Home.this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            //request permission from user if the app hasn't got the required permission
+            ActivityCompat.requestPermissions(Home.this,
+                    new String[]{Manifest.permission.CALL_PHONE},   //request specific permission from user
+                    10);
+            return;
+        } else {     //have got permission
+            try {
+                startActivity(callIntent);  //call activity and make phone call
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(Home.this, "yourActivity is not founded", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
+

@@ -31,6 +31,7 @@ import static com.example.user.emergencyamulance.Controllers.Home.btn_cancel;
 import static com.example.user.emergencyamulance.Controllers.Home.btn_req;
 import static com.example.user.emergencyamulance.Controllers.Home.d_token;
 import static com.example.user.emergencyamulance.Controllers.Home.f1;
+import static com.example.user.emergencyamulance.Controllers.Home.urlwhole;
 
 
 public class CancelTrip extends Fragment implements FragmentChangeListner {
@@ -40,7 +41,7 @@ public class CancelTrip extends Fragment implements FragmentChangeListner {
     RadioGroup radioReasongGrp;
     int selectedId;
     String val;
-    String url = "http://192.168.0.101:51967//api/useracc/cancelRideUser";
+    String url = urlwhole + "useracc/cancelRideUser";
     /*    public  void onClickListnerButton()
         {
             Home main2Activity = new Home();

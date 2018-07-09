@@ -33,11 +33,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.example.user.emergencyamulance.Controllers.Home.urlwhole;
+
 
 public class Welcome extends AppCompatActivity {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
-    public String url = "http://192.168.0.103:51967/api/useracc/post";
+    public String url = urlwhole + "/useracc/post";
     LoginButton loginButton;
     Button btn;
     CallbackManager callbackManager;

@@ -48,7 +48,9 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
-
+    <string name="Edhi">Edhi</string>
+    <string name="Chippa">Chippa</string>
+    <string name="Aman">Aman</string>
     <!-- Bottom Nav Icons -->
     <string name="first">Normal</string>
     <string name="sec">Critical</string>
