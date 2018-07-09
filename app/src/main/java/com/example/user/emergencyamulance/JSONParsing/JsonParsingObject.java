@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class JsonParsingObject
 {
-    public JSONObject reqObject (String  id ,String Contact_No,double lat, double longi,String token_no,String Service_type)
+    public JSONObject reqObject(String id, String Contact_No, double lat, double longi, double destlat, double destlong, String token_no, String Service_type)
     {
         JSONObject obj = new JSONObject();
         try {
@@ -18,6 +18,8 @@ public class JsonParsingObject
             obj.put("lat", lat);
             obj.put("longi", longi);
             obj.put("token", token_no);
+            obj.put("destlat", destlat);
+            obj.put("destlong", destlong);
             obj.put("Service_type", Service_type);
         } catch (JSONException e) {
             // TODO Auto-generated catch block

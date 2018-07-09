@@ -40,7 +40,7 @@ public class CancelTrip extends Fragment implements FragmentChangeListner {
     RadioGroup radioReasongGrp;
     int selectedId;
     String val;
-    String url = "http://192.168.0.103:51967//api/useracc/cancelRideUser";
+    String url = "http://192.168.0.101:51967//api/useracc/cancelRideUser";
     /*    public  void onClickListnerButton()
         {
             Home main2Activity = new Home();
@@ -50,7 +50,7 @@ public class CancelTrip extends Fragment implements FragmentChangeListner {
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container, @Nullable Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.cancellationdialog,container,false);
+        v = inflater.inflate(R.layout.fragment_cancelation, container, false);
         radioReasongGrp = (RadioGroup)v.findViewById(R.id.rg);
         btn = (Button)v.findViewById(R.id.btn_submit);
 

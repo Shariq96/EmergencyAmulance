@@ -31,16 +31,15 @@ public class MyAndroidFirebaseMsgService extends FirebaseMessagingService {
         String color = remoteMessage.getNotification().getColor();
         String Trip_id = remoteMessage.getNotification().getSound();
         String Clickaction = remoteMessage.getNotification().getClickAction();
-        if(myApplication.isActivityVisible()) {
+        if (myApplication.isActivityVisible()) {
             Intent intent = new Intent("myFunction");
             intent.putExtra("mobile_no", mobile_no);
             intent.putExtra("LATLONG", latLong);
-            intent.putExtra("drivertoken_no",color);
-            intent.putExtra("Trip_id",Trip_id);
-            intent.putExtra("clickaction",Clickaction);
+            intent.putExtra("drivertoken_no", color);
+            intent.putExtra("Trip_id", Trip_id);
+            intent.putExtra("clickaction", Clickaction);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        }
-        else
+        } else
         createNotification(remoteMessage.getNotification().getBody());
     }
 

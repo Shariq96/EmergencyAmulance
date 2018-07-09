@@ -12,6 +12,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -161,6 +163,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     private double sourclon;
     private TextView lbl_sidenav_userName;
     private LatLng sourcelocation;
+    Button cancel;
     private int baseFee = 300;
     private int costPerKM = 10;
     private String sourceAddressName;
@@ -221,6 +224,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        cancel = (Button) findViewById(R.id.cancel_ride);
+        f1 = (FrameLayout) findViewById(R.id.frame);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -282,6 +288,14 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //   f1.setVisibility(View.VISIBLE);
+                //  replaceFragment(cf);
+
+            }
+        });
 
         myLocationTrackerIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -331,7 +345,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
             @Override
             public void onClick(View v) {
                 try {
-                    jbobj = jb.reqObject(MyPref.getString("id", "1024"), "03338983584", finalsourceLocation.latitude, finalsourceLocation.longitude, token, serviceType);
+                    jbobj = jb.reqObject(MyPref.getString("id", "1024"), "03338983584", finalsourceLocation.latitude, finalsourceLocation.longitude, destlat, destlang, token, serviceType);
 //                    _progdialog.show();
                     run(url, v,jbobj);
 
@@ -552,7 +566,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
         estdistance.setText("Distance: " + distance + "km");
         estfare.setText("Est. Fare: " + ((distance * costPerKM) + baseFee) + "Rs");
-
+        estdistance.setVisibility(View.VISIBLE);
+        estfare.setVisibility(View.VISIBLE);
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.destinationmarkericon));
         markerOptions.snippet("Distance = " + result[0]);
         mMap.addMarker(markerOptions);
@@ -602,19 +617,29 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
 
     private void displayAlert(Intent intent) {
         mobile_no = intent.getStringExtra("title");
-        latLong = intent.getStringExtra("body");
+        latLong = intent.getStringExtra("LATLONG");
         d_token = intent.getStringExtra("drivertoken_no");
         Click_action = intent.getStringExtra("clickaction");
         Trip_id = intent.getStringExtra("Trip_id");
 
         if (Click_action == null) {
-
-            request_panel.setVisibility(View.GONE);
-            trip_panel.setVisibility(View.VISIBLE);
-
+            nearestAmbtext.setText("D-Status = " + latLong);
+            ToneGenerator toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+            toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
+            if (latLong.equals("ride Started") || latLong.equals("Reached to Patient") || latLong.equals("Reached Dest and Trip Ended")) {
+                trip_panel.setVisibility(View.GONE);
+                request_panel.setVisibility(View.GONE);
+            } else if (latLong.equals("YOU Have Paid Your Bill ThankYou")) {
+                request_panel.setVisibility(View.VISIBLE);
+                trip_panel.setVisibility(View.GONE);
+                btn_req.setVisibility(View.VISIBLE);
+            } else {
+                request_panel.setVisibility(View.GONE);
+                trip_panel.setVisibility(View.VISIBLE);
+            }
 
         } else {
-            // btn_cancel.setVisibility(View.GONE);
+            // btn_cancancel.setVisibility(View.GONE);
             btn_req.setVisibility(View.VISIBLE);
             Toast.makeText(this, "Driver has Canceled. Please Wait", Toast.LENGTH_LONG).show();
         }
@@ -919,9 +944,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback,
     @Override
     public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        ;
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        // fragmentTransaction.replace(R.id.frame, fragment, fragment.toString());
+        fragmentTransaction.replace(R.id.frame, fragment, fragment.toString());
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
     }
