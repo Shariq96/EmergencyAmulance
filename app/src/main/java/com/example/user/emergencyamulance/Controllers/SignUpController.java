@@ -150,7 +150,7 @@ public class SignUpController extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(getApplicationContext(), "Something went Wrong, Try Again!", Toast.LENGTH_LONG).show();
+                //       Toast.makeText(getApplicationContext(), "Something went Wrong, Try Again!", Toast.LENGTH_LONG).show();
             }
 
             @Override

@@ -370,6 +370,18 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:fontFamily="@font/alice"
+                android:text="@string/cancel"
+                android:textColor="@color/topBar"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
         </LinearLayout>
 
 

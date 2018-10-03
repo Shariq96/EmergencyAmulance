@@ -53,6 +53,7 @@ public class SplashActivity extends AppCompatActivity {
         }
 
 
+
     }
 
 
@@ -80,6 +81,21 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        myPref = getSharedPreferences("MyPref", MODE_PRIVATE);
+        boolean logger = myPref.getBoolean("login", false);
+        if (logger == false) {
+
+
+            Intent intent = new Intent(getApplicationContext(), LoginController.class);
+            startActivity(intent);
+            // close splash activity
+            finish();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), Home.class);
+            startActivity(intent);
+            finish();
+        }
+
         super.onResume();
 
     }

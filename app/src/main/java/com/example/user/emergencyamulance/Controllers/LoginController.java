@@ -106,21 +106,6 @@ public class LoginController extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    CountDownTimer countDownTimer = new CountDownTimer(3000, 1000) {
-
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            Toasty.info(getApplicationContext(), "Login Sucessful", Toast.LENGTH_LONG, true).show();
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            Toasty.success(getApplicationContext(), "Welcome!", Toast.LENGTH_LONG, true).show();
-                        }
-                    };
-
-                    countDownTimer.start();
-
 
                 }
 
@@ -188,8 +173,38 @@ public class LoginController extends AppCompatActivity {
                                 Intent intent = new Intent(LoginController.this, Home.class);
                                 startActivity(intent);
                                 finish();
+
+                                CountDownTimer countDownTimer = new CountDownTimer(3000, 1000) {
+
+                                    @Override
+                                    public void onTick(long millisUntilFinished) {
+                                        Toasty.info(getApplicationContext(), "Login Sucessful", Toast.LENGTH_LONG, true).show();
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        Toasty.success(getApplicationContext(), "Welcome!", Toast.LENGTH_LONG, true).show();
+                                    }
+                                };
+
+                                countDownTimer.start();
+
+
                             } else {
-                                Toast.makeText(getApplicationContext(), "Wrong Credentials", Toast.LENGTH_LONG).show();
+                                CountDownTimer countDownTimer = new CountDownTimer(3000, 1000) {
+
+                                    @Override
+                                    public void onTick(long millisUntilFinished) {
+                                        Toasty.info(getApplicationContext(), "Login Unsucessfull", Toast.LENGTH_LONG, true).show();
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        Toasty.success(getApplicationContext(), "Try Again", Toast.LENGTH_LONG, true).show();
+                                    }
+                                };
+
+                                countDownTimer.start();
 
                                 editor.putBoolean("login", false);
                                 editor.commit();
